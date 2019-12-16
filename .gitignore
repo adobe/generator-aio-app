@@ -1,0 +1,21 @@
+# package directories
+node_modules
+
+# Config
+.env
+
+# IDE & Temp
+.cache
+.idea
+.nyc_output
+.vscode
+coverage
+
+# OSX
+.DS_Store
+
+#custom
+playground
+
+# no package lock for libs
+package-lock.json

@@ -1,0 +1,49 @@
+<!-- <% if (false) { %>
+Copyright 2019 Adobe. All rights reserved.
+This file is licensed to you under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License. You may obtain a copy
+of the License at http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software distributed under
+the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+OF ANY KIND, either express or implied. See the License for the specific language
+governing permissions and limitations under the License.
+<% } %> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title><%= projectName %></title>
+</head>
+<body>
+    <script src="./src/index.js"></script>
+    <div style="text-align: center">
+      <h1>Welcome to <%= projectName %>!</h1>
+        <div>
+          <h3>backend actions</h3>
+          <div id="action-list"></div>
+          <script>window.showActionsList()</script>
+        </div>
+      <div>
+        <h3>next steps</h3>
+        <div id="doc-list">
+          <ul>
+              <li>check <code>README.md</code> for more docs</li>
+              <li><a href="https://adobedocs.github.io/adobeio-runtime/">Adobe I/O Runtime Documentation</a></li>
+              <% if (adobeServices.includes('target')) { %>
+                <li><a href="http://developers.adobetarget.com/api/">Adobe Target API</a></li>
+              <% } %>
+              <% if (adobeServices.includes('analytics')) { %>
+                <li><a href="https://www.adobe.io/apis/experiencecloud/analytics/docs.html">Adobe Analytics API</a></li>
+              <% } %>
+              <% if (adobeServices.includes('campaign')) { %>
+                <li><a href="https://final-docs.campaign.adobe.com/doc/standard/en/api/ACS_API.html">Adobe Campaign Standard API</a></li>
+              <% } %>
+            </ul>
+        </div>
+      </div>
+    </div>
+</body>
+</html>
