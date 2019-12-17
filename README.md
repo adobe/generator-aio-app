@@ -20,7 +20,7 @@ A Yeoman code generator for Adobe I/O Applications.
 - `yo aio-app:add-actions` to add new actions to an existing app
 - `yo aio-app:add-web-assets` to add a UI to an existing app
 - `yo aio-app:delete-action` to delete an existing action
-- `yo aio-app:add-web-assets` to delete the app's UI
+- `yo aio-app:delete-web-assets` to delete the app's UI
 
 ## Contributing
 
