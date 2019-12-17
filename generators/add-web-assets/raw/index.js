@@ -20,6 +20,7 @@ class RawGenerator extends Generator {
     this.option('web-dir', { type: String })
     this.option('project-name', { type: String })
     // this.option('skip-prompt', { default: false }) // useless for now
+
     // props are used by templates
     this.props = {}
     this.props.adobeServices = this.options['adobe-services'].split(',').map(x => x.trim())
