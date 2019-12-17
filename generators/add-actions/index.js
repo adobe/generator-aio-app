@@ -19,13 +19,13 @@ const { actionsDirname } = require('../../lib/constants')
 const sdkCodeToActionGenerator = {
   target: path.join(__dirname, 'target/index.js'),
   analytics: path.join(__dirname, 'analytics/index.js'),
-  campaign: path.join(__dirname, 'campaign-standard/index.js')
+  'campaign-standard': path.join(__dirname, 'campaign-standard/index.js')
 }
 
 const sdkCodeToTitle = {
   target: 'Adobe Target',
   analytics: 'Adobe Analytics',
-  campaign: 'Adobe Campaign Standard'
+  'campaign-standard': 'Adobe Campaign Standard'
 }
 
 const genericActionGenerator = path.join(__dirname, 'generic/index.js')
@@ -47,7 +47,7 @@ class AddActions extends Generator {
 
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
-    this.option('adobe-services', { type: String, default: 'target,analytics,campaign' }) // todo use real sdkCodes from console
+    this.option('adobe-services', { type: String, default: '' })
 
     this.option('project-name', { type: String, default: path.basename(process.cwd()) }) // todo get name from console
 
