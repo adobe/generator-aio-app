@@ -40,9 +40,7 @@ class CodeGenerator extends Generator {
   }
 
   async prompting () {
-    this.log(`Code generation
-You are about to initialize the project '${this.options['project-name']}' in this directory:
-  ${this.destinationPath()}`)
+    this.log(`Generating code in: ${this.destinationPath()}`)
 
     const atLeastOne = input => {
       if (input.length === 0) {
