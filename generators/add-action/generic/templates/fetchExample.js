@@ -48,7 +48,7 @@ async function main (params) {
   try {
     // replace this with the api you want to access
     // if needed apikeys and tokens can be passed to the action using default parameters and dotenv variables
-    const apiEndpoint = 'https://adobeioruntime.net/api/v1/'
+    const apiEndpoint = 'https://adobeioruntime.net/api/v1/api-docs'
 
     const response = await fetch(apiEndpoint)
     if (!response.ok) {

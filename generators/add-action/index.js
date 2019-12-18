@@ -67,15 +67,12 @@ class AddActions extends Generator {
         type: 'checkbox',
         name: 'actionGenerators',
         message: 'Which type of sample actions do you want to create?\nselect type of actions to generate',
-        choices: [{ type: 'separator', line: '--service specific--' }]
-          .concat(
-            this.options['adobe-services'].split(',').map(x => x.trim())
-              .map(s => ({ name: sdkCodeToTitle[s], value: sdkCodeToActionGenerator[s] }))
-              .filter(entry => !!entry.value)
-              .concat([
-                { type: 'separator', line: '--others--' },
-                { name: 'Generic', value: genericActionGenerator, checked: true }
-              ])),
+        choices: this.options['adobe-services'].split(',').map(x => x.trim())
+          .map(s => ({ name: sdkCodeToTitle[s], value: sdkCodeToActionGenerator[s] }))
+          .filter(entry => !!entry.value)
+          .concat([
+            { name: 'Generic', value: genericActionGenerator, checked: true }
+          ]),
         when: !this.options['skip-prompt'],
         validate: atLeastOne
       }

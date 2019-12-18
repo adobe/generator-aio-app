@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 const Generator = require('yeoman-generator')
 describe('prototype', () => {
   test('exports', () => {
-    const actionGen = require('../../../generators/actions/campaign-standard')
+    const actionGen = require('../../../generators/add-action')
     expect(actionGen.prototype).toBeInstanceOf(Generator)
   })
 })
