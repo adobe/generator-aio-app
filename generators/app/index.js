@@ -71,6 +71,7 @@ class CodeGenerator extends Generator {
         validate: atLeastOne
       }
     ])
+    res.components = res.components || ['actions', 'webAssets'] // defaults when skip prompt
     const addActions = res.components.includes('actions')
     const addWebAssets = res.components.includes('webAssets')
 
