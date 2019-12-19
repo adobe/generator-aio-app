@@ -76,7 +76,7 @@ class CodeGenerator extends Generator {
 
     // run add action and add ui generators when applicable
     if (addActions) {
-      this.composeWith(path.join(__dirname, '../add-actions/index.js'), {
+      this.composeWith(path.join(__dirname, '../add-action/index.js'), {
         'skip-install': true,
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services']
