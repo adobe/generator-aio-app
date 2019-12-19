@@ -12,8 +12,6 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const { actionsDirname } = require('../../lib/constants')
-
 // we have one actions generator per service, an action generator could generate different types of actions
 // todo use real sdkCodes from console
 const sdkCodeToActionGenerator = {

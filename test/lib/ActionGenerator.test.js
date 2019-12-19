@@ -26,13 +26,6 @@ describe('prototype', () => {
 
 describe('implementation', () => {
   describe('constructor', () => {
-    test('expects actions-dir argument', () => {
-      const spy = jest.spyOn(ActionGenerator.prototype, 'argument')
-      // eslint-disable-next-line no-new
-      new ActionGenerator()
-      expect(spy).toHaveBeenCalledWith('actions-dir', { type: String, required: true })
-      spy.mockRestore()
-    })
     test('accepts skip-prompt option', () => {
       const spy = jest.spyOn(ActionGenerator.prototype, 'option')
       // eslint-disable-next-line no-new
@@ -47,7 +40,7 @@ describe('implementation', () => {
     beforeEach(() => {
       spy = jest.spyOn(ActionGenerator.prototype, 'prompt')
       actionGenerator = new ActionGenerator()
-      actionGenerator.options = { 'actions-dir': 'fakedir' }
+      actionGenerator.options = { 'skip-prompt': false }
     })
     afterEach(() => {
       spy.mockRestore()
@@ -112,7 +105,7 @@ describe('implementation', () => {
     let actionGenerator
     beforeEach(() => {
       actionGenerator = new ActionGenerator()
-      actionGenerator.options = { 'actions-dir': 'fakeActionsDir' }
+      actionGenerator.options = { 'skip-prompt': false }
     })
 
     test('with no options and manifest does not exist', () => {
@@ -127,7 +120,7 @@ describe('implementation', () => {
       actionGenerator.addAction('myAction', './templateFile.js')
 
       // 1. test copy action template to right destination
-      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith('/fakeTplDir/templateFile.js', '/fakeDestRoot/fakeActionsDir/myAction/index.js', {}, {}, {})
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith('/fakeTplDir/templateFile.js', `/fakeDestRoot/${constants.actionsDirname}/myAction/index.js`, {}, {}, {})
       // 2. test manifest creation with action information
       expect(actionGenerator.fs.write).toHaveBeenCalledWith('/fakeDestRoot/manifest.yml', yaml.safeDump({
         packages: {
@@ -135,7 +128,7 @@ describe('implementation', () => {
             license: 'Apache-2.0',
             actions: {
               myAction: {
-                function: 'fakeActionsDir/myAction/index.js', // relative path is important here
+                function: `${constants.actionsDirname}/myAction/index.js`, // relative path is important here
                 web: 'yes',
                 runtime: 'nodejs:10'
               }
@@ -174,7 +167,7 @@ describe('implementation', () => {
           [constants.manifestPackagePlaceholder]: {
             actions: {
               myAction: {
-                function: 'fakeActionsDir/myAction/index.js', // relative path is important here
+                function: `${constants.actionsDirname}/myAction/index.js`, // relative path is important here
                 web: 'yes',
                 runtime: 'nodejs:10'
               }
@@ -219,7 +212,7 @@ describe('implementation', () => {
       actionGenerator.addAction('myAction', './templateFile.js', { tplContext: { fake: 'context', with: { fake: 'values' } } })
 
       // 1. test copy action template to right destination
-      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith('/fakeTplDir/templateFile.js', '/fakeDestRoot/fakeActionsDir/myAction/index.js', { fake: 'context', with: { fake: 'values' } }, {}, {})
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith('/fakeTplDir/templateFile.js', `/fakeDestRoot/${constants.actionsDirname}/myAction/index.js`, { fake: 'context', with: { fake: 'values' } }, {}, {})
     })
 
     test('with actionManifestConfig option that also overwrite runtime action config', () => {
@@ -240,7 +233,7 @@ describe('implementation', () => {
             license: 'Apache-2.0',
             actions: {
               myAction: {
-                function: 'fakeActionsDir/myAction/index.js', // relative path is important here
+                function: `${constants.actionsDirname}/myAction/index.js`, // relative path is important here
                 web: 'yes',
                 runtime: 'fake:42',
                 inputs: {
@@ -297,7 +290,7 @@ describe('implementation', () => {
       actionGenerator.addAction('myAction', './templateFile.js', { testFile: './template.test.js' })
 
       // test manifest update with action information
-      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith('/fakeTplDir/template.test.js', '/fakeDestRoot/test/fakeActionsDir/myAction.test.js', { actionRelPath: '../../fakeActionsDir/myAction/index.js' }, {}, {})
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith('/fakeTplDir/template.test.js', `/fakeDestRoot/test/${constants.actionsDirname}/myAction.test.js`, { actionRelPath: `../../${constants.actionsDirname}/myAction/index.js` }, {}, {})
     })
 
     test('with testFile option and tplContext option (should append relative path to tested file to test template context)', () => {
@@ -312,7 +305,7 @@ describe('implementation', () => {
       actionGenerator.addAction('myAction', './templateFile.js', { testFile: './template.test.js', tplContext: { fake: 'context', with: { fake: 'values' } } })
 
       // test manifest update with action information
-      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith('/fakeTplDir/template.test.js', '/fakeDestRoot/test/fakeActionsDir/myAction.test.js', { actionRelPath: '../../fakeActionsDir/myAction/index.js', fake: 'context', with: { fake: 'values' } }, {}, {})
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith('/fakeTplDir/template.test.js', `/fakeDestRoot/test/${constants.actionsDirname}/myAction.test.js`, { actionRelPath: `../../${constants.actionsDirname}/myAction/index.js`, fake: 'context', with: { fake: 'values' } }, {}, {})
     })
   })
 })
