@@ -23,12 +23,13 @@ module.exports = {
   testPathIgnorePatterns: [
     '<rootDir>/generators/',
     '<rootDir>/playground/'
-  ],
-  coverageThreshold: {
-    global: {
-      branches: 100,
-      lines: 100,
-      statements: 100
-    }
-  }
+  ]
+  //,
+  // coverageThreshold: {
+  //   global: {
+  //     branches: 100,
+  //     lines: 100,
+  //     statements: 100
+  //   }
+  // }
 }
