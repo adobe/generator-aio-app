@@ -79,8 +79,7 @@ class CodeGenerator extends Generator {
       this.composeWith(path.join(__dirname, '../add-actions/index.js'), {
         'skip-install': true,
         'skip-prompt': this.options['skip-prompt'],
-        'adobe-services': this.options['adobe-services'],
-        'project-name': this.options['project-name']
+        'adobe-services': this.options['adobe-services']
       })
     }
     if (addWebAssets) {

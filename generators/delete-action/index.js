@@ -14,7 +14,7 @@ const path = require('path')
 const fs = require('fs-extra')
 const yaml = require('js-yaml')
 
-const { manifestFilename, manifestPackagePlaceholder } = require('../../lib/constants')
+const { manifestPackagePlaceholder } = require('../../lib/constants')
 
 /*
       'initializing',
@@ -39,7 +39,7 @@ class DeleteAction extends Generator {
       throw new Error('--skip-prompt option provided but missing --action-name')
     }
 
-    this.manifestContent = fs.existsSync(this.destinationPath(manifestFilename)) && yaml.safeLoad(fs.readFileSync(this.destinationPath(manifestFilename)).toString())
+    this.manifestContent = fs.existsSync(this.destinationPath('manifest.yml')) && yaml.safeLoad(fs.readFileSync(this.destinationPath('manifest.yml')).toString())
     this.manifestActions = this.manifestContent && this.manifestContent.packages[manifestPackagePlaceholder].actions
 
     if (!this.manifestContent || Object.keys(this.manifestActions).length === 0) throw new Error('you have no actions in your project')
@@ -84,7 +84,7 @@ class DeleteAction extends Generator {
 
       fs.removeSync(this.actionPath) // will make user prompt for all files if not --force
       delete this.manifestActions[this.actionName]
-      fs.writeFileSync(this.destinationPath(manifestFilename), yaml.safeDump(this.manifestContent))
+      fs.writeFileSync(this.destinationPath('manifest.yml'), yaml.safeDump(this.manifestContent))
     }
   }
 }

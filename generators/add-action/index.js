@@ -49,8 +49,6 @@ class AddActions extends Generator {
     this.option('skip-prompt', { default: false })
     this.option('adobe-services', { type: String, default: '' })
 
-    this.option('project-name', { type: String, default: path.basename(process.cwd()) }) // todo get name from console
-
     // todo throw meaningful error if add actions in a non existing project, but what defines a project?
   }
 

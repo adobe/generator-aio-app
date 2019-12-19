@@ -16,6 +16,12 @@ const { webAssetsDirname } = require('../../lib/constants')
 
 const rawWebAssetsGenerator = path.join(__dirname, 'raw/index.js')
 
+// make it util or in an app super class
+const guessProjectName = (generator) => {
+  const packagejsonPath = generator.destinationPath('package.json')
+  return (generator.fs.exists(packagejsonPath) && generator.fs.readJSON('package.json').name) || path.basename(process.cwd())
+}
+
 /*
       'initializing',
       'prompting',
@@ -35,7 +41,7 @@ class AddWebAssets extends Generator {
     this.option('skip-prompt', { default: false })
     this.option('adobe-services', { type: String, default: '' }) // todo use real sdkCodes from console
 
-    this.option('project-name', { type: String, default: path.basename(process.cwd()) }) // todo get name from console
+    this.option('project-name', { type: String, default: guessProjectName(this) }) // project name is used in html template
 
     // todo throw meaningful error if add actions/webassets in a non existing project, but how to know if we are in a project?
   }
