@@ -12,12 +12,13 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
+const { webAssetsDirname } = require('../../../lib/constants')
+
 class RawGenerator extends Generator {
   constructor (args, opts) {
     super(args, opts)
     // todo check that those are set
     this.option('adobe-services', { type: String })
-    this.option('web-dir', { type: String })
     this.option('project-name', { type: String })
     // this.option('skip-prompt', { default: false }) // useless for now
 
@@ -32,7 +33,7 @@ class RawGenerator extends Generator {
 
   writing () {
     this.sourceRoot(path.join(__dirname, './templates/'))
-    this.fs.copyTpl(this.templatePath('./**/*'), this.destinationPath(this.options['web-dir']), this.props)
+    this.fs.copyTpl(this.templatePath('./**/*'), this.destinationPath(webAssetsDirname), this.props)
   }
 }
 

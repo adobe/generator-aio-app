@@ -12,8 +12,6 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const { webAssetsDirname } = require('../../lib/constants')
-
 const rawWebAssetsGenerator = path.join(__dirname, 'raw/index.js')
 
 // make it util or in an app super class
@@ -64,7 +62,6 @@ class AddWebAssets extends Generator {
     // run ui generator
     this.composeWith(promptProps.webAssetsGenerator, {
       'skip-prompt': this.options['skip-prompt'],
-      'web-dir': webAssetsDirname,
       'adobe-services': this.options['adobe-services'],
       'project-name': this.options['project-name']
     })

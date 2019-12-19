@@ -81,8 +81,7 @@ class AddActions extends Generator {
 
     // run action generators
     promptProps.actionGenerators.forEach(gen => this.composeWith(gen, {
-      'skip-prompt': this.options['skip-prompt'],
-      'actions-dir': actionsDirname
+      'skip-prompt': this.options['skip-prompt']
     }))
   }
 
