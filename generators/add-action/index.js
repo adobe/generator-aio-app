@@ -12,6 +12,8 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
+const { atLeastOne } = require('../../lib/utils')
+
 // we have one actions generator per service, an action generator could generate different types of actions
 // todo use real sdkCodes from console
 const sdkCodeToActionGenerator = {
@@ -51,34 +53,29 @@ class AddActions extends Generator {
   }
 
   async prompting () {
-    const atLeastOne = input => {
-      if (input.length === 0) {
-        // eslint-disable-next-line no-throw-literal
-        return 'please choose at least one option'
-      }
-      return true
+    // default if skip-prompt = true
+    let actionGenerators = [genericActionGenerator]
+
+    if (!this.options['skip-prompt']) {
+      const promptProps = await this.prompt([
+        {
+          type: 'checkbox',
+          name: 'actionGenerators',
+          message: 'Which type of sample actions do you want to create?\nselect type of actions to generate',
+          choices: this.options['adobe-services'].split(',').map(x => x.trim())
+            .map(s => ({ name: sdkCodeToTitle[s], value: sdkCodeToActionGenerator[s] }))
+            .filter(entry => !!entry.value)
+            .concat([
+              { name: 'Generic', value: genericActionGenerator, checked: true }
+            ]),
+          validate: atLeastOne
+        }
+      ])
+      actionGenerators = promptProps.actionGenerators
     }
-    const prompts = [
-      {
-        type: 'checkbox',
-        name: 'actionGenerators',
-        message: 'Which type of sample actions do you want to create?\nselect type of actions to generate',
-        choices: this.options['adobe-services'].split(',').map(x => x.trim())
-          .map(s => ({ name: sdkCodeToTitle[s], value: sdkCodeToActionGenerator[s] }))
-          .filter(entry => !!entry.value)
-          .concat([
-            { name: 'Generic', value: genericActionGenerator, checked: true }
-          ]),
-        when: !this.options['skip-prompt'],
-        validate: atLeastOne
-      }
-    ]
-    const promptProps = await this.prompt(prompts)
-    // defaults for when skip-prompt is set
-    promptProps.actionGenerators = promptProps.actionGenerators || [genericActionGenerator]
 
     // run action generators
-    promptProps.actionGenerators.forEach(gen => this.composeWith(gen, {
+    actionGenerators.forEach(gen => this.composeWith(gen, {
       'skip-prompt': this.options['skip-prompt']
     }))
   }

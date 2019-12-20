@@ -12,13 +12,9 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const rawWebAssetsGenerator = path.join(__dirname, 'raw/index.js')
+const { atLeastOne, guessProjectName } = require('../../lib/utils')
 
-// make it util or in an app super class
-const guessProjectName = (generator) => {
-  const packagejsonPath = generator.destinationPath('package.json')
-  return (generator.fs.exists(packagejsonPath) && generator.fs.readJSON('package.json').name) || path.basename(process.cwd())
-}
+const rawWebAssetsGenerator = path.join(__dirname, 'raw/index.js')
 
 /*
       'initializing',
@@ -45,22 +41,23 @@ class AddWebAssets extends Generator {
   }
 
   async prompting () {
-    const prompts = [
-      {
-        // for now we just have one webAsset generator
-        type: 'list',
-        name: 'webAssetsGenerator',
-        message: 'Which type of UI do you want to add to your project?\nselect template to generate',
-        choices: [{ name: 'Raw HTML/JS', value: rawWebAssetsGenerator }],
-        when: !this.options['skip-prompt']
-      }
-    ]
-    const promptProps = await this.prompt(prompts)
-    // defaults for when skip-prompt is set
-    promptProps.webAssetsGenerator = promptProps.webAssetsGenerator || rawWebAssetsGenerator
+    let webAssetsGenerator = rawWebAssetsGenerator
+    if (!this.options['skip-prompt']) {
+      const promptProps = await this.prompt([
+        {
+          // for now we just have one webAsset generator
+          type: 'list',
+          name: 'webAssetsGenerator',
+          message: 'Which type of UI do you want to add to your project?\nselect template to generate',
+          choices: [{ name: 'Raw HTML/JS', value: rawWebAssetsGenerator }],
+          validate: atLeastOne
+        }
+      ])
+      webAssetsGenerator = promptProps.webAssetsGenerator
+    }
 
     // run ui generator
-    this.composeWith(promptProps.webAssetsGenerator, {
+    this.composeWith(webAssetsGenerator, {
       'skip-prompt': this.options['skip-prompt'],
       'adobe-services': this.options['adobe-services'],
       'project-name': this.options['project-name']

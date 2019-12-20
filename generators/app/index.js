@@ -13,7 +13,7 @@ const path = require('path')
 const Generator = require('yeoman-generator')
 
 const { dotenvFilename } = require('../../lib/constants')
-
+const { atLeastOne } = require('../../lib/utils')
 /*
       'initializing',
       'prompting',
@@ -42,38 +42,32 @@ class CodeGenerator extends Generator {
   async prompting () {
     this.log(`Generating code in: ${this.destinationPath()}`)
 
-    const atLeastOne = input => {
-      if (input.length === 0) {
-        // eslint-disable-next-line no-throw-literal
-        return 'please choose at least one option'
-      }
-      return true
+    let components = ['actions', 'webAssets'] // defaults when skip prompt
+    if (!this.options['skip-prompt']) {
+      const res = await this.prompt([
+        {
+          type: 'checkbox',
+          name: 'components',
+          message: 'Which Adobe I/O App features do you want to enable for this project?\nselect components to include',
+          choices: [
+            {
+              name: 'Actions: Deploy Runtime actions',
+              value: 'actions',
+              checked: true
+            },
+            {
+              name: 'Web Assets: Deploy hosted static assets',
+              value: 'webAssets',
+              checked: true
+            }
+          ],
+          validate: atLeastOne
+        }
+      ])
+      components = res.components
     }
-
-    const res = await this.prompt([
-      {
-        type: 'checkbox',
-        name: 'components',
-        message: 'Which Adobe I/O App features do you want to enable for this project?\nselect components to include',
-        choices: [
-          {
-            name: 'Actions: Deploy Runtime actions',
-            value: 'actions',
-            checked: true
-          },
-          {
-            name: 'Web Assets: Deploy hosted static assets',
-            value: 'webAssets',
-            checked: true
-          }
-        ],
-        when: !this.options['skip-prompt'],
-        validate: atLeastOne
-      }
-    ])
-    res.components = res.components || ['actions', 'webAssets'] // defaults when skip prompt
-    const addActions = res.components.includes('actions')
-    const addWebAssets = res.components.includes('webAssets')
+    const addActions = components.includes('actions')
+    const addWebAssets = components.includes('webAssets')
 
     // run add action and add ui generators when applicable
     if (addActions) {
