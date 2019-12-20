@@ -36,7 +36,7 @@ class CodeGenerator extends Generator {
 
     // props are passed to templates
     this.props = {}
-    this.props.projectName = this.options['project-name']
+    this.props.projectName = this.options && this.options['project-name']
   }
 
   async prompting () {
@@ -96,6 +96,7 @@ class CodeGenerator extends Generator {
         this.props
     )
     // the above excluded our strangely named .env file, lets fix it
+    // todo create dotenv programmatically from required vars
     this.fs.copyTpl(
       this.templatePath('_dot.env'),
       this.destinationPath(dotenvFilename),

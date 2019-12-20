@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 /*
 Copyright 2019 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -71,7 +70,7 @@ describe('implementation', () => {
       expect(prompt).toHaveBeenCalledTimes(0)
 
       expect(composeWith).toHaveBeenCalledTimes(1)
-      // if skip prompt makes sure defaults to generic
+
       expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('raw/index.js'), {
         'skip-prompt': true,
         'project-name': 'fake',
