@@ -153,5 +153,4 @@ describe('run', () => {
   })
 })
 
-// to validate at least one
 // todo check with existing files in project
