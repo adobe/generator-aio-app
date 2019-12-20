@@ -33,6 +33,7 @@ class CodeGenerator extends Generator {
     this.option('skip-prompt', { default: false })
     this.option('adobe-services', { type: String, default: '' })
     this.option('project-name', { type: String, default: path.basename(process.cwd()) }) // todo get name from console
+    this.option('skip-install', { type: String, default: false })
 
     // props are passed to templates
     this.props = {}

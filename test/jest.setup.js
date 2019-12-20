@@ -15,7 +15,3 @@ process.on('unhandledRejection', error => {
 
 // dont touch the real fs
 jest.mock('fs-extra')
-
-beforeEach(() => {
-  expect.hasAssertions()
-})

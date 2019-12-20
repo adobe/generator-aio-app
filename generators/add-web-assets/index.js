@@ -36,6 +36,7 @@ class AddWebAssets extends Generator {
     this.option('adobe-services', { type: String, default: '' }) // todo use real sdkCodes from console
 
     this.option('project-name', { type: String, default: guessProjectName(this) }) // project name is used in html template
+    this.option('skip-install', { type: String, default: false })
 
     // todo throw meaningful error if add actions/webassets in a non existing project, but how to know if we are in a project?
   }
