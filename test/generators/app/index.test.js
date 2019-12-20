@@ -191,5 +191,3 @@ describe('run', () => {
     expect(installDependencies).toHaveBeenCalledTimes(0)
   })
 })
-
-// todo tests with tmpdir
