@@ -44,7 +44,6 @@ describe('run', () => {
   test('no manifest.yml', async () => {
     await expect(
       helpers.run(theGeneratorPath)
-        .withOptions({ 'skip-prompt': false })
     ).rejects.toThrow('you have no actions in your project')
   })
 
@@ -58,7 +57,6 @@ describe('run', () => {
   test('prompts with a non existing actionName', async () => {
     await expect(
       helpers.run(theGeneratorPath)
-        .withOptions({ 'skip-prompt': false })
         .inTmpDir(dir => {
           writeFakeActionFile(dir, 'fakeName')
         })
@@ -79,7 +77,6 @@ describe('run', () => {
   test('prompts action name `fakeName` and prompts yes to delete confirmation', async () => {
     await expect(
       helpers.run(theGeneratorPath)
-        .withOptions({ 'skip-prompt': false })
         .inTmpDir(dir => {
           writeFakeActionFile(dir, 'fakeName')
         })
@@ -95,7 +92,6 @@ describe('run', () => {
   test('prompts action name `fakeName` and prompts false to delete confirmation', async () => {
     await expect(
       helpers.run(theGeneratorPath)
-        .withOptions({ 'skip-prompt': false })
         .inTmpDir(dir => {
           writeFakeActionFile(dir, 'fakeName')
         })
@@ -111,7 +107,7 @@ describe('run', () => {
   test('--action-name=fakeName and prompts yes to delete confirmation', async () => {
     await expect(
       helpers.run(theGeneratorPath)
-        .withOptions({ 'skip-prompt': false, 'action-name': 'fakeName' })
+        .withOptions({ 'action-name': 'fakeName' })
         .inTmpDir(dir => {
           writeFakeActionFile(dir, 'fakeName')
         })
@@ -127,7 +123,7 @@ describe('run', () => {
   test('--action-name=fakeName and prompts false to delete confirmation', async () => {
     await expect(
       helpers.run(theGeneratorPath)
-        .withOptions({ 'skip-prompt': false, 'action-name': 'fakeName' })
+        .withOptions({ 'action-name': 'fakeName' })
         .inTmpDir(dir => {
           writeFakeActionFile(dir, 'fakeName')
         })

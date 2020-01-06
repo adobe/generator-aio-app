@@ -33,6 +33,9 @@ class DeleteAction extends Generator {
     this.option('skip-prompt', { default: false })
 
     this.webAssetsPath = this.destinationPath(webAssetsDirname)
+  }
+
+  initializing () {
     if (!fs.existsSync(this.webAssetsPath)) throw new Error('you have no webAssets in your project')
   }
 
