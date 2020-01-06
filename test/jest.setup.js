@@ -9,6 +9,12 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
+const path = require('path')
+
 process.on('unhandledRejection', error => {
   throw error
 })
+
+// quick normalization to test windows/unix paths
+global.n = p => path.normalize(p)
+global.r = p => path.resolve(p)

@@ -1,4 +1,8 @@
 {
   "plugins": ["jest"],
-  "extends": ["standard", "plugin:jest/recommended"]
+  "extends": ["standard", "plugin:jest/recommended"],
+  "globals": {
+    "n": "readonly",
+    "r": "readonly"
+  }
 }

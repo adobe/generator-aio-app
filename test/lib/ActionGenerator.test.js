@@ -117,15 +117,15 @@ describe('implementation', () => {
       actionGenerator.addAction('myAction', './templateFile.js')
 
       // 1. test copy action template to right destination
-      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith('/fakeTplDir/templateFile.js', `/fakeDestRoot/${constants.actionsDirname}/myAction/index.js`, {}, {}, {})
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/templateFile.js'), n(`/fakeDestRoot/${constants.actionsDirname}/myAction/index.js`), {}, {}, {})
       // 2. test manifest creation with action information
-      expect(actionGenerator.fs.write).toHaveBeenCalledWith('/fakeDestRoot/manifest.yml', yaml.safeDump({
+      expect(actionGenerator.fs.write).toHaveBeenCalledWith(n('/fakeDestRoot/manifest.yml'), yaml.safeDump({
         packages: {
           [constants.manifestPackagePlaceholder]: {
             license: 'Apache-2.0',
             actions: {
               myAction: {
-                function: `${constants.actionsDirname}/myAction/index.js`, // relative path is important here
+                function: n(`${constants.actionsDirname}/myAction/index.js`), // relative path is important here
                 web: 'yes',
                 runtime: 'nodejs:10'
               }
@@ -134,7 +134,7 @@ describe('implementation', () => {
         }
       }))
       // 3. make sure wskdebug dependency was added to package.json
-      expect(actionGenerator.fs.writeJSON).toHaveBeenCalledWith('/fakeDestRoot/package.json', {
+      expect(actionGenerator.fs.writeJSON).toHaveBeenCalledWith(n('/fakeDestRoot/package.json'), {
         devDependencies: {
           '@adobe/wskdebug': '^1.1.0'
         }
@@ -159,12 +159,12 @@ describe('implementation', () => {
       }
       actionGenerator.addAction('myAction', './templateFile.js')
       // test manifest update with action information
-      expect(actionGenerator.fs.write).toHaveBeenCalledWith('/fakeDestRoot/manifest.yml', yaml.safeDump({
+      expect(actionGenerator.fs.write).toHaveBeenCalledWith(n('/fakeDestRoot/manifest.yml'), yaml.safeDump({
         packages: {
           [constants.manifestPackagePlaceholder]: {
             actions: {
               myAction: {
-                function: `${constants.actionsDirname}/myAction/index.js`, // relative path is important here
+                function: n(`${constants.actionsDirname}/myAction/index.js`), // relative path is important here
                 web: 'yes',
                 runtime: 'nodejs:10'
               }
@@ -187,7 +187,7 @@ describe('implementation', () => {
       actionGenerator.addAction('myAction', './templateFile.js', { dependencies: { abc: '1.2.3', def: '4.5.6' }, devDependencies: { xyz: '3.2.1', vuw: '6.5.4' } })
 
       // dependencies are added to package.json + still adds wskdebug dependency
-      expect(actionGenerator.fs.writeJSON).toHaveBeenCalledWith('/fakeDestRoot/package.json', {
+      expect(actionGenerator.fs.writeJSON).toHaveBeenCalledWith(n('/fakeDestRoot/package.json'), {
         dependencies: { abc: '1.2.3', def: '4.5.6' },
         devDependencies: {
           xyz: '3.2.1',
@@ -209,7 +209,7 @@ describe('implementation', () => {
       actionGenerator.addAction('myAction', './templateFile.js', { tplContext: { fake: 'context', with: { fake: 'values' } } })
 
       // 1. test copy action template to right destination
-      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith('/fakeTplDir/templateFile.js', `/fakeDestRoot/${constants.actionsDirname}/myAction/index.js`, { fake: 'context', with: { fake: 'values' } }, {}, {})
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/templateFile.js'), n(`/fakeDestRoot/${constants.actionsDirname}/myAction/index.js`), { fake: 'context', with: { fake: 'values' } }, {}, {})
     })
 
     test('with actionManifestConfig option that also overwrite runtime action config', () => {
@@ -224,13 +224,13 @@ describe('implementation', () => {
       actionGenerator.addAction('myAction', './templateFile.js', { actionManifestConfig: { runtime: 'fake:42', inputs: { fake: 'value' } } })
 
       // test manifest update with action information
-      expect(actionGenerator.fs.write).toHaveBeenCalledWith('/fakeDestRoot/manifest.yml', yaml.safeDump({
+      expect(actionGenerator.fs.write).toHaveBeenCalledWith(n('/fakeDestRoot/manifest.yml'), yaml.safeDump({
         packages: {
           [constants.manifestPackagePlaceholder]: {
             license: 'Apache-2.0',
             actions: {
               myAction: {
-                function: `${constants.actionsDirname}/myAction/index.js`, // relative path is important here
+                function: n(`${constants.actionsDirname}/myAction/index.js`), // relative path is important here
                 web: 'yes',
                 runtime: 'fake:42',
                 inputs: {
@@ -256,7 +256,7 @@ describe('implementation', () => {
       actionGenerator.addAction('myAction', './templateFile.js', { dotenvStub: { label: 'fake label', vars: ['FAKE', 'FAKE2'] } })
 
       // test manifest update with action information
-      expect(actionGenerator.fs.write).toHaveBeenCalledWith(`/fakeDestRoot/${constants.dotenvFilename}`, 'PREV=123\n\n## fake label\n#FAKE=\n#FAKE2=\n')
+      expect(actionGenerator.fs.write).toHaveBeenCalledWith(n(`/fakeDestRoot/${constants.dotenvFilename}`), 'PREV=123\n\n## fake label\n#FAKE=\n#FAKE2=\n')
     })
 
     test('with dotenvStub option but dotenv label is already set in dotenv (should ignore)', () => {
@@ -272,7 +272,7 @@ describe('implementation', () => {
       actionGenerator.addAction('myAction', './templateFile.js', { dotenvStub: { label: 'fake label', vars: ['FAKE', 'FAKE2'] } })
 
       // test manifest update with action information
-      expect(actionGenerator.fs.write).not.toHaveBeenCalledWith(`/fakeDestRoot/${constants.dotenvFilename}`, expect.any(String))
+      expect(actionGenerator.fs.write).not.toHaveBeenCalledWith(n(`/fakeDestRoot/${constants.dotenvFilename}`), expect.any(String))
     })
 
     test('with testFile option', () => {
@@ -287,7 +287,7 @@ describe('implementation', () => {
       actionGenerator.addAction('myAction', './templateFile.js', { testFile: './template.test.js' })
 
       // test manifest update with action information
-      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith('/fakeTplDir/template.test.js', `/fakeDestRoot/test/${constants.actionsDirname}/myAction.test.js`, { actionRelPath: `../../${constants.actionsDirname}/myAction/index.js` }, {}, {})
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/test/${constants.actionsDirname}/myAction.test.js`), { actionRelPath: n(`../../${constants.actionsDirname}/myAction/index.js`) }, {}, {})
     })
 
     test('with testFile option and tplContext option (should append relative path to tested file to test template context)', () => {
@@ -302,7 +302,7 @@ describe('implementation', () => {
       actionGenerator.addAction('myAction', './templateFile.js', { testFile: './template.test.js', tplContext: { fake: 'context', with: { fake: 'values' } } })
 
       // test manifest update with action information
-      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith('/fakeTplDir/template.test.js', `/fakeDestRoot/test/${constants.actionsDirname}/myAction.test.js`, { actionRelPath: `../../${constants.actionsDirname}/myAction/index.js`, fake: 'context', with: { fake: 'values' } }, {}, {})
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/test/${constants.actionsDirname}/myAction.test.js`), { actionRelPath: n(`../../${constants.actionsDirname}/myAction/index.js`), fake: 'context', with: { fake: 'values' } }, {}, {})
     })
   })
 })
