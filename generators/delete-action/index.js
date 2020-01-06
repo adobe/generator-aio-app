@@ -34,19 +34,16 @@ class DeleteAction extends Generator {
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
     this.option('action-name', { type: String, default: '' })
+  }
 
+  initializing () {
     if (this.options['skip-prompt'] && !this.options['action-name']) {
       throw new Error('--skip-prompt option provided but missing --action-name')
     }
 
     this.manifestContent = fs.existsSync(this.destinationPath('manifest.yml')) && yaml.safeLoad(fs.readFileSync(this.destinationPath('manifest.yml')).toString())
     this.manifestActions = this.manifestContent && this.manifestContent.packages[manifestPackagePlaceholder].actions
-
     if (!this.manifestContent || Object.keys(this.manifestActions).length === 0) throw new Error('you have no actions in your project')
-
-    if (this.options['action-name'] && !this.manifestActions[this.options['action-name']]) {
-      throw new Error(`--action-name=${this.options['action-name']} does not exist`)
-    }
   }
 
   async prompting () {
@@ -62,6 +59,10 @@ class DeleteAction extends Generator {
         }
       ])
       this.actionName = resAction.actionName
+    }
+
+    if (!this.manifestActions[this.actionName]) {
+      throw new Error(`action name '${this.actionName}' does not exist`)
     }
   }
 

@@ -12,6 +12,3 @@ governing permissions and limitations under the License.
 process.on('unhandledRejection', error => {
   throw error
 })
-
-// dont touch the real fs
-jest.mock('fs-extra')
