@@ -4,7 +4,7 @@ A Yeoman code generator for Adobe I/O Applications.
 
 [![Version](https://img.shields.io/npm/v/generator-aio-app.svg)](https://npmjs.org/package/@adobe/generator-aio-app)
 [![Downloads/week](https://img.shields.io/npm/dw/generator-aio-app.svg)](https://npmjs.org/package/@adobe/generator-aio-app)
-[![Build Status](https://travis-ci.com/adobe/generator-aio-app.svg?branch=master)](https://travis-ci.org/adobe/generator-aio-app)
+[![Build Status](https://travis-ci.com/adobe/generator-aio-app.svg?branch=master)](https://travis-ci.com/adobe/generator-aio-app)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/adobe/generator-aio-app/master.svg?style=flat-square)](https://codecov.io/gh/adobe/generator-aio-app/)
 [![Greenkeeper badge](https://badges.greenkeeper.io/adobe/generator-aio-app.svg)](https://greenkeeper.io/)
