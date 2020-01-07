@@ -65,13 +65,13 @@ describe('run', () => {
     assert.JSONFileContent('package.json', { name: 'fake-name', version: '0.0.1' })
     // make sure sub generators have been called
     expect(composeWith).toHaveBeenCalledTimes(2)
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('add-web-assets/index.js'), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-web-assets/index.js')), expect.objectContaining({
       'skip-install': true,
       'skip-prompt': true,
       'adobe-services': '',
       'project-name': 'fake-name'
     }))
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('add-action/index.js'), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-action/index.js')), expect.objectContaining({
       'skip-install': true,
       'skip-prompt': true,
       'adobe-services': ''
@@ -90,13 +90,13 @@ describe('run', () => {
     assert.JSONFileContent('package.json', { name: expectedProjectName, version: '0.0.1' })
     // make sure sub generators have been called
     expect(composeWith).toHaveBeenCalledTimes(2)
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('add-web-assets/index.js'), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-web-assets/index.js')), expect.objectContaining({
       'skip-install': true,
       'skip-prompt': true,
       'adobe-services': 'some,string',
       'project-name': expectedProjectName
     }))
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('add-action/index.js'), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-action/index.js')), expect.objectContaining({
       'skip-install': true,
       'skip-prompt': true,
       'adobe-services': 'some,string'
@@ -116,7 +116,7 @@ describe('run', () => {
     // make sure sub generators have been called
     expect(composeWith).toHaveBeenCalledTimes(1)
 
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('add-action/index.js'), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-action/index.js')), expect.objectContaining({
       'skip-install': true,
       'skip-prompt': false,
       'adobe-services': 'some,string'
@@ -135,7 +135,7 @@ describe('run', () => {
     // make sure sub generators have been called
     expect(composeWith).toHaveBeenCalledTimes(1)
 
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('add-web-assets/index.js'), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-web-assets/index.js')), expect.objectContaining({
       'skip-install': true,
       'adobe-services': 'some,string',
       'project-name': expectedProjectName
@@ -155,12 +155,12 @@ describe('run', () => {
     // make sure sub generators have been called
     expect(composeWith).toHaveBeenCalledTimes(2)
 
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('add-web-assets/index.js'), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-web-assets/index.js')), expect.objectContaining({
       'skip-install': true,
       'adobe-services': 'some,string',
       'project-name': expectedProjectName
     }))
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('add-web-assets/index.js'), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-web-assets/index.js')), expect.objectContaining({
       'skip-install': true,
       'adobe-services': 'some,string',
       'project-name': expectedProjectName
@@ -178,12 +178,12 @@ describe('run', () => {
     // make sure sub generators have been called
     expect(composeWith).toHaveBeenCalledTimes(2)
 
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('add-web-assets/index.js'), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-web-assets/index.js')), expect.objectContaining({
       'skip-install': true,
       'adobe-services': '',
       'project-name': expectedProjectName
     }))
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('add-web-assets/index.js'), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-web-assets/index.js')), expect.objectContaining({
       'skip-install': true,
       'adobe-services': '',
       'project-name': expectedProjectName

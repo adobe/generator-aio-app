@@ -49,7 +49,7 @@ describe('run', () => {
     const expectProjectName = path.basename(dir)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('raw/index.js'), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('raw/index.js')), expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
       'project-name': expectProjectName
@@ -62,7 +62,7 @@ describe('run', () => {
       .withOptions({ 'skip-prompt': true, 'skip-install': false, 'project-name': 'fake' })
 
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('raw/index.js'), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('raw/index.js')), expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
       'project-name': 'fake'
@@ -75,7 +75,7 @@ describe('run', () => {
       .withOptions({ 'skip-prompt': true, 'skip-install': true, 'project-name': 'fake' })
 
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('raw/index.js'), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('raw/index.js')), expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
       'project-name': 'fake'
@@ -88,7 +88,7 @@ describe('run', () => {
       .withOptions({ 'skip-prompt': true, 'skip-install': false, 'project-name': 'fake', 'adobe-services': 'some,string' })
 
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('raw/index.js'), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('raw/index.js')), expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': 'some,string',
       'project-name': 'fake'
@@ -106,7 +106,7 @@ describe('run', () => {
       [expect.objectContaining({
         type: 'list',
         name: 'webAssetsGenerator',
-        choices: [{ name: 'Raw HTML/JS', value: expect.stringContaining('raw/index.js') }],
+        choices: [{ name: 'Raw HTML/JS', value: expect.stringContaining(n('raw/index.js')) }],
         validate: utils.atLeastOne
       })])
 
