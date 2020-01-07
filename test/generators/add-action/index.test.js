@@ -134,7 +134,7 @@ describe('run', () => {
           { name: 'Adobe Analytics', value: expect.stringContaining(n('analytics/index.js')) },
           { name: 'Adobe Target', value: expect.stringContaining(n('target/index.js')) },
           { name: 'Adobe Campaign Standard', value: expect.stringContaining(n('campaign-standard/index.js')) },
-          { name: 'Generic', value: expect.stringContaining('generic/index.js'), checked: true }
+          { name: 'Generic', value: expect.stringContaining(n('generic/index.js')), checked: true }
         ]
       })
     ])
