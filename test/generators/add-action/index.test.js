@@ -48,7 +48,7 @@ describe('run', () => {
     // with skip prompt defaults to generic action
     // make sure sub generators have been called
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('generic/index.js'), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('generic/index.js')), expect.objectContaining({
       'skip-prompt': true
     }))
     expect(installDependencies).toHaveBeenCalledTimes(1)
@@ -61,7 +61,7 @@ describe('run', () => {
     // with skip prompt defaults to generic action
     // make sure sub generators have been called
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining('generic/index.js'), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('generic/index.js')), expect.objectContaining({
       'skip-prompt': true
     }))
     expect(installDependencies).toHaveBeenCalledTimes(0)
@@ -80,7 +80,7 @@ describe('run', () => {
         name: 'actionGenerators',
         validate: utils.atLeastOne,
         choices: [
-          { name: 'Generic', value: expect.stringContaining('generic/index.js'), checked: true }
+          { name: 'Generic', value: expect.stringContaining(n('generic/index.js')), checked: true }
         ]
       })
     ])
@@ -105,8 +105,8 @@ describe('run', () => {
         name: 'actionGenerators',
         validate: utils.atLeastOne,
         choices: [
-          { name: 'Adobe Analytics', value: expect.stringContaining('analytics/index.js') },
-          { name: 'Generic', value: expect.stringContaining('generic/index.js'), checked: true }
+          { name: 'Adobe Analytics', value: expect.stringContaining(n('analytics/index.js')) },
+          { name: 'Generic', value: expect.stringContaining(n('generic/index.js')), checked: true }
         ]
       })
     ])
@@ -131,10 +131,10 @@ describe('run', () => {
         name: 'actionGenerators',
         validate: utils.atLeastOne,
         choices: [
-          { name: 'Adobe Analytics', value: expect.stringContaining('analytics/index.js') },
-          { name: 'Adobe Target', value: expect.stringContaining('target/index.js') },
-          { name: 'Adobe Campaign Standard', value: expect.stringContaining('campaign-standard/index.js') },
-          { name: 'Generic', value: expect.stringContaining('generic/index.js'), checked: true }
+          { name: 'Adobe Analytics', value: expect.stringContaining(n('analytics/index.js')) },
+          { name: 'Adobe Target', value: expect.stringContaining(n('target/index.js')) },
+          { name: 'Adobe Campaign Standard', value: expect.stringContaining(n('campaign-standard/index.js')) },
+          { name: 'Generic', value: expect.stringContaining(n('generic/index.js')), checked: true }
         ]
       })
     ])
