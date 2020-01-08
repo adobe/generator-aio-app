@@ -9,7 +9,9 @@ A Yeoman code generator for Adobe I/O Applications.
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/adobe/generator-aio-app/master.svg?style=flat-square)](https://codecov.io/gh/adobe/generator-aio-app/)
 [![Greenkeeper badge](https://badges.greenkeeper.io/adobe/generator-aio-app.svg)](https://greenkeeper.io/)
 
-## Use with aio CLI
+## Usage
+
+### OOTB with aio-cli
 
 - `npm install -g @adobe/aio-cli`
 
@@ -19,7 +21,7 @@ A Yeoman code generator for Adobe I/O Applications.
 - `aio app delete action` to delete an existing action
 - `aio app delete web-assets` to delete the app's UI
 
-## Standalone Usage
+### Standalone with yeoman
 
 - `npm install -g yo @adobe/generator-aio-app`
 
@@ -32,6 +34,23 @@ A Yeoman code generator for Adobe I/O Applications.
 ## Contributing
 
 Contributions are welcomed! Read the [Contributing Guide](./.github/CONTRIBUTING.md) for more information.
+
+### How to provide new template generators
+
+Two types of generators can be easily contributed to the project:
+
+- action generators, e.g. [analytics action generator](./generators/add-action/analytics/index.js):
+
+  - add a new action template generator into `generators/add-action/<generator-name>/index.js`. It is recommended that
+    the generator extends `lib/ActionGenerator.js` that provides a set of helpers.
+  - add template files into `generators/add-action/<generator-name>/templates/`
+  - update `generators/add-action/index.js` to reference the newly added generator in the prompt choices.
+
+- web assets generators, e.g. [raw html/js generator](./generators/add-web-assets/raw/index.js):
+
+  - add a new web assets template generator into `generators/add-web-assets/<generator-name>/index.js`.
+  - add template files into `generators/add-web-assets/<generator-name>/templates/`
+  - update `generators/add-web-assets/index.js` to reference the newly added generator in the prompt choices.
 
 ## Licensing
 
