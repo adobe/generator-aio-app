@@ -35,13 +35,13 @@ afterAll(() => {
   installDependencies.mockRestore()
 })
 
-const expectedDefaultGenerator = expect.stringContaining('exc-react/index.js')
+const expectedDefaultGenerator = expect.stringContaining(n('exc-react/index.js'))
 const expectedPromptChoices = [expect.objectContaining({
   type: 'list',
   name: 'webAssetsGenerator',
   choices: [
-    { name: 'Exc Shell React', value: expect.stringContaining('exc-react/index.js') },
-    { name: 'Raw HTML/JS', value: expect.stringContaining('raw/index.js') }
+    { name: 'Exc Shell React', value: expect.stringContaining(n('exc-react/index.js')) },
+    { name: 'Raw HTML/JS', value: expect.stringContaining(n('raw/index.js')) }
   ],
   validate: utils.atLeastOne
 })]
