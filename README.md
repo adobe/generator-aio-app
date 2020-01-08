@@ -1,6 +1,6 @@
-# Adobe I/O App Code Generator
+# Adobe I/O App Generator
 
-A Yeoman code generator for Adobe I/O Applications.
+A Yeoman generator for Adobe I/O Applications.
 
 [![Version](https://img.shields.io/npm/v/generator-aio-app.svg)](https://npmjs.org/package/@adobe/generator-aio-app)
 [![Downloads/week](https://img.shields.io/npm/dw/generator-aio-app.svg)](https://npmjs.org/package/@adobe/generator-aio-app)
@@ -11,7 +11,7 @@ A Yeoman code generator for Adobe I/O Applications.
 
 ## Usage
 
-### OOTB with aio-cli
+This module is used by the Adobe I/O CLI app plugin. 
 
 - `npm install -g @adobe/aio-cli`
 
@@ -20,16 +20,6 @@ A Yeoman code generator for Adobe I/O Applications.
 - `aio app add web-assets` to add a UI to an existing app
 - `aio app delete action` to delete an existing action
 - `aio app delete web-assets` to delete the app's UI
-
-### Standalone with yeoman
-
-- `npm install -g yo @adobe/generator-aio-app`
-
-- `yo aio-app` to bootstrap your project's code
-- `yo aio-app:add-action` to add new actions to an existing app
-- `yo aio-app:add-web-assets` to add a UI to an existing app
-- `yo aio-app:delete-action` to delete an existing action
-- `yo aio-app:delete-web-assets` to delete the app's UI
 
 ## Contributing
 
