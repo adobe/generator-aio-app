@@ -11,16 +11,18 @@ governing permissions and limitations under the License.
 
 const path = require('path')
 const Generator = require('yeoman-generator')
+const utils = require('../../../lib/utils')
 
 const { webAssetsDirname } = require('../../../lib/constants')
 
-class RawGenerator extends Generator {
+class ExcReactGenerator extends Generator {
   constructor (args, opts) {
     super(args, opts)
     // todo check that those are set
     this.option('adobe-services', { type: String, default: '' })
     this.option('project-name', { type: String })
     // this.option('skip-prompt', { default: false }) // useless for now
+    this.option('skip-install', { type: String, default: false })
 
     // props are used by templates
     this.props = {}
@@ -34,7 +36,17 @@ class RawGenerator extends Generator {
   writing () {
     this.sourceRoot(path.join(__dirname, './templates/'))
     this.fs.copyTpl(this.templatePath('./**/*'), this.destinationPath(webAssetsDirname), this.props)
+    utils.addDependencies(this, {
+      react: '^16.9.0',
+      'react-dom': '^16.9.0',
+      'react-error-boundary': '^1.2.5'
+    })
+  }
+
+  async install () {
+    // this condition makes sure it doesn't print any unwanted 'skip install message'
+    if (!this.options['skip-install']) return this.installDependencies({ bower: false, skipMessage: true })
   }
 }
 
-module.exports = RawGenerator
+module.exports = ExcReactGenerator
