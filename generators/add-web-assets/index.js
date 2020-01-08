@@ -15,6 +15,7 @@ const Generator = require('yeoman-generator')
 const { atLeastOne, guessProjectName } = require('../../lib/utils')
 
 const rawWebAssetsGenerator = path.join(__dirname, 'raw/index.js')
+const excReactWebAssetsGenerator = path.join(__dirname, 'exc-react/index.js')
 
 /*
       'initializing',
@@ -42,7 +43,7 @@ class AddWebAssets extends Generator {
   }
 
   async prompting () {
-    let webAssetsGenerator = rawWebAssetsGenerator
+    let webAssetsGenerator = excReactWebAssetsGenerator
     if (!this.options['skip-prompt']) {
       const promptProps = await this.prompt([
         {
@@ -50,7 +51,7 @@ class AddWebAssets extends Generator {
           type: 'list',
           name: 'webAssetsGenerator',
           message: 'Which type of UI do you want to add to your project?\nselect template to generate',
-          choices: [{ name: 'Raw HTML/JS', value: rawWebAssetsGenerator }],
+          choices: [{ name: 'Exc Shell React', value: excReactWebAssetsGenerator, checked: true }, { name: 'Raw HTML/JS', value: rawWebAssetsGenerator }],
           validate: atLeastOne
         }
       ])
