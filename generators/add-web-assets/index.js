@@ -51,7 +51,7 @@ class AddWebAssets extends Generator {
           type: 'list',
           name: 'webAssetsGenerator',
           message: 'Which type of UI do you want to add to your project?\nselect template to generate',
-          choices: [{ name: 'Exc Shell React', value: excReactWebAssetsGenerator, checked: true }, { name: 'Raw HTML/JS', value: rawWebAssetsGenerator }],
+          choices: [{ name: 'Exc Shell React', value: excReactWebAssetsGenerator }, { name: 'Raw HTML/JS', value: rawWebAssetsGenerator }],
           validate: atLeastOne
         }
       ])

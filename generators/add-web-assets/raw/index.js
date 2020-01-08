@@ -18,7 +18,7 @@ class RawGenerator extends Generator {
   constructor (args, opts) {
     super(args, opts)
     // todo check that those are set
-    this.option('adobe-services', { type: String })
+    this.option('adobe-services', { type: String, default: '' })
     this.option('project-name', { type: String })
     // this.option('skip-prompt', { default: false }) // useless for now
 

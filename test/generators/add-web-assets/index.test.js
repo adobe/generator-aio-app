@@ -35,6 +35,17 @@ afterAll(() => {
   installDependencies.mockRestore()
 })
 
+const expectedDefaultGenerator = expect.stringContaining('exc-react/index.js')
+const expectedPromptChoices = [expect.objectContaining({
+  type: 'list',
+  name: 'webAssetsGenerator',
+  choices: [
+    { name: 'Exc Shell React', value: expect.stringContaining('exc-react/index.js') },
+    { name: 'Raw HTML/JS', value: expect.stringContaining('raw/index.js') }
+  ],
+  validate: utils.atLeastOne
+})]
+
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
     expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
@@ -49,7 +60,8 @@ describe('run', () => {
     const expectProjectName = path.basename(dir)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('raw/index.js')), expect.objectContaining({
+    // calls default generator
+    expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
       'project-name': expectProjectName
@@ -62,7 +74,7 @@ describe('run', () => {
       .withOptions({ 'skip-prompt': true, 'skip-install': false, 'project-name': 'fake' })
 
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('raw/index.js')), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
       'project-name': 'fake'
@@ -75,7 +87,7 @@ describe('run', () => {
       .withOptions({ 'skip-prompt': true, 'skip-install': true, 'project-name': 'fake' })
 
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('raw/index.js')), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
       'project-name': 'fake'
@@ -88,7 +100,7 @@ describe('run', () => {
       .withOptions({ 'skip-prompt': true, 'skip-install': false, 'project-name': 'fake', 'adobe-services': 'some,string' })
 
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('raw/index.js')), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': 'some,string',
       'project-name': 'fake'
@@ -102,13 +114,7 @@ describe('run', () => {
       .withPrompts({ webAssetsGenerator: 'a' })
 
     // check choices
-    expect(prompt).toHaveBeenCalledWith(
-      [expect.objectContaining({
-        type: 'list',
-        name: 'webAssetsGenerator',
-        choices: [{ name: 'Raw HTML/JS', value: expect.stringContaining(n('raw/index.js')) }],
-        validate: utils.atLeastOne
-      })])
+    expect(prompt).toHaveBeenCalledWith(expectedPromptChoices)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
     expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({

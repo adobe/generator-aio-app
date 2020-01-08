@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 
 const path = require('path')
 const Generator = require('yeoman-generator')
+const utils = require('../../../lib/utils')
 
 const { webAssetsDirname } = require('../../../lib/constants')
 
@@ -18,7 +19,7 @@ class ExcReactGenerator extends Generator {
   constructor (args, opts) {
     super(args, opts)
     // todo check that those are set
-    this.option('adobe-services', { type: String })
+    this.option('adobe-services', { type: String, default: '' })
     this.option('project-name', { type: String })
     // this.option('skip-prompt', { default: false }) // useless for now
     this.option('skip-install', { type: String, default: false })
@@ -35,20 +36,11 @@ class ExcReactGenerator extends Generator {
   writing () {
     this.sourceRoot(path.join(__dirname, './templates/'))
     this.fs.copyTpl(this.templatePath('./**/*'), this.destinationPath(webAssetsDirname), this.props)
-    this._addDependencies({
+    utils.addDependencies(this, {
       react: '^16.9.0',
       'react-dom': '^16.9.0',
       'react-error-boundary': '^1.2.5'
     })
-  }
-
-  // todo don't copy this from ActionGenerator => create a super class or move this to a common util
-  _addDependencies (deps, dev = false) {
-    const packagejsonPath = this.destinationPath('package.json')
-    const packagejsonContent = this.fs.readJSON(packagejsonPath)
-    const key = dev ? 'devDependencies' : 'dependencies'
-    packagejsonContent[key] = { ...packagejsonContent[key], ...deps }
-    this.fs.writeJSON(packagejsonPath, packagejsonContent)
   }
 
   async install () {
