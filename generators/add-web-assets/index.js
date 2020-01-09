@@ -12,9 +12,9 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const { atLeastOne, guessProjectName } = require('../../lib/utils')
+const utils = require('../../lib/utils')
 
-const rawWebAssetsGenerator = path.join(__dirname, 'raw/index.js')
+// const rawWebAssetsGenerator = path.join(__dirname, 'raw/index.js')
 const excReactWebAssetsGenerator = path.join(__dirname, 'exc-react/index.js')
 
 /*
@@ -36,27 +36,29 @@ class AddWebAssets extends Generator {
     this.option('skip-prompt', { default: false })
     this.option('adobe-services', { type: String, default: '' }) // todo use real sdkCodes from console
 
-    this.option('project-name', { type: String, default: guessProjectName(this) }) // project name is used in html template
+    this.option('project-name', { type: String, default: utils.guessProjectName(this) }) // project name is used in html template
     this.option('skip-install', { type: String, default: false })
 
     // todo throw meaningful error if add actions/webassets in a non existing project, but how to know if we are in a project?
   }
 
   async prompting () {
-    let webAssetsGenerator = excReactWebAssetsGenerator
-    if (!this.options['skip-prompt']) {
-      const promptProps = await this.prompt([
-        {
-          // for now we just have one webAsset generator
-          type: 'list',
-          name: 'webAssetsGenerator',
-          message: 'Which type of UI do you want to add to your project?\nselect template to generate',
-          choices: [{ name: 'Exc Shell React', value: excReactWebAssetsGenerator }, { name: 'Raw HTML/JS', value: rawWebAssetsGenerator }],
-          validate: atLeastOne
-        }
-      ])
-      webAssetsGenerator = promptProps.webAssetsGenerator
-    }
+    const webAssetsGenerator = excReactWebAssetsGenerator
+
+    // code for later -> as of now support only exc-react
+    // if (!this.options['skip-prompt']) {
+    //   const promptProps = await this.prompt([
+    //     {
+    //       // for now we just have one webAsset generator
+    //       type: 'list',
+    //       name: 'webAssetsGenerator',
+    //       message: 'Which type of UI do you want to add to your project?\nselect template to generate',
+    //       choices: [{ name: 'Adobe Experience Cloud Shell - React', value: excReactWebAssetsGenerator }, { name: 'Raw HTML/JS', value: rawWebAssetsGenerator }],
+    //       validate: utils.atLeastOne
+    //     }
+    //   ])
+    //   webAssetsGenerator = promptProps.webAssetsGenerator
+    // }
 
     // run ui generator
     this.composeWith(webAssetsGenerator, {

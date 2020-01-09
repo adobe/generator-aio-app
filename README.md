@@ -36,7 +36,7 @@ Two types of generators can be easily contributed to the project:
   - add template files into `generators/add-action/<generator-name>/templates/`
   - update `generators/add-action/index.js` to reference the newly added generator in the prompt choices.
 
-- web assets generators, e.g. [raw html/js generator](./generators/add-web-assets/raw/index.js):
+- web assets generators, e.g. [experience cloud shell react generator](./generators/add-web-assets/exc-react/index.js):
 
   - add a new web assets template generator into `generators/add-web-assets/<generator-name>/index.js`.
   - add template files into `generators/add-web-assets/<generator-name>/templates/`
