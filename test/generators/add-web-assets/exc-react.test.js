@@ -57,7 +57,7 @@ describe('run', () => {
     })
 
     // greats with projectName
-    assert.fileContent('web-src/src/App.js', '<h1>abc</h1>')
+    assert.fileContent('web-src/src/App.js', '<h1>Welcome to abc!</h1>')
 
     // make sure html calls js files
     assert.fileContent('web-src/index.html', '<script src="./src/exc-runtime.js"')
