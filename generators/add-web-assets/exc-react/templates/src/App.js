@@ -14,12 +14,11 @@ import ErrorBoundary from 'react-error-boundary'
 
 import actions from './config.json'
 
+/* Here is your entry point React Component, this class has access to the Adobe Experience Cloud Shell runtime object */
+
 export default class App extends React.Component {
   constructor (props) {
     super(props)
-
-    console.log('actions.list = ', actions.list)
-    console.log('actions = ', actions.resolver)
 
     // error handler on UI rendering failure
     this.onError = (e, componentStack) => {}
@@ -43,6 +42,7 @@ export default class App extends React.Component {
 
 render () {
   return (
+    // ErrorBoundary wraps child components to handle eventual rendering errors
     <ErrorBoundary onError={this.onError} FallbackComponent={this.fallbackComponent} >
     <div style={{ textAlign: 'center' }}>
       <h1>Welcome to <%= projectName %>!</h1>
