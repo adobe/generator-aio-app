@@ -31,6 +31,8 @@ export default class App extends React.Component {
         <pre>{ componentStack + '\n' + error.message }</pre>
       </React.Fragment>
     )
+
+    console.log('runtime object:', this.props.runtime)
   }
 
   static get propTypes () {
@@ -39,12 +41,28 @@ export default class App extends React.Component {
     }
   }
 
-  render () {
-    return (
-      <ErrorBoundary onError={this.onError} FallbackComponent={this.fallbackComponent} >
-        <h1><%= projectName %></h1>
-        <pre>this.props.runtime &eq;{JSON.stringify(this.props.runtime, 0, '\t')}</pre>
-      </ErrorBoundary>
-    )
+render () {
+  return (
+    <ErrorBoundary onError={this.onError} FallbackComponent={this.fallbackComponent} >
+    <div style={{ textAlign: 'center' }}>
+      <h1>Welcome to <%= projectName %>!</h1>
+      <div id="action-list">
+        <h3>backend actions</h3>
+        <ul style={{ listStyleType: 'none', padding: 0 }}>{ Object.entries(actions).map(([name, url]) => <li key={name}>{name}: <a href={url}>{url}</a></li>) }</ul>
+        <script>window.showActionsList()</script>
+      </div>
+      <h3>next steps</h3>
+      <div id="doc-list">
+        <ul style={{ listStyleType: 'none', padding: 0 }}>
+          <li key='doc-readme'>check <code>README.md</code> for more docs</li>
+          <li key='doc-runtime'><a href="https://adobedocs.github.io/adobeio-runtime/">Adobe I/O Runtime Documentation</a></li>
+          <% if (adobeServices.includes('target')) { %><li key='doc-target'><a href="http://developers.adobetarget.com/api/">Adobe Target API</a></li><% } %>
+          <% if (adobeServices.includes('analytics')) { %><li key='doc-analytics'><a href="https://www.adobe.io/apis/experiencecloud/analytics/docs.html">Adobe Analytics API</a></li><% } %>
+          <% if (adobeServices.includes('campaign-standard')) { %><li key='doc-campaign'><a href="https://final-docs.campaign.adobe.com/doc/standard/en/api/ACS_API.html">Adobe Campaign Standard API</a></li><% } %>
+        </ul>
+      </div>
+    </div>
+    </ErrorBoundary>
+  )
   }
 }
