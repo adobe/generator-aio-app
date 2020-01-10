@@ -10,7 +10,7 @@ governing permissions and limitations under the License.
 */
 const helpers = require('yeoman-test')
 const path = require('path')
-
+const fs = require('fs-extra')
 // const utils = require('../../../lib/utils')
 
 const theGeneratorPath = require.resolve('../../../generators/add-web-assets')
@@ -53,6 +53,14 @@ describe('prototype', () => {
 })
 
 describe('run', () => {
+  test('web assets already in project --skip-prompt', async () => {
+    await expect(helpers.run(theGeneratorPath)
+      .withOptions({ 'skip-prompt': true, 'project-name': 'fake', 'adobe-services': 'some,string' })
+      .inTmpDir(dir => {
+        fs.mkdirSync(path.join(dir, 'web-src'))
+      })).rejects.toThrow('you already have web assets in your project, please delete first')
+  })
+
   test('--skip-prompt', async () => {
     const dir = await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true, 'skip-install': false })

@@ -25,7 +25,7 @@ const { webAssetsDirname } = require('../../lib/constants')
       'end'
       */
 
-class DeleteAction extends Generator {
+class DeleteWebAssets extends Generator {
   constructor (args, opts) {
     super(args, opts)
 
@@ -56,4 +56,4 @@ class DeleteAction extends Generator {
   }
 }
 
-module.exports = DeleteAction
+module.exports = DeleteWebAssets
