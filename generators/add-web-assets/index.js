@@ -11,8 +11,11 @@ governing permissions and limitations under the License.
 
 const path = require('path')
 const Generator = require('yeoman-generator')
+const fs = require('fs-extra')
 
 const utils = require('../../lib/utils')
+
+const { webAssetsDirname } = require('../../lib/constants')
 
 // const rawWebAssetsGenerator = path.join(__dirname, 'raw/index.js')
 const excReactWebAssetsGenerator = path.join(__dirname, 'exc-react/index.js')
@@ -39,7 +42,12 @@ class AddWebAssets extends Generator {
     this.option('project-name', { type: String, default: utils.guessProjectName(this) }) // project name is used in html template
     this.option('skip-install', { type: String, default: false })
 
+    this.webAssetsPath = this.destinationPath(webAssetsDirname)
     // todo throw meaningful error if add actions/webassets in a non existing project, but how to know if we are in a project?
+  }
+
+  initializing () {
+    if (fs.existsSync(this.webAssetsPath)) throw new Error('you already have web assets in your project, please delete first')
   }
 
   async prompting () {
