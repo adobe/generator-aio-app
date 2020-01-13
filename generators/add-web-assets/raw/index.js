@@ -14,6 +14,8 @@ const Generator = require('yeoman-generator')
 
 const { webAssetsDirname } = require('../../../lib/constants')
 
+const { sdkCodes } = require('../../../lib/constants')
+
 class RawGenerator extends Generator {
   constructor (args, opts) {
     super(args, opts)
@@ -26,6 +28,7 @@ class RawGenerator extends Generator {
     this.props = {}
     this.props.adobeServices = this.options['adobe-services'].split(',').map(x => x.trim())
     this.props.projectName = this.options['project-name']
+    this.props.sdkCodes = sdkCodes
   }
 
   // nothing for now

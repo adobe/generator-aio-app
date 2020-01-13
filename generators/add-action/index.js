@@ -14,18 +14,19 @@ const Generator = require('yeoman-generator')
 
 const { atLeastOne } = require('../../lib/utils')
 
+const { sdkCodes } = require('../../lib/constants')
+
 // we have one actions generator per service, an action generator could generate different types of actions
-// todo use real sdkCodes from console
 const sdkCodeToActionGenerator = {
-  target: path.join(__dirname, 'target/index.js'),
-  analytics: path.join(__dirname, 'analytics/index.js'),
-  'campaign-standard': path.join(__dirname, 'campaign-standard/index.js')
+  [sdkCodes.target]: path.join(__dirname, 'target/index.js'),
+  [sdkCodes.analytics]: path.join(__dirname, 'analytics/index.js'),
+  [sdkCodes.campaign]: path.join(__dirname, 'campaign-standard/index.js')
 }
 
 const sdkCodeToTitle = {
-  target: 'Adobe Target',
-  analytics: 'Adobe Analytics',
-  'campaign-standard': 'Adobe Campaign Standard'
+  [sdkCodes.target]: 'Adobe Target',
+  [sdkCodes.analytics]: 'Adobe Analytics',
+  [sdkCodes.campaign]: 'Adobe Campaign Standard'
 }
 
 const genericActionGenerator = path.join(__dirname, 'generic/index.js')
