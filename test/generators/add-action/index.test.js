@@ -14,6 +14,8 @@ const utils = require('../../../lib/utils')
 const theGeneratorPath = require.resolve('../../../generators/add-action')
 const Generator = require('yeoman-generator')
 
+const { sdkCodes } = require('../../../lib/constants')
+
 // spies
 const prompt = jest.spyOn(Generator.prototype, 'prompt')
 const composeWith = jest.spyOn(Generator.prototype, 'composeWith')
@@ -44,7 +46,7 @@ describe('prototype', () => {
 describe('run', () => {
   test('--skip-prompt --adobe-services="analytics,target,campaign-standard"', async () => {
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'adobe-services': 'analytics,target,campaign-standard', 'skip-install': false })
+      .withOptions({ 'skip-prompt': true, 'adobe-services': `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign}`, 'skip-install': false })
     // with skip prompt defaults to generic action
     // make sure sub generators have been called
     expect(composeWith).toHaveBeenCalledTimes(1)
@@ -94,7 +96,7 @@ describe('run', () => {
 
   test('--adobe-services="analytics" and selects fake generator a', async () => {
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'adobe-services': 'analytics', 'skip-install': false })
+      .withOptions({ 'adobe-services': `${sdkCodes.analytics}`, 'skip-install': false })
       .withPrompts({ actionGenerators: ['a'] })
 
     // first make sure choices are displayed
@@ -120,7 +122,7 @@ describe('run', () => {
 
   test('--adobe-services="analytics,target,campaign-standard" and selects fake generators a,b,c', async () => {
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'adobe-services': 'analytics,target,campaign-standard', 'skip-install': false })
+      .withOptions({ 'adobe-services': `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign}`, 'skip-install': false })
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
     // first make sure choices are displayed

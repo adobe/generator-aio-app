@@ -32,13 +32,13 @@ governing permissions and limitations under the License.
           <ul>
               <li>check <code>README.md</code> for more docs</li>
               <li><a href="https://adobedocs.github.io/adobeio-runtime/">Adobe I/O Runtime Documentation</a></li>
-              <% if (adobeServices.includes('target')) { %>
+              <% if (adobeServices.includes(sdkCodes.target)) { %>
                 <li><a href="http://developers.adobetarget.com/api/">Adobe Target API</a></li>
               <% } %>
-              <% if (adobeServices.includes('analytics')) { %>
+              <% if (adobeServices.includes(sdkCodes.analytics)) { %>
                 <li><a href="https://www.adobe.io/apis/experiencecloud/analytics/docs.html">Adobe Analytics API</a></li>
               <% } %>
-              <% if (adobeServices.includes('campaign-standard')) { %>
+              <% if (adobeServices.includes(sdkCodes.campaign)) { %>
                 <li><a href="https://final-docs.campaign.adobe.com/doc/standard/en/api/ACS_API.html">Adobe Campaign Standard API</a></li>
               <% } %>
             </ul>

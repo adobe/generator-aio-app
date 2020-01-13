@@ -17,6 +17,8 @@ const assert = require('yeoman-assert')
 const theGeneratorPath = require.resolve('../../../generators/add-web-assets/raw')
 const Generator = require('yeoman-generator')
 
+const { sdkCodes } = require('../../../lib/constants')
+
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
     expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
@@ -26,7 +28,7 @@ describe('prototype', () => {
 describe('run', () => {
   test('--project-name abc --adobe-services analytics,target,campaign-standard', async () => {
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'adobe-services': 'analytics,target,campaign-standard', 'project-name': 'abc' })
+      .withOptions({ 'adobe-services': `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign}`, 'project-name': 'abc' })
 
     // added files
     assert.file('web-src/index.html')
@@ -48,7 +50,7 @@ describe('run', () => {
 
   test('--project-name abc --adobe-services analytics', async () => {
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'adobe-services': 'analytics', 'project-name': 'abc' })
+      .withOptions({ 'adobe-services': `${sdkCodes.analytics}`, 'project-name': 'abc' })
 
     // added files
     assert.file('web-src/index.html')

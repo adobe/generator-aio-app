@@ -56,9 +56,9 @@ render () {
         <ul style={{ listStyleType: 'none', padding: 0 }}>
           <li key='doc-readme'>check <code>README.md</code> for more docs</li>
           <li key='doc-runtime'><a href="https://adobedocs.github.io/adobeio-runtime/">Adobe I/O Runtime Documentation</a></li>
-          <% if (adobeServices.includes('target')) { %><li key='doc-target'><a href="http://developers.adobetarget.com/api/">Adobe Target API</a></li><% } %>
-          <% if (adobeServices.includes('analytics')) { %><li key='doc-analytics'><a href="https://www.adobe.io/apis/experiencecloud/analytics/docs.html">Adobe Analytics API</a></li><% } %>
-          <% if (adobeServices.includes('campaign-standard')) { %><li key='doc-campaign'><a href="https://final-docs.campaign.adobe.com/doc/standard/en/api/ACS_API.html">Adobe Campaign Standard API</a></li><% } %>
+          <% if (adobeServices.includes(sdkCodes.target)) { %><li key='doc-target'><a href="http://developers.adobetarget.com/api/">Adobe Target API</a></li><% } %>
+          <% if (adobeServices.includes(sdkCodes.analytics)) { %><li key='doc-analytics'><a href="https://www.adobe.io/apis/experiencecloud/analytics/docs.html">Adobe Analytics API</a></li><% } %>
+          <% if (adobeServices.includes(sdkCodes.campaign)) { %><li key='doc-campaign'><a href="https://final-docs.campaign.adobe.com/doc/standard/en/api/ACS_API.html">Adobe Campaign Standard API</a></li><% } %>
         </ul>
       </div>
     </div>
