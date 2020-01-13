@@ -32,7 +32,7 @@ class CodeGenerator extends Generator {
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
     this.option('adobe-services', { type: String, default: '' })
-    this.option('project-name', { type: String, default: path.basename(process.cwd()) }) // todo get name from console
+    this.option('project-name', { type: String, default: path.basename(process.cwd()) })
     this.option('skip-install', { type: String, default: false })
 
     // props are passed to templates
