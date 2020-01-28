@@ -17,6 +17,21 @@ jest.mock('yeoman-generator')
 
 const ActionGenerator = require('../../lib/ActionGenerator')
 const Generator = require('yeoman-generator')
+const mockfs = {
+  copyTpl: jest.fn(),
+  exists: jest.fn().mockReturnValue(true), // called on manifest
+  write: jest.fn(),
+  read: jest.fn().mockReturnValue(yaml.safeDump({
+    packages: {
+      [constants.manifestPackagePlaceholder]: {
+        actions: {},
+        fake: 'value'
+      }
+    }
+  })),
+  writeJSON: jest.fn(),
+  readJSON: jest.fn().mockReturnValue({}) // package.json read
+}
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
@@ -34,6 +49,34 @@ describe('implementation', () => {
       spy.mockRestore()
     })
   })
+  describe('getDefaultActionName', () => {
+    test('default', async () => {
+      const actionGenerator = new ActionGenerator()
+      // console.log(actionGenerator.getDefaultActionName)
+      actionGenerator.fs = mockfs
+
+      let actionName = await actionGenerator.getDefaultActionName('generic')
+      expect(actionName).toEqual('generic')
+
+      const spy = jest.spyOn(actionGenerator, '_loadManifest')
+      spy.mockReturnValue({
+        packages: {
+          [constants.manifestPackagePlaceholder]: {
+            license: 'Apache-2.0',
+            actions: {
+              generic: {
+                function: '/myAction/index.js',
+                web: 'yes',
+                runtime: 'nodejs:10'
+              }
+            }
+          }
+        }
+      })
+      actionName = await actionGenerator.getDefaultActionName('generic')
+      expect(actionName).toEqual('generic-1')
+    })
+  })
   describe('promptForActionName', () => {
     let spy
     let actionGenerator
@@ -49,6 +92,7 @@ describe('implementation', () => {
       spy.mockResolvedValue({
         actionName: 'inputName'
       })
+      actionGenerator.fs = mockfs
       const actionName = await actionGenerator.promptForActionName('fake purpose', 'fake default')
       expect(actionName).toEqual('inputName')
       expect(spy).toHaveBeenCalledWith([expect.objectContaining({
@@ -63,12 +107,14 @@ describe('implementation', () => {
         actionName: undefined
       })
       actionGenerator.options['skip-prompt'] = true
+      actionGenerator.fs = mockfs
       const actionName = await actionGenerator.promptForActionName('fake purpose', 'fake default')
       expect(actionName).toEqual('fake default')
       expect(spy).toHaveBeenCalledTimes(0)
     })
     test('validates input `abc-1234, 1234-abc, ABC-1234, 1234-ABC`', async () => {
       spy.mockReturnValue({ actionName: 'fake' })
+      actionGenerator.fs = mockfs
       await actionGenerator.promptForActionName()
       expect(spy.mock.calls[0][0][0].validate).toBeInstanceOf(Function)
       const validate = spy.mock.calls[0][0][0].validate
@@ -79,6 +125,7 @@ describe('implementation', () => {
     })
     test('rejects inputs `a, 1, ab, 12, -abc-1234, abc@, abc_1234, 1234-abc!, abc123456789012345678901234567890`', async () => {
       spy.mockReturnValue({ actionName: 'fake' })
+      actionGenerator.fs = mockfs
       await actionGenerator.promptForActionName()
       expect(spy.mock.calls[0][0][0].validate).toBeInstanceOf(Function)
       const validate = spy.mock.calls[0][0][0].validate

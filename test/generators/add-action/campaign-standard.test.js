@@ -26,6 +26,8 @@ describe('implementation', () => {
   describe('prompting', () => {
     test('generator prompts for action name with default set to campaign-standard', async () => {
       const campaignStandardGenerator = new CampaignStandardGenerator()
+      const actionNameSpy = jest.spyOn(campaignStandardGenerator, 'getDefaultActionName')
+      actionNameSpy.mockReturnValue('campaign-standard')
       const spy = jest.spyOn(campaignStandardGenerator, 'promptForActionName')
       await campaignStandardGenerator.prompting()
       expect(spy).toHaveBeenCalledTimes(1)
