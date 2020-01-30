@@ -10,7 +10,6 @@ Welcome to my Adobe I/O Application!
 
 - `aio app run` to start your local Dev server
 - App will run on `localhost:9080` by default
-- Local dev server uses an expressJS proxy to invoke action code.
 
 By default the UI will be served locally but actions will be deployed and served from Adobe I/O Runtime. To start a
 local serverless stack and also run your actions locally use the `aio app run --local` option.
@@ -24,9 +23,6 @@ local serverless stack and also run your actions locally use the `aio app run --
 
 - `aio app deploy` to build and deploy all actions on Runtime and static files to CDN
 - `aio app undeploy` to undeploy the app
-
-Each of the above commands can either be run for actions or static files, append `-s` or `-a`, for
-example `aio app deploy -s` will only build and deploy static files.
 
 ## Config
 
