@@ -26,7 +26,7 @@ describe('implementation', () => {
   describe('prompting', () => {
     test('generator prompts for action name with default set to generic', async () => {
       const genericGenerator = new GenericGenerator()
-      const actionNameSpy = jest.spyOn(genericGenerator, 'getDefaultActionName')
+      const actionNameSpy = jest.spyOn(genericGenerator, '_getDefaultActionName')
       actionNameSpy.mockReturnValue('generic')
       const spy = jest.spyOn(genericGenerator, 'promptForActionName')
       await genericGenerator.prompting()

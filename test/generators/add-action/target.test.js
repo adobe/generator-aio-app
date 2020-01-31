@@ -26,7 +26,7 @@ describe('implementation', () => {
   describe('prompting', () => {
     test('generator prompts for action name with default set to target', async () => {
       const targetGenerator = new TargetGenerator()
-      const actionNameSpy = jest.spyOn(targetGenerator, 'getDefaultActionName')
+      const actionNameSpy = jest.spyOn(targetGenerator, '_getDefaultActionName')
       actionNameSpy.mockReturnValue('target')
       const spy = jest.spyOn(targetGenerator, 'promptForActionName')
       await targetGenerator.prompting()
