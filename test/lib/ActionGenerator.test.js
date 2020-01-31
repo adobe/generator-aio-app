@@ -56,6 +56,7 @@ describe('implementation', () => {
       spy = jest.spyOn(ActionGenerator.prototype, 'prompt')
       actionGenerator = new ActionGenerator()
       actionGenerator.options = { 'skip-prompt': false }
+      actionGenerator.fs = mockfs
     })
     afterEach(() => {
       spy.mockRestore()
@@ -64,7 +65,6 @@ describe('implementation', () => {
       spy.mockResolvedValue({
         actionName: 'inputName'
       })
-      actionGenerator.fs = mockfs
       const actionName = await actionGenerator.promptForActionName('fake purpose', 'fake default')
       expect(actionName).toEqual('inputName')
       expect(spy).toHaveBeenCalledWith([expect.objectContaining({
@@ -79,14 +79,12 @@ describe('implementation', () => {
         actionName: undefined
       })
       actionGenerator.options['skip-prompt'] = true
-      actionGenerator.fs = mockfs
       const actionName = await actionGenerator.promptForActionName('fake purpose', 'fake default')
       expect(actionName).toEqual('fake default')
       expect(spy).toHaveBeenCalledTimes(0)
     })
     test('validates input `abc-1234, 1234-abc, ABC-1234, 1234-ABC`', async () => {
       spy.mockReturnValue({ actionName: 'fake' })
-      actionGenerator.fs = mockfs
       await actionGenerator.promptForActionName()
       expect(spy.mock.calls[0][0][0].validate).toBeInstanceOf(Function)
       const validate = spy.mock.calls[0][0][0].validate
@@ -97,7 +95,6 @@ describe('implementation', () => {
     })
     test('rejects inputs `a, 1, ab, 12, -abc-1234, abc@, abc_1234, 1234-abc!, abc123456789012345678901234567890`', async () => {
       spy.mockReturnValue({ actionName: 'fake' })
-      actionGenerator.fs = mockfs
       await actionGenerator.promptForActionName()
       expect(spy.mock.calls[0][0][0].validate).toBeInstanceOf(Function)
       const validate = spy.mock.calls[0][0][0].validate
@@ -112,7 +109,6 @@ describe('implementation', () => {
       expect(validate('abc123456789012345678901234567890')).not.toEqual(true)
     })
     test('returns new action name in case of conflict', async () => {
-      actionGenerator.fs = mockfs
       spy.mockResolvedValue({
         actionName: 'fake'
       })
