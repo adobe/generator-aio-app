@@ -17,6 +17,21 @@ jest.mock('yeoman-generator')
 
 const ActionGenerator = require('../../lib/ActionGenerator')
 const Generator = require('yeoman-generator')
+const mockfs = {
+  copyTpl: jest.fn(),
+  exists: jest.fn().mockReturnValue(true), // called on manifest
+  write: jest.fn(),
+  read: jest.fn().mockReturnValue(yaml.safeDump({
+    packages: {
+      [constants.manifestPackagePlaceholder]: {
+        actions: {},
+        fake: 'value'
+      }
+    }
+  })),
+  writeJSON: jest.fn(),
+  readJSON: jest.fn().mockReturnValue({}) // package.json read
+}
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
@@ -41,6 +56,7 @@ describe('implementation', () => {
       spy = jest.spyOn(ActionGenerator.prototype, 'prompt')
       actionGenerator = new ActionGenerator()
       actionGenerator.options = { 'skip-prompt': false }
+      actionGenerator.fs = mockfs
     })
     afterEach(() => {
       spy.mockRestore()
@@ -91,6 +107,33 @@ describe('implementation', () => {
       expect(validate('1234-abc!')).not.toEqual(true)
       expect(validate('abc@')).not.toEqual(true)
       expect(validate('abc123456789012345678901234567890')).not.toEqual(true)
+    })
+    test('returns new action name in case of conflict', async () => {
+      spy.mockResolvedValue({
+        actionName: 'fake'
+      })
+      const spyManifest = jest.spyOn(actionGenerator, '_loadManifest')
+      spyManifest.mockReturnValue({
+        packages: {
+          [constants.manifestPackagePlaceholder]: {
+            license: 'Apache-2.0',
+            actions: {
+              fakedefault: {
+                function: '/myAction/index.js',
+                web: 'yes',
+                runtime: 'nodejs:10'
+              }
+            }
+          }
+        }
+      })
+      const actionName = await actionGenerator.promptForActionName('fakepurpose', 'fakedefault')
+      expect(actionName).toEqual('fake')
+      expect(spy).toHaveBeenCalledWith([expect.objectContaining({
+        when: true,
+        default: 'fakedefault-1',
+        message: expect.stringContaining('fakepurpose')
+      })])
     })
   })
 
