@@ -45,7 +45,7 @@ class ExcReactGenerator extends Generator {
     })
     // add env variable to load ui in exc shell
     utils.appendOrWrite(this, this.destinationPath(dotenvFilename),
-      'AIO_LAUNCH_URL_PREFIX=https://experience.adobe.com/?devMode=true#/myapps/?localDevUrl=')
+      'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/myapps/?localDevUrl="')
   }
 
   async install () {

@@ -55,7 +55,7 @@ describe('run', () => {
     // check append to dotenv
     assert.file('.env')
     assert.fileContent('.env', 'FAKECONTENT')
-    assert.fileContent('.env', 'AIO_LAUNCH_URL_PREFIX=https://experience.adobe.com/?devMode=true#/myapps/?localDevUrl=')
+    assert.fileContent('.env', 'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/myapps/?localDevUrl="')
 
     // make sure react dependencies are added
     assert.jsonFileContent('package.json', {
