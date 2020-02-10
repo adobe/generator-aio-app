@@ -13,7 +13,7 @@ const path = require('path')
 const Generator = require('yeoman-generator')
 const utils = require('../../../lib/utils')
 
-const { webAssetsDirname } = require('../../../lib/constants')
+const { webAssetsDirname, dotenvFilename } = require('../../../lib/constants')
 const { sdkCodes } = require('../../../lib/constants')
 
 class ExcReactGenerator extends Generator {
@@ -43,6 +43,9 @@ class ExcReactGenerator extends Generator {
       'react-dom': '^16.9.0',
       'react-error-boundary': '^1.2.5'
     })
+    // add env variable to load ui in exc shell
+    utils.appendOrWrite(this, this.destinationPath(dotenvFilename),
+      'AIO_LAUNCH_URL_PREFIX=https://experience.adobe.com/?devMode=true#/myapps/?localDevUrl=')
   }
 
   async install () {
