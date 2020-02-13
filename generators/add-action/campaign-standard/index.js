@@ -27,6 +27,7 @@ class CampaignStandardGenerator extends ActionGenerator {
 
     this.addAction(this.props.actionName, './getAllProfiles.js', {
       testFile: './getAllProfiles.test.js',
+      e2eTestFile: './getAllProfiles.e2etest.js',
       tplContext: this.props,
       dotenvStub: {
         label: 'please provide your Adobe I/O Campaign Standard integration tenant',

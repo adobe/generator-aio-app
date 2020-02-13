@@ -27,6 +27,7 @@ class TargetGenerator extends ActionGenerator {
 
     this.addAction(this.props.actionName, './getActivities.js', {
       testFile: './getActivities.test.js',
+      e2eTestFile: './getActivities.e2etest.js',
       tplContext: this.props,
       dotenvStub: {
         label: 'please provide your Adobe I/O Target tenant',

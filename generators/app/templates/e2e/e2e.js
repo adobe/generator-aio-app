@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 
 const execa = require('execa')
 const chalk = require('chalk').default
+const fetch = require('node-fetch');
 
 test('config create test', async () => {
 
@@ -19,8 +20,10 @@ test('config create test', async () => {
 
   console.log(chalk.bold('    - start local server' + process.env['AIO_RUNTIME_NAMESPACE']))
   execa.sync('node', ['aio', 'app', 'deploy']);
-  result = execa.sync('curl', ['https://' + process.env['AIO_RUNTIME_NAMESPACE'] + '.adobeio-static.net/1-0.0.1/index.html']);
-  expect(result.stdout.includes('HTTP/1.1 200 OK'))
+  resp = await fetch('https://' + process.env['AIO_RUNTIME_NAMESPACE'] + '.adobeio-static.net/1-0.0.1/index.html')
+  expect(resp).toEqual(expect.objectContaining({
+      statusCode: 200
+    }))
   execa.sync('node', ['aio', 'app', 'undeploy']);
   
   console.log(chalk.green(`    - done for ${chalk.bold(name)}`))
