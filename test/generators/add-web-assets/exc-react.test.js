@@ -13,6 +13,8 @@ governing permissions and limitations under the License.
 
 const helpers = require('yeoman-test')
 const assert = require('yeoman-assert')
+const fs = require('fs')
+const path = require('path')
 
 const theGeneratorPath = require.resolve('../../../generators/add-web-assets/exc-react')
 const Generator = require('yeoman-generator')
@@ -39,6 +41,9 @@ describe('run', () => {
   test('--project-name abc', async () => {
     await helpers.run(theGeneratorPath)
       .withOptions({ 'project-name': 'abc', 'skip-install': false })
+      .inTmpDir(dir => {
+        fs.writeFileSync(path.join(dir, '.env'), 'FAKECONTENT')
+      })
 
     // added files
     assert.file('web-src/index.html')
@@ -46,6 +51,11 @@ describe('run', () => {
     assert.file('web-src/src/index.js')
     assert.file('web-src/src/App.js')
     assert.file('web-src/src/exc-runtime.js')
+
+    // check append to dotenv
+    assert.file('.env')
+    assert.fileContent('.env', 'FAKECONTENT')
+    assert.fileContent('.env', 'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/myapps/?localDevUrl="')
 
     // make sure react dependencies are added
     assert.jsonFileContent('package.json', {

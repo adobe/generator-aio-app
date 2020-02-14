@@ -9,6 +9,40 @@ describe('atLeastOne', () => {
   })
 })
 
+describe('appendOrWrite', () => {
+  test('writes if file does not exist', () => {
+    const mockWrite = jest.fn()
+    const mockAppend = jest.fn()
+    const generator = {
+      fs: {
+        exists: () => false,
+        write: mockWrite,
+        append: mockAppend
+      }
+    }
+    utils.appendOrWrite(generator, 'file', 'content')
+    expect(mockWrite).toHaveBeenCalledTimes(1)
+    expect(mockWrite).toHaveBeenCalledWith('file', 'content')
+    expect(mockAppend).toHaveBeenCalledTimes(0)
+  })
+
+  test('appends if file exists', () => {
+    const mockWrite = jest.fn()
+    const mockAppend = jest.fn()
+    const generator = {
+      fs: {
+        exists: () => true,
+        write: mockWrite,
+        append: mockAppend
+      }
+    }
+    utils.appendOrWrite(generator, 'file', 'content')
+    expect(mockAppend).toHaveBeenCalledTimes(1)
+    expect(mockAppend).toHaveBeenCalledWith('file', 'content')
+    expect(mockWrite).toHaveBeenCalledTimes(0)
+  })
+})
+
 describe('guessProjectName', () => {
   test('returns cwd if package.json does not exist', () => {
     const spy = jest.spyOn(process, 'cwd')
