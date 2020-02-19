@@ -57,7 +57,7 @@ describe('implementation', () => {
       // 4. sets the dotenv variables
       // 5. sets manifest
       expect(spy).toHaveBeenCalledWith('fakeName', expect.stringContaining('.js'), {
-        e2eTestFile: expect.stringContaining('.e2etest.js'),
+        e2eTestFile: expect.stringContaining('.e2e.js'),
         testFile: expect.stringContaining('.test.js'),
         tplContext: expect.any(Object),
         dependencies: {
