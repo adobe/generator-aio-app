@@ -44,7 +44,7 @@ local serverless stack and also run your actions locally use the `aio app run --
 
 ### `manifest.yml`
 
-- List your backend actions under the `actions` field within the `__CNA_PACKAGE__`
+- List your backend actions under the `actions` field within the `__APP_PACKAGE__`
 package placeholder. We will take care of replacing the package name placeholder
 by your project name and version.
 - For each action, use the `function` field to indicate the path to the action
