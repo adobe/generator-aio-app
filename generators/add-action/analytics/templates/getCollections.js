@@ -27,43 +27,45 @@ governing permissions and limitations under the License.
  */
 
 const { Core, Analytics } = require('@adobe/aio-sdk')
+const { errorResponse, getToken, logParameters, validateRequest } = require('../utils')
 
 async function main (params) {
   // create a Logger
-  const myAppLogger = Core.Logger('main', { level: params.LOG_LEVEL || 'info' })
+  const logger = Core.Logger('main', { level: params.LOG_LEVEL || 'info' })
 
-  // 'info' is the default level if not set
-  myAppLogger.info('Calling the main action')
-
-  // log levels are cumulative: 'debug' will include 'info' as well (levels are in order of verbosity: error, warn, info, verbose, debug, silly)
-  const maskToken = params.token ? { token: '<hidden>' } : {}
-  myAppLogger.debug(`params: ${JSON.stringify({ ...params, ...maskToken }, null, 2)}`)
-
-  if (!params.companyId || !params.apiKey || !params.token) {
-    myAppLogger.info('sending 400, missing a required parameter')
-    return {
-      statusCode: 400,
-      body: { error: 'missing Adobe Analytics credentials, required: companyId, apiKey and token' }
-    }
-  }
   try {
+    // 'info' is the default level if not set
+    logger.info('Calling the main action')
+
+    logParameters(logger.debug, params)
+
+    // check for missing parameters
+    const required = ['companyId', 'apiKey']
+
+    const { ok, status, errorMessage } = await validateRequest(params, required)
+    if (!ok) {
+      if (status === 500) {
+        logger.error(errorMessage)
+        return errorResponse(status, 'server error', logger)
+      }
+      return errorResponse(status, errorMessage, logger)
+    }
+
+    // get the input user token, which can be reused to access Adobe APIs
+    const token = getToken(params)
+
     // initialize the sdk
-    const analyticsClient = await Analytics.init(params.companyId, params.apiKey, params.token)
+    const analyticsClient = await Analytics.init(params.companyId, params.apiKey, token)
 
     // get collections from analytic API
     const collections = await analyticsClient.getCollections({ limit: 5, page: 0 })
-    myAppLogger.debug(`collections = ${JSON.stringify(collections, null, 2)}`)
-
+    logger.debug(`collections = ${JSON.stringify(collections, null, 2)}`)
     return {
       statusCode: 200,
       body: collections
     }
   } catch (error) {
-    myAppLogger.error(error)
-    return {
-      statusCode: 500,
-      body: { error: 'server error' }
-    }
+    return errorResponse(500, 'server error', logger)
   }
 }
 

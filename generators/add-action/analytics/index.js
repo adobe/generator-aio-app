@@ -11,11 +11,30 @@ governing permissions and limitations under the License.
 
 const path = require('path')
 const ActionGenerator = require('../../../lib/ActionGenerator')
-
+const beautify = require('gulp-beautify')
 class AnalyticsGenerator extends ActionGenerator {
   constructor (args, opts) {
     super(args, opts)
-    this.props = {}
+    this.props = {
+      solutionName: 'Adobe Analytics',
+      // eslint-disable-next-line quotes
+      requiredParams: `['apiKey', 'companyId']`,
+      // eslint-disable-next-line quotes
+      importCode: `const { Analytics } = require('aio-sdk')`,
+      responseCode:
+`
+    // initialize the sdk
+    const analyticsClient = await Analytics.init(params.companyId, params.apiKey, token)
+
+    // get collections from analytic API
+    const collections = await analyticsClient.getCollections({ limit: 5, page: 0 })
+    logger.debug('collections =', JSON.stringify(collections, null, 2))
+    return {
+      statusCode: 200,
+      body: collections
+    }
+`
+    }
   }
 
   async prompting () {
@@ -23,10 +42,12 @@ class AnalyticsGenerator extends ActionGenerator {
   }
 
   writing () {
-    this.sourceRoot(path.join(__dirname, './templates'))
+    // this.registerTransformStream(beautify({ indent_size: 2 }))
+    this.sourceRoot(path.join(__dirname, '../templates'))
 
-    this.addAction(this.props.actionName, './getCollections.js', {
-      testFile: './getCollections.test.js',
+    this.addAction(this.props.actionName, './stub-action.js', {
+      testFile: './stub-action.test.js',
+      sharedLibFile: './utils.js',
       tplContext: this.props,
       dependencies: {
         '@adobe/aio-sdk': '^1.0.2'
