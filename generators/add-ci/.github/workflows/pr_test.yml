@@ -1,0 +1,30 @@
+name: AIO App CI
+
+on: [pull_request]
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node-version: ['12', '10']
+        os: [macOS-latest, ubuntu-latest, windows-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install
+        run: npm i
+      - name: Setup CLI
+        uses: sandeep-paliwal/aio-cli-setup@0.0.2
+      - name: Build
+        uses: sandeep-paliwal/aio-app@0.0.3
+        with:
+          command: build
+          AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE }}
+      - name: Test
+        uses: sandeep-paliwal/aio-app@0.0.4
+        with:
+          command: test
