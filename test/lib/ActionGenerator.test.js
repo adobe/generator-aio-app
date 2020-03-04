@@ -333,6 +333,21 @@ describe('implementation', () => {
       expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/test/${constants.actionsDirname}/myAction.test.js`), { actionRelPath: n(`../../${constants.actionsDirname}/myAction/index.js`) }, {}, {})
     })
 
+    test('with e2eTestFile option', () => {
+      // mock fs
+      actionGenerator.fs = {
+        copyTpl: jest.fn(),
+        exists: jest.fn().mockReturnValue(false), // called on manifest
+        write: jest.fn(),
+        writeJSON: jest.fn(),
+        readJSON: jest.fn().mockReturnValue({}) // package.json read
+      }
+      actionGenerator.addAction('myAction', './templateFile.js', { e2eTestFile: './template.test.js' })
+
+      // test manifest update with action information
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/e2e/${constants.actionsDirname}/myAction.e2e.js`), {}, {}, {})
+    })
+
     test('with testFile option and tplContext option (should append relative path to tested file to test template context)', () => {
       // mock fs
       actionGenerator.fs = {

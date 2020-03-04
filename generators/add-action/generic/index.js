@@ -27,6 +27,7 @@ class GenericGenerator extends ActionGenerator {
 
     this.addAction(this.props.actionName, './fetchExample.js', {
       testFile: './fetchExample.test.js',
+      e2eTestFile: './fetchExample.e2e.js',
       tplContext: this.props,
       dependencies: {
         '@adobe/aio-sdk': '^1.0.2',

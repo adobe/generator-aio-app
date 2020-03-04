@@ -14,7 +14,7 @@ const path = require('path')
 const fs = require('fs-extra')
 const yaml = require('js-yaml')
 
-const { manifestPackagePlaceholder } = require('../../lib/constants')
+const { manifestPackagePlaceholder, actionsDirname } = require('../../lib/constants')
 
 /*
       'initializing',
@@ -86,6 +86,9 @@ class DeleteAction extends Generator {
       fs.removeSync(this.actionPath) // will make user prompt for all files if not --force
       delete this.manifestActions[this.actionName]
       fs.writeFileSync(this.destinationPath('manifest.yml'), yaml.safeDump(this.manifestContent))
+
+      fs.removeSync(this.destinationPath('e2e', actionsDirname, this.actionName + '.e2e.js')) // remove e2e test
+      fs.removeSync(this.destinationPath('test', actionsDirname, this.actionName + '.test.js')) // remove unit test
     }
   }
 }
