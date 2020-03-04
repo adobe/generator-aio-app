@@ -48,6 +48,7 @@ class AnalyticsGenerator extends ActionGenerator {
     this.addAction(this.props.actionName, './stub-action.js', {
       testFile: './stub-action.test.js',
       sharedLibFile: './utils.js',
+      e2eTestFile: './getCollections.e2e.js',
       tplContext: this.props,
       dependencies: {
         '@adobe/aio-sdk': '^1.0.2'
