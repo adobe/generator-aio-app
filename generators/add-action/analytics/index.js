@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 
 const path = require('path')
 const ActionGenerator = require('../../../lib/ActionGenerator')
-const beautify = require('gulp-beautify')
+
 class AnalyticsGenerator extends ActionGenerator {
   constructor (args, opts) {
     super(args, opts)
@@ -20,20 +20,19 @@ class AnalyticsGenerator extends ActionGenerator {
       // eslint-disable-next-line quotes
       requiredParams: `['apiKey', 'companyId']`,
       // eslint-disable-next-line quotes
-      importCode: `const { Analytics } = require('aio-sdk')`,
+      importCode: `const { Analytics } = require('@adobe/aio-sdk')`,
       responseCode:
-`
-    // initialize the sdk
+      // indent matters
+`   // initialize the sdk
     const analyticsClient = await Analytics.init(params.companyId, params.apiKey, token)
 
     // get collections from analytic API
     const collections = await analyticsClient.getCollections({ limit: 5, page: 0 })
     logger.debug('collections =', JSON.stringify(collections, null, 2))
-    return {
+    const response = {
       statusCode: 200,
       body: collections
-    }
-`
+    }`
     }
   }
 
@@ -48,7 +47,7 @@ class AnalyticsGenerator extends ActionGenerator {
     this.addAction(this.props.actionName, './stub-action.js', {
       testFile: './stub-action.test.js',
       sharedLibFile: './utils.js',
-      e2eTestFile: './getCollections.e2e.js',
+      e2eTestFile: './stub-action.e2e.js',
       tplContext: this.props,
       dependencies: {
         '@adobe/aio-sdk': '^1.0.2'

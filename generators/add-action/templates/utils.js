@@ -9,14 +9,12 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 <% } %> */
 
-function logParameters (logger, params) {
+function stringParameters (params) {
   // hide authorization token without overriding params
   let headers = params.__ow_headers
   if (headers.authorization) {
     headers = { ...headers, authorization: '<hidden>' }
   }
-
-  logger(`params: ${JSON.stringify({ ...params, headers })}`)
 }
 
 function _getMissingParameters (params, required) {
@@ -58,6 +56,9 @@ function getToken (params) {
 }
 
 function errorResponse (statusCode, message, logger) {
+  if (logger) {
+    logger.error(statusCode, message)
+  }
   return {
     statusCode,
     body: {
@@ -69,6 +70,6 @@ function errorResponse (statusCode, message, logger) {
 module.exports = {
   errorResponse,
   getToken,
-  logParameters,
+  stringParameters,
   validateRequest
 }

@@ -17,7 +17,7 @@ const { Core } = require('@adobe/aio-sdk')
 <% if (importCode) { %>
 <%- importCode %>
 <% } %>
-const { errorResponse, getToken, logParameters, validateRequest } = require('../utils')
+const { errorResponse, getToken, stringParameters, validateRequest } = require('../utils')
 
 async function main (params) {
   // create a Logger
@@ -27,8 +27,8 @@ async function main (params) {
     // 'info' is the default level if not set
     logger.info('Calling the main action')
 
-    // log parameters
-    logParameters(logger.debug, params)
+    // log parameters, only if params.LOG_LEVEL === 'debug'
+    logger.debug(stringParameters(params))
 
     // check for missing parameters
     const required = <%- requiredParams %>
@@ -41,7 +41,11 @@ async function main (params) {
     const token = getToken(params)
 
     <%- responseCode %>
+
+    logger.info(response.statusCode, 'end of request')
+    return response
   } catch (error) {
+    logger.error(error)
     return errorResponse(500, 'server error', logger)
   }
 }
