@@ -16,17 +16,15 @@ class AnalyticsGenerator extends ActionGenerator {
   constructor (args, opts) {
     super(args, opts)
     this.props = {
-      solutionName: 'Adobe Analytics',
+      description: 'This is a sample action showcasing how to access the Adobe Analytics API',
       // eslint-disable-next-line quotes
       requiredParams: `['apiKey', 'companyId']`,
       // eslint-disable-next-line quotes
       importCode: `const { Analytics } = require('@adobe/aio-sdk')`,
-      responseCode:
-      // indent matters
-`   // initialize the sdk
+      responseCode: `// initialize the sdk
     const analyticsClient = await Analytics.init(params.companyId, params.apiKey, token)
 
-    // get collections from analytic API
+    // get collections from analytics API
     const collections = await analyticsClient.getCollections({ limit: 5, page: 0 })
     logger.debug('collections =', JSON.stringify(collections, null, 2))
     const response = {

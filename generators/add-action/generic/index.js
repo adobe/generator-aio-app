@@ -15,7 +15,26 @@ const ActionGenerator = require('../../../lib/ActionGenerator')
 class GenericGenerator extends ActionGenerator {
   constructor (args, opts) {
     super(args, opts)
-    this.props = {}
+    this.props = {
+      description: 'This is a sample action showcasing how to access an external API',
+      // eslint-disable-next-line quotes
+      requiredParams: `[/* add required params */]`,
+      // eslint-disable-next-line quotes
+      importCode: `const fetch = require('node-fetch')`,
+      responseCode: `// replace this with the api you want to access
+    const apiEndpoint = 'https://adobeioruntime.net/api/v1/api-docs'
+
+    // fetch content from external api endpoint
+    const res = await fetch(apiEndpoint)
+    if (!res.ok) {
+      throw new Error('request to ' + apiEndpoint + ' failed with status code ' + res.status)
+    }
+    const content = await res.json()
+    const response = {
+      statusCode: 200,
+      body: content
+    }`
+    }
   }
 
   async prompting () {
@@ -23,11 +42,12 @@ class GenericGenerator extends ActionGenerator {
   }
 
   writing () {
-    this.sourceRoot(path.join(__dirname, './templates'))
+    this.sourceRoot(path.join(__dirname, '../templates'))
 
-    this.addAction(this.props.actionName, './fetchExample.js', {
-      testFile: './fetchExample.test.js',
-      e2eTestFile: './fetchExample.e2e.js',
+    this.addAction(this.props.actionName, './stub-action.js', {
+      testFile: './stub-action.test.js',
+      sharedLibFile: './utils.js',
+      e2eTestFile: './stub-action.e2e.js',
       tplContext: this.props,
       dependencies: {
         '@adobe/aio-sdk': '^1.0.2',

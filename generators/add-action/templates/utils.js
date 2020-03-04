@@ -57,7 +57,7 @@ function getToken (params) {
 
 function errorResponse (statusCode, message, logger) {
   if (logger) {
-    logger.error(statusCode, message)
+    logger.info(`${statusCode}: ${message}`)
   }
   return {
     statusCode,

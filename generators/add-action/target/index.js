@@ -15,7 +15,23 @@ const ActionGenerator = require('../../../lib/ActionGenerator')
 class TargetGenerator extends ActionGenerator {
   constructor (args, opts) {
     super(args, opts)
-    this.props = {}
+    this.props = {
+      description: 'This is a sample action showcasing how to access the Adobe Target API',
+      // eslint-disable-next-line quotes
+      requiredParams: `['apiKey', 'tenant']`,
+      // eslint-disable-next-line quotes
+      importCode: `const { Target } = require('@adobe/aio-sdk')`,
+      responseCode: `// initialize the sdk
+    const targetClient = await Target.init(params.tenant, params.apiKey, token)
+
+    // get activities from Target api
+    const activities = await targetClient.getActivities({ limit: 5, offset: 0 })
+    logger.debug('profiles =', JSON.stringify(activities, null, 2))
+    const response = {
+      statusCode: 200,
+      body: activities
+    }`
+    }
   }
 
   async prompting () {
@@ -23,11 +39,12 @@ class TargetGenerator extends ActionGenerator {
   }
 
   writing () {
-    this.sourceRoot(path.join(__dirname, './templates'))
+    this.sourceRoot(path.join(__dirname, '../templates'))
 
-    this.addAction(this.props.actionName, './getActivities.js', {
-      testFile: './getActivities.test.js',
-      e2eTestFile: './getActivities.e2e.js',
+    this.addAction(this.props.actionName, './stub-action.js', {
+      testFile: './stub-action.test.js',
+      sharedLibFile: './utils.js',
+      e2eTestFile: './stub-action.e2e.js',
       tplContext: this.props,
       dotenvStub: {
         label: 'please provide your Adobe I/O Target tenant',
