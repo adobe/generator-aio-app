@@ -10,7 +10,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        node-version: ['12', '10']
+        node-version: ['12']
         os: [macOS-latest, ubuntu-latest, windows-latest]
     steps:
       - name: Checkout
@@ -22,15 +22,19 @@ jobs:
       - name: npm install
         run: npm i
       - name: Setup CLI
-        uses: sandeep-paliwal/aio-cli-setup@0.0.2
-      - name: Build
-        uses: sandeep-paliwal/aio-app@0.0.3
+        uses: adobe/aio-cli-setup-action@0.0.1
         with:
+          os: ${{ matrix.os }}
+      - name: Build
+        uses: adobe/aio-apps-action@0.0.1
+        with:
+          os: ${{ matrix.os }}
           command: build
           AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE_STAGE }}
       - name: Deploy
-        uses: sandeep-paliwal/aio-app@0.0.4
+        uses: adobe/aio-apps-action@0.0.1
         with:
+          os: ${{ matrix.os }}
           command: deploy
           AIO_RUNTIME_AUTH: ${{ secrets.AIO_RUNTIME_AUTH_STAGE }}
           AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE_STAGE }}

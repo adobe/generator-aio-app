@@ -42,7 +42,7 @@ class CIGenerator extends ActionGenerator {
   }
 
   writing () {
-    if(this.props.addCI) {
+    if (this.props.addCI) {
       this.sourceRoot(path.join(__dirname, './'))
       this.fs.copyTpl(
         this.templatePath(ciDirName),
