@@ -60,6 +60,11 @@ class CodeGenerator extends Generator {
               name: 'Web Assets: Deploy hosted static assets',
               value: 'webAssets',
               checked: true
+            },
+            {
+              name: 'CI/CD: Include GitHub Actions based workflows for Build, Test and Deploy',
+              value: 'ci',
+              checked: true
             }
           ],
           validate: atLeastOne
@@ -69,6 +74,7 @@ class CodeGenerator extends Generator {
     }
     const addActions = components.includes('actions')
     const addWebAssets = components.includes('webAssets')
+    const addCI = components.includes('ci')
 
     // run add action and add ui generators when applicable
     if (addActions) {
@@ -84,6 +90,11 @@ class CodeGenerator extends Generator {
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
         'project-name': this.options['project-name']
+      })
+    }
+    if (addCI) {
+      this.composeWith(path.join(__dirname, '../add-ci/index.js'), {
+        'skip-prompt': true
       })
     }
   }

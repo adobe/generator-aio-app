@@ -18,8 +18,10 @@ This module is used by the Adobe I/O CLI app plugin.
 - `aio app init` to bootstrap your project's code
 - `aio app add action` to add new actions to an existing app
 - `aio app add web-assets` to add a UI to an existing app
+- `aio app add ci` to add a CI to an existing app
 - `aio app delete action` to delete an existing action
 - `aio app delete web-assets` to delete the app's UI
+- `aio app delete ci` to delete CI from existing app
 
 ## Contributing
 
