@@ -63,7 +63,7 @@ class CodeGenerator extends Generator {
             },
             {
               name: 'CI/CD: Include GitHub Actions based workflows for Build, Test and Deploy',
-              value: 'gitActions',
+              value: 'ci',
               checked: true
             }
           ],
@@ -74,7 +74,7 @@ class CodeGenerator extends Generator {
     }
     const addActions = components.includes('actions')
     const addWebAssets = components.includes('webAssets')
-    const addCI = components.includes('gitActions')
+    const addCI = components.includes('ci')
 
     // run add action and add ui generators when applicable
     if (addActions) {

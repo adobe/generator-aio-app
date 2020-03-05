@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 
 const path = require('path')
 const ActionGenerator = require('../../lib/ActionGenerator')
+const fs = require('fs-extra')
 const { ciDirName } = require('../../lib/constants')
 
 class CIGenerator extends ActionGenerator {
@@ -20,36 +21,20 @@ class CIGenerator extends ActionGenerator {
 
     this.ciPath = this.destinationPath(ciDirName)
     this.props.addCI = false
+    this.option('skip-prompt', { default: false })
   }
 
-  async prompting () {
-    if (!this.options['skip-prompt']) {
-      const resConfirm = await this.prompt([
-        {
-          type: 'confirm',
-          name: 'addCI',
-          message: `Please confirm the addition of CI files in '${this.ciPath}'`,
-          when: !this.options['skip-prompt']
-        }
-      ])
-      if (this.options['skip-prompt'] || resConfirm.addCI) {
-        this.log('> adding CI')
-        this.props.addCI = true
-      }
-    } else {
-      this.props.addCI = true
-    }
+  initializing () {
+    if (fs.existsSync(this.ciPath)) throw new Error('you already have CI in your project, please delete first')
   }
 
   writing () {
-    if (this.props.addCI) {
-      this.sourceRoot(path.join(__dirname, './'))
-      this.fs.copyTpl(
-        this.templatePath(ciDirName),
-        this.destinationPath(ciDirName),
-        {}
-      )
-    }
+    this.sourceRoot(path.join(__dirname, './'))
+    this.fs.copyTpl(
+      this.templatePath(ciDirName),
+      this.destinationPath(ciDirName),
+      {}
+    )
   }
 }
 
