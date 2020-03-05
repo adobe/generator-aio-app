@@ -11,7 +11,6 @@ governing permissions and limitations under the License.
 
 const path = require('path')
 const ActionGenerator = require('../../lib/ActionGenerator')
-const fs = require('fs-extra')
 const { ciDirName } = require('../../lib/constants')
 
 class CIGenerator extends ActionGenerator {
@@ -22,10 +21,6 @@ class CIGenerator extends ActionGenerator {
     this.ciPath = this.destinationPath(ciDirName)
     this.props.addCI = false
     this.option('skip-prompt', { default: false })
-  }
-
-  initializing () {
-    if (fs.existsSync(this.ciPath)) throw new Error('you already have CI in your project, please delete first')
   }
 
   writing () {

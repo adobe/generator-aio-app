@@ -38,13 +38,6 @@ describe('prototype', () => {
 })
 
 describe('run', () => {
-  test('CI already in project', async () => {
-    await expect(helpers.run(theGeneratorPath)
-      .inTmpDir(dir => {
-        fs.mkdirSync(path.join(dir, '.github'))
-      })).rejects.toThrow('you already have CI in your project, please delete first')
-  })
-
   test('should create files under .github', async () => {
     await helpers.run(theGeneratorPath)
       .inTmpDir(dir => {

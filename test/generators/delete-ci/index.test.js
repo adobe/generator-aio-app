@@ -27,7 +27,7 @@ describe('prototype', () => {
 
 describe('run', () => {
   function writeFakeCIFiles (dir) {
-    const actionPath = '.github/workflows/action.yml'
+    const actionPath = '.github/workflows/deploy_prod.yml'
     const actionContent = ''
 
     // we use real fs, dir is provided by yeoman-test helpers and will be cleaned up
@@ -48,8 +48,8 @@ describe('run', () => {
       })
       .withPrompts({ deleteCI: true })
 
-    assert.noFile('.github/workflows/action.yml')
-    expect(fs.existsSync(path.join(dir, '.github'))).toEqual(false)
+    assert.noFile('.github/workflows/deploy_prod.yml')
+    expect(fs.existsSync(path.join(dir, '.github/workflows/deploy_prod.yml'))).toEqual(false)
   })
 
   test('prompts false to delete confirmation', async () => {
@@ -59,8 +59,8 @@ describe('run', () => {
       })
       .withPrompts({ deleteCI: false })
 
-    assert.file('.github/workflows/action.yml')
-    expect(fs.existsSync(path.join(dir, '.github'))).toEqual(true)
+    assert.file('.github/workflows/deploy_prod.yml')
+    expect(fs.existsSync(path.join(dir, '.github/workflows/deploy_prod.yml'))).toEqual(true)
   })
 
   test('--skip-prompt', async () => {
@@ -70,7 +70,7 @@ describe('run', () => {
       })
       .withOptions({ 'skip-prompt': true })
 
-    assert.noFile('.github/workflows/action.yml')
-    expect(fs.existsSync(path.join(dir, '.github'))).toEqual(false)
+    assert.noFile('.github/workflows/deploy_prod.yml')
+    expect(fs.existsSync(path.join(dir, '.github/workflows/deploy_prod.yml'))).toEqual(false)
   })
 })

@@ -13,6 +13,9 @@ const Generator = require('yeoman-generator')
 const fs = require('fs-extra')
 
 const { ciDirName } = require('../../lib/constants')
+const DEPLOY_PROD_FILENAME = '/workflows/deploy_prod.yml'
+const DEPLOY_STAGE_FILENAME = '/workflows/deploy_stage.yml'
+const TEST_PR_FILENAME = '/workflows/pr_test.yml'
 
 /*
       'initializing',
@@ -48,7 +51,9 @@ class DeleteCI extends Generator {
       }
     ])
     if (this.options['skip-prompt'] || resConfirm.deleteCI) {
-      fs.removeSync(this.ciPath)
+      fs.removeSync(this.ciPath + DEPLOY_PROD_FILENAME)
+      fs.removeSync(this.ciPath + DEPLOY_STAGE_FILENAME)
+      fs.removeSync(this.ciPath + TEST_PR_FILENAME)
       this.log('✔ deleted CI files locally')
     }
   }
