@@ -2,7 +2,8 @@ name: AIO App CI
 
 on: [pull_request]
 jobs:
-  build:
+  test:
+    name: Test PR
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:

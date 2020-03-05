@@ -5,13 +5,14 @@ on:
     branches:
       - master
 jobs:
-  build:
+  deploy:
+    name: Deploy to Stage
     runs-on: ${{ matrix.os }}
     strategy:
       max-parallel: 1
       matrix:
         node-version: ['12']
-        os: [macOS-latest, ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
