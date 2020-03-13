@@ -1,4 +1,4 @@
-/* <% if (false) { %>
+/* <% if (false) {%>
 Copyright 2019 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
@@ -11,67 +11,123 @@ governing permissions and limitations under the License.
 * <license header>
 */
 
+/* This file exposes some common utilities for your actions */
+
+/**
+ *
+ * Returns a log ready string of the action input parameters.
+ * The `Authorization` header content will be replaced by '<hidden>'.
+ *
+ * @param {object} params action input parameters.
+ *
+ * @returns {string}
+ *
+ */
 function stringParameters (params) {
   // hide authorization token without overriding params
   let headers = params.__ow_headers
   if (headers.authorization) {
     headers = { ...headers, authorization: '<hidden>' }
   }
+  return JSON.stringify({ ...params, __ow_headers: headers })
 }
 
-function _getMissingParameters (params, required) {
+/**
+ *
+ * Returns the list of missing keys giving an object and its required keys.
+ *
+ * @param {object} obj object to check.
+ * @param {array} required list of required keys.
+ *        Each element can be multi level deep using a '.' separator e.g. 'myRequiredObj.myRequiredKey'
+ *
+ * @returns {array}
+ * @private
+ */
+function getMissingKeys (obj, required) {
   return required.filter(r => {
     const splits = r.split('.')
     const last = splits[splits.length - 1]
-    const obj = splits.slice(0, -1).reduce((obj, split) => { obj = (obj[split] || {}); return obj }, params)
-    return !obj[last]
+    const traverse = splits.slice(0, -1).reduce((tObj, split) => { tObj = (tObj[split] || {}); return tObj }, obj)
+    return !traverse[last]
   })
 }
 
-async function validateRequest (params, required = []) {
-  if (!params.__ow_headers.authorization) {
-    return { ok: false, status: 401, errorMessage: 'missing Authorization header' }
-  }
-  if (!params.__ow_headers['x-org-id']) {
-    return { ok: false, status: 400, errorMessage: 'missing x-org-id header' }
-  }
-  const missing = _getMissingParameters(params, required)
-  if (missing.length > 0) {
-    return { ok: false, status: 400, errorMessage: `missing parameter(s) ${missing}` }
+/**
+ *
+ * Returns the list of missing keys giving an object and its required keys.
+ *
+ * @param {object} params action input parameters.
+ * @param {array} requiredHeaders list of required input headers.
+ * @param {array} requiredParams list of required input parameters.
+ *        Each element can be multi level deep using a '.' separator e.g. 'myRequiredObj.myRequiredKey'.
+ *
+ * @returns {string|undefined} if the return value is defined, then it holds an error message describing the missing inputs.
+ *
+ */
+function checkMissingRequestInputs (params, requiredParams = [], requiredHeaders = []) {
+  let errorMessage
+
+  // input headers are always lowercase
+  requiredHeaders = requiredHeaders.map(h => h.toLowerCase())
+  // check for missing headers
+  const missingHeaders = getMissingKeys(params.__ow_headers, requiredHeaders)
+  if (missingHeaders.length > 0) {
+    errorMessage = `missing headers '${missingHeaders}'`
   }
 
-  const VALIDATION_ENDPOINT = 'https://adobeio.adobeioruntime.net/apis/validate/app-registry/'
-  const validationUrl = `${VALIDATION_ENDPOINT}/${params.__ow_headers['x-org-id']}?namespace=${process.env.__OW_NAMESPACE}`
-  const response = await fetch(validationUrl, { headers: { Authorization: params.__ow_headers.authorization } })
-  if (!response.ok && response.status !== 403) {
-    throw new Error(`bad response from validation endpoint with status ${response.status}`)
-  }
-  if (response.status === 403) {
-    return { ok: false, status: 403, errorMessage: 'request is not authorized to access the application' }
+  // check for missing parameters
+  const missingParams = getMissingKeys(params, requiredParams)
+  if (missingParams.length > 0) {
+    errorMessage += ` and missing parameter(s) '${missingParams}'`
   }
 
-  return { ok: true }
+  return errorMessage
 }
 
-function getToken (params) {
-  return params.__ow_headers.authorization.substring('Bearer '.length)
+/**
+ *
+ * Extracts the bearer token string from the Authorization header in the request parameters.
+ *
+ * @param {object} params action input parameters.
+ *
+ * @returns {string|undefined} the token string or undefined if not set in request headers.
+ *
+ */
+function getBearerToken (params) {
+  return params.__ow_headers.authorization && params.__ow_headers.authorization.substring('Bearer '.length)
 }
 
+/**
+ *
+ * Returns an error response object and attempts to log.info the status code and error message
+ *
+ * @param {number} statusCode the error status code.
+ *        e.g. 400
+ * @param {string} message the error message.
+ *        e.g. 'missing xyz parameter'
+ * @param {*} [logger] an optional logger instance object with an `info` method
+ *        e.g. `new require('@adobe/aio-sdk').Core.Logger('name')`
+ *
+ * @returns {object} the error object, ready to be returned from the action main's function.
+ *
+ */
 function errorResponse (statusCode, message, logger) {
-  if (logger) {
+  if (logger && typeof logger.info === 'function') {
     logger.info(`${statusCode}: ${message}`)
   }
   return {
-    statusCode,
-    body: {
-      error: message
+    error: {
+      statusCode,
+      body: {
+        error: message
+      }
     }
   }
 }
 
 module.exports = {
   errorResponse,
-  getToken,
+  getBearerToken,
   stringParameters,
-  validateRequest
+  checkMissingRequestInputs
 }

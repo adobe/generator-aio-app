@@ -51,13 +51,14 @@ class AnalyticsGenerator extends ActionGenerator {
         '@adobe/aio-sdk': '^1.0.2'
       },
       dotenvStub: {
-        label: 'please provide your Adobe I/O Analytics company id',
+        label: 'please provide your Adobe I/O Analytics company id and api key',
         vars: [
-          'ANALYTICS_COMPANY_ID'
+          'ANALYTICS_COMPANY_ID',
+          'ANALYTICS_API_KEY'
         ]
       },
       actionManifestConfig: {
-        inputs: { LOG_LEVEL: 'debug', companyId: '$ANALYTICS_COMPANY_ID' },
+        inputs: { LOG_LEVEL: 'debug', companyId: '$ANALYTICS_COMPANY_ID', apiKey: '$ANALYTICS_API_KEY' },
         annotations: { final: true }
       }
     })

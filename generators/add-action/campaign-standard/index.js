@@ -48,16 +48,17 @@ class CampaignStandardGenerator extends ActionGenerator {
       e2eTestFile: './stub-action.e2e.js',
       tplContext: this.props,
       dotenvStub: {
-        label: 'please provide your Adobe I/O Campaign Standard integration tenant',
+        label: 'please provide your Adobe I/O Campaign Standard integration tenant and api key',
         vars: [
-          'CAMPAIGN_STANDARD_TENANT'
+          'CAMPAIGN_STANDARD_TENANT',
+          'CAMPAIGN_STANDARD_API_KEY'
         ]
       },
       dependencies: {
         '@adobe/aio-sdk': '^1.0.2'
       },
       actionManifestConfig: {
-        inputs: { LOG_LEVEL: 'debug', tenant: '$CAMPAIGN_STANDARD_TENANT' },
+        inputs: { LOG_LEVEL: 'debug', tenant: '$CAMPAIGN_STANDARD_TENANT', apiKey: '$CAMPAIGN_STANDARD_API_KEY' },
         annotations: { final: true }
       }
     })

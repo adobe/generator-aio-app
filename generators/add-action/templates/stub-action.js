@@ -17,7 +17,7 @@ governing permissions and limitations under the License.
 
 const { Core } = require('@adobe/aio-sdk')
 <% if (importCode) { %><%- importCode %><% } %>
-const { errorResponse, getToken, stringParameters, validateRequest } = require('../utils')
+const { errorResponse, getBearerToken, stringParameters, checkMissingRequestInputs } = require('../utils')
 
 // main function that will be executed by Adobe I/O Runtime
 async function main (params) {
@@ -31,24 +31,21 @@ async function main (params) {
     // log parameters, only if params.LOG_LEVEL === 'debug'
     logger.debug(stringParameters(params))
 
-    // check for missing parameters
-    const required = <%- requiredParams %>
-
-    // validate the incoming request
-    // clients must be authorized to access the app and must provide required parameters
-    const { ok, status, errorMessage } = await validateRequest(params, required)
-    if (!ok) {
+    // check for missing request input parameters and headers
+    const requiredParams = <%- requiredParams %>
+    const errorMessage = checkMissingRequestInputs(params, requiredParams, ['Authorization'])
+    if (errorMessage) {
       // return and log client errors
-      return errorResponse(status, errorMessage, logger)
+      return errorResponse(400, errorMessage, logger)
     }
 
     // extract the user Bearer token from the input request parameters
-    const token = getToken(params)
+    const token = getBearerToken(params)
 
     <%- responseCode %>
 
     // log the response status code
-    logger.info(response.statusCode, 'end of request')
+    logger.info(`${response.statusCode}: successful request`)
     return response
   } catch (error) {
     // log any server errors
