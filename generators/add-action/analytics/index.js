@@ -43,7 +43,7 @@ class AnalyticsGenerator extends ActionGenerator {
     this.sourceRoot(path.join(__dirname, '../templates'))
 
     this.addAction(this.props.actionName, './stub-action.js', {
-      testFile: './stub-action.test.js',
+      testFile: '../analytics/templates/getCollections.test.js',
       sharedLibFile: './utils.js',
       sharedLibTestFile: './utils.test.js',
       e2eTestFile: './stub-action.e2e.js',

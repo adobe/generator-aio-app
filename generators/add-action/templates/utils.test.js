@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 * <license header>
 */
 
-const utils = require('../actions/utils')
+const utils = require('../../actions/utils')
 
 test('interface', () => {
   expect(typeof utils.errorResponse).toBe('function')

@@ -25,7 +25,7 @@ governing permissions and limitations under the License.
  */
 function stringParameters (params) {
   // hide authorization token without overriding params
-  let headers = params.__ow_headers
+  let headers = params.__ow_headers || {}
   if (headers.authorization) {
     headers = { ...headers, authorization: '<hidden>' }
   }
@@ -70,7 +70,7 @@ function checkMissingRequestInputs (params, requiredParams = [], requiredHeaders
   // input headers are always lowercase
   requiredHeaders = requiredHeaders.map(h => h.toLowerCase())
   // check for missing headers
-  const missingHeaders = getMissingKeys(params.__ow_headers, requiredHeaders)
+  const missingHeaders = getMissingKeys(params.__ow_headers || {}, requiredHeaders)
   if (missingHeaders.length > 0) {
     errorMessage = `missing header(s) '${missingHeaders}'`
   }
