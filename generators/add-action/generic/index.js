@@ -47,6 +47,7 @@ class GenericGenerator extends ActionGenerator {
     this.addAction(this.props.actionName, './stub-action.js', {
       testFile: './stub-action.test.js',
       sharedLibFile: './utils.js',
+      sharedLibTestFile: './utils.test.js',
       e2eTestFile: './stub-action.e2e.js',
       tplContext: this.props,
       dependencies: {

@@ -1,4 +1,4 @@
-/* <% if (false) { %>
+/*<% if (false) { %>
 Copyright 2019 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
@@ -22,10 +22,10 @@ const packagejson = JSON.parse(fs.readFileSync('package.json').toString())
 const runtimePackage = `${packagejson.name}-${packagejson.version}`
 const actionUrl = `https://${namespace}.${hostname}/api/v1/web/${runtimePackage}/<%= actionName %>`
 
-test('returns a 401 when missing Authorization header', async () => {
+test('returns a 400 when missing Authorization header', async () => {
   const res = await fetch(actionUrl)
   expect(res).toEqual(expect.objectContaining({
-    status: 401
+    status: 400
   }))
   const jsonBody = await res.json()
   expect(jsonBody.error).toBe('missing Authorization header')

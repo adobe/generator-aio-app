@@ -1,4 +1,4 @@
-/* <% if (false) {%>
+/*<% if (false) { %>
 Copyright 2019 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
@@ -61,24 +61,29 @@ function getMissingKeys (obj, required) {
  * @param {array} requiredParams list of required input parameters.
  *        Each element can be multi level deep using a '.' separator e.g. 'myRequiredObj.myRequiredKey'.
  *
- * @returns {string|undefined} if the return value is defined, then it holds an error message describing the missing inputs.
+ * @returns {string} if the return value is not null, then it holds an error message describing the missing inputs.
  *
  */
 function checkMissingRequestInputs (params, requiredParams = [], requiredHeaders = []) {
-  let errorMessage
+  let errorMessage = null
 
   // input headers are always lowercase
   requiredHeaders = requiredHeaders.map(h => h.toLowerCase())
   // check for missing headers
   const missingHeaders = getMissingKeys(params.__ow_headers, requiredHeaders)
   if (missingHeaders.length > 0) {
-    errorMessage = `missing headers '${missingHeaders}'`
+    errorMessage = `missing header(s) '${missingHeaders}'`
   }
 
   // check for missing parameters
   const missingParams = getMissingKeys(params, requiredParams)
   if (missingParams.length > 0) {
-    errorMessage += ` and missing parameter(s) '${missingParams}'`
+    if (errorMessage) {
+      errorMessage += ' and '
+    } else {
+      errorMessage = ''
+    }
+    errorMessage += `missing parameter(s) '${missingParams}'`
   }
 
   return errorMessage
@@ -94,9 +99,13 @@ function checkMissingRequestInputs (params, requiredParams = [], requiredHeaders
  *
  */
 function getBearerToken (params) {
-  return params.__ow_headers.authorization && params.__ow_headers.authorization.substring('Bearer '.length)
+  if (params.__ow_headers &&
+      params.__ow_headers.authorization &&
+      params.__ow_headers.authorization.startsWith('Bearer ')) {
+    return params.__ow_headers.authorization.substring('Bearer '.length)
+  }
+  return undefined
 }
-
 /**
  *
  * Returns an error response object and attempts to log.info the status code and error message
