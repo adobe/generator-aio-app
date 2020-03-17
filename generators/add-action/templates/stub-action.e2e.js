@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 */
 
 const { Config } = require('@adobe/aio-sdk').Core
-const fs = require.require('fs')
+const fs = require('fs')
 const fetch = require('node-fetch')
 
 // get action url
@@ -22,11 +22,11 @@ const packagejson = JSON.parse(fs.readFileSync('package.json').toString())
 const runtimePackage = `${packagejson.name}-${packagejson.version}`
 const actionUrl = `https://${namespace}.${hostname}/api/v1/web/${runtimePackage}/<%= actionName %>`
 
-test('returns a 400 when missing Authorization header', async () => {
+// The deployed actions are secured with the `require-adobe-auth` annotation.
+// If the authorization header is missing, Adobe I/O Runtime returns with a 401 before the action is executed.
+test('returns a 401 when missing Authorization header', async () => {
   const res = await fetch(actionUrl)
   expect(res).toEqual(expect.objectContaining({
-    status: 400
+    status: 401
   }))
-  const jsonBody = await res.json()
-  expect(jsonBody.error).toBe('missing Authorization header')
 })
