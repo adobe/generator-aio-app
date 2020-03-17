@@ -168,6 +168,28 @@ describe('run', () => {
     }))
     expect(installDependencies).toHaveBeenCalledTimes(1)
   })
+  test('--adobe-services some,string and prompt selection "web-assets, actions, CI"', async () => {
+    const dir = await helpers.run(theGeneratorPath)
+      .withOptions({ 'adobe-services': 'some,string', 'skip-install': false })
+      .withPrompts({ components: ['webAssets', 'actions', 'ci'] })
+
+    expectBaseFiles()
+    expectDotEnv()
+    const expectedProjectName = path.basename(dir)
+    assert.JSONFileContent('package.json', { name: expectedProjectName, version: '0.0.1' })
+    // make sure sub generators have been called
+    expect(composeWith).toHaveBeenCalledTimes(3)
+
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-web-assets/index.js')), expect.objectContaining({
+      'skip-install': true,
+      'adobe-services': 'some,string',
+      'project-name': expectedProjectName
+    }))
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-ci/index.js')), expect.objectContaining({
+      'skip-prompt': true
+    }))
+    expect(installDependencies).toHaveBeenCalledTimes(1)
+  })
   test('--skip-prompt --skip-install', async () => {
     const dir = await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true, 'skip-install': true })
