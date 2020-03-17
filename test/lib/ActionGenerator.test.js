@@ -170,7 +170,10 @@ describe('implementation', () => {
               myAction: {
                 function: n(`${constants.actionsDirname}/myAction/index.js`), // relative path is important here
                 web: 'yes',
-                runtime: 'nodejs:10'
+                runtime: 'nodejs:10',
+                annotations: {
+                  'require-adobe-auth': true
+                }
               }
             }
           }
@@ -209,7 +212,10 @@ describe('implementation', () => {
               myAction: {
                 function: n(`${constants.actionsDirname}/myAction/index.js`), // relative path is important here
                 web: 'yes',
-                runtime: 'nodejs:10'
+                runtime: 'nodejs:10',
+                annotations: {
+                  'require-adobe-auth': true
+                }
               }
             },
             fake: 'value'
@@ -278,6 +284,9 @@ describe('implementation', () => {
                 runtime: 'fake:42',
                 inputs: {
                   fake: 'value'
+                },
+                annotations: {
+                  'require-adobe-auth': true
                 }
               }
             }
@@ -329,23 +338,7 @@ describe('implementation', () => {
       }
       actionGenerator.addAction('myAction', './templateFile.js', { testFile: './template.test.js' })
 
-      // test manifest update with action information
       expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/test/${constants.actionsDirname}/myAction.test.js`), { actionRelPath: n(`../../${constants.actionsDirname}/myAction/index.js`) }, {}, {})
-    })
-
-    test('with e2eTestFile option', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
-        write: jest.fn(),
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({}) // package.json read
-      }
-      actionGenerator.addAction('myAction', './templateFile.js', { e2eTestFile: './template.test.js' })
-
-      // test manifest update with action information
-      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/e2e/${constants.actionsDirname}/myAction.e2e.js`), {}, {}, {})
     })
 
     test('with testFile option and tplContext option (should append relative path to tested file to test template context)', () => {
@@ -361,6 +354,63 @@ describe('implementation', () => {
 
       // test manifest update with action information
       expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/test/${constants.actionsDirname}/myAction.test.js`), { actionRelPath: n(`../../${constants.actionsDirname}/myAction/index.js`), fake: 'context', with: { fake: 'values' } }, {}, {})
+    })
+
+    test('with e2eTestFile option', () => {
+      // mock fs
+      actionGenerator.fs = {
+        copyTpl: jest.fn(),
+        exists: jest.fn().mockReturnValue(false), // called on manifest
+        write: jest.fn(),
+        writeJSON: jest.fn(),
+        readJSON: jest.fn().mockReturnValue({}) // package.json read
+      }
+      actionGenerator.addAction('myAction', './templateFile.js', { e2eTestFile: './template.test.js' })
+
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/e2e/${constants.actionsDirname}/myAction.e2e.js`), {}, {}, {})
+    })
+
+    test('with sharedLibFile option', () => {
+      // mock fs
+      actionGenerator.fs = {
+        copyTpl: jest.fn(),
+        exists: jest.fn().mockReturnValue(false), // called on manifest
+        write: jest.fn(),
+        writeJSON: jest.fn(),
+        readJSON: jest.fn().mockReturnValue({}) // package.json read
+      }
+      actionGenerator.addAction('myAction', './templateFile.js', { sharedLibFile: './utils.js' })
+
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/utils.js'), n(`/fakeDestRoot/${constants.actionsDirname}/utils.js`), {})
+    })
+
+    test('with sharedLibTestFile option', () => {
+      // mock fs
+      actionGenerator.fs = {
+        copyTpl: jest.fn(),
+        exists: jest.fn().mockReturnValue(false), // called on manifest
+        write: jest.fn(),
+        writeJSON: jest.fn(),
+        readJSON: jest.fn().mockReturnValue({}) // package.json read
+      }
+      actionGenerator.addAction('myAction', './templateFile.js', { sharedLibTestFile: './utils.test.js' })
+
+      expect(actionGenerator.fs.copyTpl).not.toHaveBeenCalledWith(n('/fakeTplDir/utils.test.js'), n(`/fakeDestRoot/test/${constants.actionsDirname}/utils.test.js`), {})
+    })
+
+    test('with sharedLibFile and sharedLibTestFile option', () => {
+      // mock fs
+      actionGenerator.fs = {
+        copyTpl: jest.fn(),
+        exists: jest.fn().mockReturnValue(false), // called on manifest
+        write: jest.fn(),
+        writeJSON: jest.fn(),
+        readJSON: jest.fn().mockReturnValue({}) // package.json read
+      }
+      actionGenerator.addAction('myAction', './templateFile.js', { sharedLibFile: './utils.js', sharedLibTestFile: './utils.test.js' })
+
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/utils.js'), n(`/fakeDestRoot/${constants.actionsDirname}/utils.js`), {})
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/utils.test.js'), n(`/fakeDestRoot/test/${constants.actionsDirname}/utils.test.js`), {})
     })
   })
 })

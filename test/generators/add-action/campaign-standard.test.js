@@ -1,3 +1,4 @@
+/* eslint-disable jest/expect-expect */
 /*
 Copyright 2019 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -9,69 +10,161 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
+const helpers = require('yeoman-test')
+const assert = require('yeoman-assert')
+const fs = require('fs')
+const yaml = require('js-yaml')
 const path = require('path')
 
-const ActionGenerator = require('../../../lib/ActionGenerator')
-const CampaignStandardGenerator = require('../../../generators/add-action/campaign-standard')
+const theGeneratorPath = require.resolve('../../../generators/add-action/campaign-standard')
+const Generator = require('yeoman-generator')
 
-jest.mock('../../../lib/ActionGenerator') // treat the lib super class as a separate unit
+const constants = require('../../../lib/constants')
+
+const installDependencies = jest.spyOn(Generator.prototype, 'installDependencies')
+beforeAll(() => {
+  // mock implementations
+  installDependencies.mockReturnValue(undefined)
+})
+beforeEach(() => {
+  installDependencies.mockClear()
+})
+afterAll(() => {
+  installDependencies.mockRestore()
+})
 
 describe('prototype', () => {
-  test('exports ActionGenerator instance', () => {
-    expect(CampaignStandardGenerator.prototype).toBeInstanceOf(ActionGenerator)
+  test('exports a yeoman generator', () => {
+    expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
   })
 })
 
-describe('implementation', () => {
-  describe('prompting', () => {
-    test('generator prompts for action name with default set to campaign-standard', async () => {
-      const campaignStandardGenerator = new CampaignStandardGenerator()
-      const actionNameSpy = jest.spyOn(campaignStandardGenerator, '_getDefaultActionName')
-      actionNameSpy.mockReturnValue('campaign-standard')
-      const spy = jest.spyOn(campaignStandardGenerator, 'promptForActionName')
-      await campaignStandardGenerator.prompting()
-      expect(spy).toHaveBeenCalledTimes(1)
-      expect(spy).toHaveBeenCalledWith(expect.any(String), 'campaign-standard')
-      spy.mockRestore()
-    })
+function assertGeneratedFiles (actionName) {
+  assert.file(`${constants.actionsDirname}/${actionName}/index.js`)
+  assert.file(`test/${constants.actionsDirname}/${actionName}.test.js`)
+  assert.file(`e2e/${constants.actionsDirname}/${actionName}.e2e.js`)
+
+  assert.file(`${constants.actionsDirname}/utils.js`)
+  assert.file(`test/${constants.actionsDirname}/utils.test.js`)
+
+  assert.file('manifest.yml')
+  assert.file('.env')
+}
+
+function assertManifestContent (actionName) {
+  const json = yaml.safeLoad(fs.readFileSync('manifest.yml').toString())
+  expect(json.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
+    function: path.normalize(`${constants.actionsDirname}/${actionName}/index.js`),
+    web: 'yes',
+    runtime: 'nodejs:10',
+    inputs: {
+      LOG_LEVEL: 'debug',
+      apiKey: '$CAMPAIGN_STANDARD_API_KEY',
+      tenant: '$CAMPAIGN_STANDARD_TENANT'
+    },
+    annotations: {
+      final: true,
+      'require-adobe-auth': true
+    }
+  })
+}
+
+function assertEnvContent (prevContent) {
+  assert.fileContent('.env', `## please provide your Adobe I/O Campaign Standard integration tenant and api key
+#CAMPAIGN_STANDARD_TENANT=
+#CAMPAIGN_STANDARD_API_KEY=`)
+  assert.fileContent('.env', prevContent)
+}
+
+function assertActionCodeContent (actionName) {
+  const theFile = `${constants.actionsDirname}/${actionName}/index.js`
+  // a few checks to make sure the action calls the sdk
+  assert.fileContent(
+    theFile,
+    'const requiredParams = [\'apiKey\', \'tenant\']'
+  )
+  assert.fileContent(
+    theFile,
+    'const campaignClient = await CampaignStandard.init(params.tenant, params.apiKey, token)'
+  )
+  assert.fileContent(
+    theFile,
+    'const profiles = await campaignClient.getAllProfiles()'
+  )
+}
+
+function assertDependencies () {
+  expect(JSON.parse(fs.readFileSync('package.json').toString())).toEqual({
+    dependencies: {
+      '@adobe/aio-sdk': expect.any(String)
+    },
+    devDependencies: {
+      '@adobe/wskdebug': expect.any(String)
+    }
+  })
+}
+
+describe('run', () => {
+  test('--skip-prompt', async () => {
+    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    await helpers.run(theGeneratorPath)
+      .withOptions({ 'skip-prompt': true })
+      .inTmpDir(dir => {
+        fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
+      })
+
+    // default
+    const actionName = 'campaign-standard'
+
+    assertGeneratedFiles(actionName)
+    assertActionCodeContent(actionName)
+    assertManifestContent(actionName)
+    assertEnvContent(prevDotEnvContent)
+    assertDependencies()
   })
 
-  describe('writing', () => {
-    test('generator sets sourceRoot to ./templates', async () => {
-      const campaignStandardGenerator = new CampaignStandardGenerator()
-      const spy = jest.spyOn(campaignStandardGenerator, 'sourceRoot')
-      await campaignStandardGenerator.writing()
-      expect(spy).toHaveBeenCalledWith(path.join(__dirname, '../../../generators/add-action/campaign-standard/templates'))
-      spy.mockRestore()
-    })
-    test('generator adds an action by calling ActionGenerator.addAction', async () => {
-      const campaignStandardGenerator = new CampaignStandardGenerator()
-      const spy = jest.spyOn(campaignStandardGenerator, 'addAction')
-      campaignStandardGenerator.props.actionName = 'fakeName'
-
-      campaignStandardGenerator.writing()
-      // here we test that:
-      // 1. uses the set fakeName
-      // 2. provides template files
-      // 3. sets the dependencies
-      // 4. sets the dotenv variables
-      // 5. sets manifest
-      expect(spy).toHaveBeenCalledWith('fakeName', expect.stringContaining('.js'), {
-        e2eTestFile: expect.stringContaining('.e2e.js'),
-        testFile: expect.stringContaining('.test.js'),
-        tplContext: expect.any(Object),
-        dependencies: {
-          '@adobe/aio-sdk': expect.any(String)
-        },
-        dotenvStub: {
-          label: expect.any(String),
-          vars: ['CAMPAIGN_STANDARD_TENANT']
-        },
-        actionManifestConfig: {
-          inputs: { LOG_LEVEL: 'debug', tenant: '$CAMPAIGN_STANDARD_TENANT' },
-          annotations: { final: true }
-        }
+  test('--skip-prompt, and action with default name already exists', async () => {
+    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    await helpers.run(theGeneratorPath)
+      .withOptions({ 'skip-prompt': true })
+      .inTmpDir(dir => {
+        fs.writeFileSync('manifest.yml', yaml.dump({
+          packages: {
+            __APP_PACKAGE__: {
+              actions: {
+                'campaign-standard': { function: 'fake.js' }
+              }
+            }
+          }
+        }))
+        fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
       })
-    })
+
+    // default
+    const actionName = 'campaign-standard-1'
+
+    assertGeneratedFiles(actionName)
+    assertActionCodeContent(actionName)
+    assertManifestContent(actionName)
+    assertEnvContent(prevDotEnvContent)
+    assertDependencies()
+  })
+
+  test('user input actionName=yolo', async () => {
+    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    await helpers.run(theGeneratorPath)
+      .withOptions({ 'skip-prompt': false })
+      .withPrompts({ actionName: 'yolo' })
+      .inTmpDir(dir => {
+        fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
+      })
+
+    const actionName = 'yolo'
+
+    assertGeneratedFiles(actionName)
+    assertActionCodeContent(actionName)
+    assertManifestContent(actionName)
+    assertEnvContent(prevDotEnvContent)
+    assertDependencies()
   })
 })

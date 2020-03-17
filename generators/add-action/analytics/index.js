@@ -52,7 +52,7 @@ class AnalyticsGenerator extends ActionGenerator {
         '@adobe/aio-sdk': '^1.0.2'
       },
       dotenvStub: {
-        label: 'please provide your Adobe I/O Analytics company id and api key',
+        label: 'please provide your Adobe I/O Analytics integration company id and api key',
         vars: [
           'ANALYTICS_COMPANY_ID',
           'ANALYTICS_API_KEY'
