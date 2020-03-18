@@ -30,6 +30,7 @@ class GenericGenerator extends ActionGenerator {
       throw new Error('request to ' + apiEndpoint + ' failed with status code ' + res.status)
     }
     const content = await res.json()
+    logger.debug('fetch content = ' + JSON.stringify(content, null, 2))
     const response = {
       statusCode: 200,
       body: content

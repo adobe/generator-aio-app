@@ -26,7 +26,7 @@ class TargetGenerator extends ActionGenerator {
 
     // get activities from Target api
     const activities = await targetClient.getActivities({ limit: 5, offset: 0 })
-    logger.debug('profiles =', JSON.stringify(activities, null, 2))
+    logger.debug('activities = ' + JSON.stringify(activities, null, 2))
     const response = {
       statusCode: 200,
       body: activities
