@@ -37,41 +37,101 @@ describe('prototype', () => {
   })
 })
 
+function assertEnvContent (prevContent) {
+  assert.fileContent('.env', 'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/myapps/?localDevUrl="')
+  assert.fileContent('.env', prevContent)
+}
+
+function assertDependencies () {
+  expect(JSON.parse(fs.readFileSync('package.json').toString())).toEqual({
+    dependencies: {
+      react: expect.any(String),
+      'react-dom': expect.any(String),
+      'react-error-boundary': expect.any(String),
+      'core-js': expect.any(String),
+      'regenerator-runtime': expect.any(String)
+    },
+    devDependencies: {
+      '@babel/core': expect.any(String),
+      '@babel/polyfill': expect.any(String),
+      '@babel/preset-env': expect.any(String)
+    }
+  })
+}
+
+function assertFiles () {
+  assert.file('web-src/index.html')
+  assert.file('web-src/404.html')
+  assert.file('web-src/src/index.js')
+  assert.file('web-src/src/App.js')
+  assert.file('web-src/src/App.css')
+  assert.file('web-src/src/utils.js')
+}
+
+function assertWithActions () {
+  assert.fileContent('web-src/src/App.js', '<h3>Your application backend actions</h3>')
+  assert.fileContent('web-src/src/App.js', 'invoke</button>')
+  assert.fileContent('web-src/src/App.js', 'async invoke (')
+  assert.fileContent('web-src/src/App.js', '<a href="https://adobedocs.github.io/adobeio-runtime/">Adobe I/O Runtime</a>')
+}
+
+function assertWithNoActions () {
+  assert.noFileContent('web-src/src/App.js', '<h3>Your application backend actions</h3>')
+  assert.noFileContent('web-src/src/App.js', 'invoke</button>')
+  assert.noFileContent('web-src/src/App.js', 'async invoke (')
+  assert.noFileContent('web-src/src/App.js', '<a href="https://adobedocs.github.io/adobeio-runtime/">Adobe I/O Runtime</a>')
+}
+
+function assertWithDoc () {
+  assert.fileContent('web-src/src/App.js', '<h3>Useful documentation for your app</h3>')
+  assert.fileContent('web-src/src/App.js', '<a href="https://github.com/AdobeDocs/adobe-custom-applications/blob/master/README.md">Adobe I/O Custom Applications</a>')
+}
+
+const prevDotEnv = 'FAKECONTENT'
+
 describe('run', () => {
   test('--project-name abc', async () => {
     await helpers.run(theGeneratorPath)
       .withOptions({ 'project-name': 'abc', 'skip-install': false })
       .inTmpDir(dir => {
-        fs.writeFileSync(path.join(dir, '.env'), 'FAKECONTENT')
+        fs.writeFileSync(path.join(dir, '.env'), prevDotEnv)
       })
 
-    // added files
-    assert.file('web-src/index.html')
-    assert.file('web-src/404.html')
-    assert.file('web-src/src/index.js')
-    assert.file('web-src/src/App.js')
-    assert.file('web-src/src/exc-runtime.js')
-
-    // check append to dotenv
-    assert.file('.env')
-    assert.fileContent('.env', 'FAKECONTENT')
-    assert.fileContent('.env', 'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/myapps/?localDevUrl="')
-
-    // make sure react dependencies are added
-    assert.jsonFileContent('package.json', {
-      dependencies: {
-        react: '^16.9.0',
-        'react-dom': '^16.9.0',
-        'react-error-boundary': '^1.2.5'
-      }
-    })
+    assertFiles()
+    assertDependencies()
+    assertEnvContent(prevDotEnv)
 
     // greats with projectName
     assert.fileContent('web-src/src/App.js', '<h1>Welcome to abc!</h1>')
 
     // make sure html calls js files
-    assert.fileContent('web-src/index.html', '<script src="./src/exc-runtime.js"')
     assert.fileContent('web-src/index.html', '<script src="./src/index.js"')
+
+    assertWithActions()
+    assertWithDoc()
+
+    expect(installDependencies).toHaveBeenCalledTimes(1)
+  })
+
+  test('--project-name abc --has-backend false', async () => {
+    await helpers.run(theGeneratorPath)
+      .withOptions({ 'project-name': 'abc', 'skip-install': false, 'has-backend': false })
+      .inTmpDir(dir => {
+        fs.writeFileSync(path.join(dir, '.env'), prevDotEnv)
+      })
+
+    assertFiles()
+    assertDependencies()
+    assertEnvContent(prevDotEnv)
+
+    // greats with projectName
+    assert.fileContent('web-src/src/App.js', '<h1>Welcome to abc!</h1>')
+
+    // make sure html calls js files
+    assert.fileContent('web-src/index.html', '<script src="./src/index.js"')
+
+    assertWithNoActions()
+    assertWithDoc()
 
     expect(installDependencies).toHaveBeenCalledTimes(1)
   })
@@ -82,5 +142,3 @@ describe('run', () => {
     expect(installDependencies).toHaveBeenCalledTimes(0)
   })
 })
-
-// todo check with existing files in project
