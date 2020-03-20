@@ -11,11 +11,14 @@ governing permissions and limitations under the License.
 * <license header>
 */
 
-import config from './config.json'
+import "core-js/stable"
+import "regenerator-runtime/runtime"
+
 import React from 'react'
 import ReactDOM from 'react-dom'
+
 import App from './App'
-import loadExcRuntime from './exc-runtime'
+import { loadExcRuntime } from './utils.js'
 
 /* Here you can bootstrap your application and configure the integration with the Adobe Experience Cloud Shell */
 let inExc = false
@@ -72,6 +75,8 @@ function bootstrapInExcShell () {
   // ready event brings in authentication/user info
   runtime.on('ready', ({ imsOrg, imsToken, imsProfile, locale }) => {
     console.log('Ready! received imsProfile:', imsProfile)
+    window.imsOrg = imsOrg
+    window.imsToken = imsToken
     window.imsProfile = imsProfile
   })
 

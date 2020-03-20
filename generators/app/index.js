@@ -89,7 +89,8 @@ class CodeGenerator extends Generator {
         'skip-install': true,
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
-        'project-name': this.options['project-name']
+        'project-name': this.options['project-name'],
+        'has-backend': addActions
       })
     }
     if (addCI) {

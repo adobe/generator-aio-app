@@ -37,13 +37,14 @@ class AddWebAssets extends Generator {
 
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
-    this.option('adobe-services', { type: String, default: '' }) // todo use real sdkCodes from console
+    this.option('adobe-services', { type: String, default: '' })
 
     this.option('project-name', { type: String, default: utils.guessProjectName(this) }) // project name is used in html template
     this.option('skip-install', { type: String, default: false })
+    this.option('has-backend', { type: Boolean, default: true })
 
     this.webAssetsPath = this.destinationPath(webAssetsDirname)
-    // todo throw meaningful error if add actions/webassets in a non existing project, but how to know if we are in a project?
+    // throw meaningful error if add actions/webassets in a non existing project
   }
 
   initializing () {
@@ -69,11 +70,7 @@ class AddWebAssets extends Generator {
     // }
 
     // run ui generator
-    this.composeWith(webAssetsGenerator, {
-      'skip-prompt': this.options['skip-prompt'],
-      'adobe-services': this.options['adobe-services'],
-      'project-name': this.options['project-name']
-    })
+    this.composeWith(webAssetsGenerator, this.options)
   }
 
   async install () {
