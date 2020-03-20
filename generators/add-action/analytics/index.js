@@ -15,7 +15,23 @@ const ActionGenerator = require('../../../lib/ActionGenerator')
 class AnalyticsGenerator extends ActionGenerator {
   constructor (args, opts) {
     super(args, opts)
-    this.props = {}
+    this.props = {
+      description: 'This is a sample action showcasing how to access the Adobe Analytics API',
+      // eslint-disable-next-line quotes
+      requiredParams: `['apiKey', 'companyId']`,
+      // eslint-disable-next-line quotes
+      importCode: `const { Analytics } = require('@adobe/aio-sdk')`,
+      responseCode: `// initialize the sdk
+    const analyticsClient = await Analytics.init(params.companyId, params.apiKey, token)
+
+    // get collections from analytics API
+    const collections = await analyticsClient.getCollections({ limit: 5, page: 0 })
+    logger.debug('collections = ' + JSON.stringify(collections, null, 2))
+    const response = {
+      statusCode: 200,
+      body: collections
+    }`
+    }
   }
 
   async prompting () {
@@ -23,23 +39,27 @@ class AnalyticsGenerator extends ActionGenerator {
   }
 
   writing () {
-    this.sourceRoot(path.join(__dirname, './templates'))
+    // this.registerTransformStream(beautify({ indent_size: 2 }))
+    this.sourceRoot(path.join(__dirname, '../templates'))
 
-    this.addAction(this.props.actionName, './getCollections.js', {
-      testFile: './getCollections.test.js',
-      e2eTestFile: './getCollections.e2e.js',
+    this.addAction(this.props.actionName, './stub-action.js', {
+      testFile: '../analytics/templates/getCollections.test.js',
+      sharedLibFile: './utils.js',
+      sharedLibTestFile: './utils.test.js',
+      e2eTestFile: './stub-action.e2e.js',
       tplContext: this.props,
       dependencies: {
         '@adobe/aio-sdk': '^1.0.2'
       },
       dotenvStub: {
-        label: 'please provide your Adobe I/O Analytics company id',
+        label: 'please provide your Adobe I/O Analytics integration company id and api key',
         vars: [
-          'ANALYTICS_COMPANY_ID'
+          'ANALYTICS_COMPANY_ID',
+          'ANALYTICS_API_KEY'
         ]
       },
       actionManifestConfig: {
-        inputs: { LOG_LEVEL: 'debug', companyId: '$ANALYTICS_COMPANY_ID' },
+        inputs: { LOG_LEVEL: 'debug', companyId: '$ANALYTICS_COMPANY_ID', apiKey: '$ANALYTICS_API_KEY' },
         annotations: { final: true }
       }
     })

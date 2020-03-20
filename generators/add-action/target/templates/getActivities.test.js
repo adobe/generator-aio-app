@@ -1,4 +1,4 @@
-/* <% if (false) { %>
+/*<% if (false) { %>
 Copyright 2019 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
@@ -7,7 +7,10 @@ Unless required by applicable law or agreed to in writing, software distributed 
 the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
-<% } %> */
+<% } %>
+* <license header>
+*/
+
 
 jest.mock('@adobe/aio-sdk', () => ({
   Target: {
@@ -36,7 +39,7 @@ beforeEach(() => {
   mockLoggerInstance.error.mockReset()
 })
 
-const fakeRequestParams = { tenant: 'fake1', apiKey: 'fake2', token: 'fake3' }
+const fakeRequestParams = { tenant: 'fakeId', apiKey: 'fakeKey', __ow_headers: { authorization: 'Bearer fakeToken' } }
 describe('<%= actionName %>', () => {
   test('main should be defined', () => {
     expect(action.main).toBeInstanceOf(Function)
@@ -47,43 +50,36 @@ describe('<%= actionName %>', () => {
   })
   test('Target sdk should be initialized with input credentials', async () => {
     await action.main({ ...fakeRequestParams, otherParam: 'fake4' })
-    expect(Target.init).toHaveBeenCalledWith(fakeRequestParams.tenant, fakeRequestParams.apiKey, fakeRequestParams.token)
+    expect(Target.init).toHaveBeenCalledWith('fakeId', 'fakeKey', 'fakeToken')
   })
   test('should return an http response with Target activities', async () => {
     const fakeResponse = { activities: 'fake' }
     mockTargetInstance.getActivities.mockResolvedValue(fakeResponse)
     const response = await action.main(fakeRequestParams)
-    expect(response).toEqual(expect.objectContaining({
+    expect(response).toEqual({
       statusCode: 200,
       body: fakeResponse
-    }))
+    })
   })
   test('if there is an error should return a 500 and log the error', async () => {
     const fakeError = new Error('fake')
     mockTargetInstance.getActivities.mockRejectedValue(fakeError)
     const response = await action.main(fakeRequestParams)
-    expect(response).toEqual(expect.objectContaining({
-      statusCode: 500,
-      body: { error: 'server error' }
-    }))
+    expect(response).toEqual({
+      error: {
+        statusCode: 500,
+        body: { error: 'server error' }
+      }
+    })
     expect(mockLoggerInstance.error).toHaveBeenCalledWith(fakeError)
   })
-  test('if tenant is missing should return with 400', async () => {
-    const response = await action.main({ apiKey: 'fake', token: 'fake' })
-    expect(response).toEqual(expect.objectContaining({
-      statusCode: 400
-    }))
-  })
-  test('if apiKey is missing should return with 400', async () => {
-    const response = await action.main({ tenant: 'fake', token: 'fake' })
-    expect(response).toEqual(expect.objectContaining({
-      statusCode: 400
-    }))
-  })
-  test('if token is missing should return with 400', async () => {
-    const response = await action.main({ apiKey: 'fake', tenant: 'fake' })
-    expect(response).toEqual(expect.objectContaining({
-      statusCode: 400
-    }))
+  test('missing input request parameters, should return 400', async () => {
+    const response = await action.main({})
+    expect(response).toEqual({
+      error: {
+        statusCode: 400,
+        body: { error: 'missing header(s) \'authorization\' and missing parameter(s) \'apiKey,tenant\'' }
+      }
+    })
   })
 })
