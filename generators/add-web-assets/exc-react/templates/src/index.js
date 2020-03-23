@@ -18,7 +18,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 import App from './App'
-import { loadExcRuntime } from './utils'
+import loadExcRuntime from './exc-runtime'
 
 /* Here you can bootstrap your application and configure the integration with the Adobe Experience Cloud Shell */
 let inExc = false
@@ -88,7 +88,7 @@ function bootstrapInExcShell () {
     // this.setState({currentPath: `/${path}`})
   }
 
-  // set solution info, shortTitle is used when window is too small to dispay full title
+  // set solution info, shortTitle is used when window is too small to display full title
   runtime.solution = {
     icon: 'AdobeExperienceCloud',
     title: '<%= projectName %>',
