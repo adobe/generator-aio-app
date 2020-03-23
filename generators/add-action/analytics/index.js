@@ -49,7 +49,7 @@ class AnalyticsGenerator extends ActionGenerator {
       e2eTestFile: './stub-action.e2e.js',
       tplContext: this.props,
       dependencies: {
-        '@adobe/aio-sdk': '^1.0.2'
+        '@adobe/aio-sdk': '^2.0.0'
       },
       dotenvStub: {
         label: 'please provide your Adobe I/O Analytics integration company id and api key',

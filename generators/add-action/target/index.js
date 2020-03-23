@@ -55,7 +55,7 @@ class TargetGenerator extends ActionGenerator {
         ]
       },
       dependencies: {
-        '@adobe/aio-sdk': '^1.0.2'
+        '@adobe/aio-sdk': '^2.0.0'
       },
       actionManifestConfig: {
         inputs: { LOG_LEVEL: 'debug', tenant: '$TARGET_TENANT', apiKey: '$TARGET_API_KEY' },

@@ -52,7 +52,7 @@ class GenericGenerator extends ActionGenerator {
       e2eTestFile: './stub-action.e2e.js',
       tplContext: this.props,
       dependencies: {
-        '@adobe/aio-sdk': '^1.0.2',
+        '@adobe/aio-sdk': '^2.0.0',
         'node-fetch': '^2.6.0'
       },
       actionManifestConfig: {
