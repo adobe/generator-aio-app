@@ -23,13 +23,15 @@ class ExcReactGenerator extends Generator {
     this.option('adobe-services', { type: String, default: '' })
     this.option('project-name', { type: String })
     // this.option('skip-prompt', { default: false }) // useless for now
-    this.option('skip-install', { type: String, default: false })
+    this.option('skip-install', { type: Boolean, default: false })
+    this.option('has-backend', { type: Boolean, default: true })
 
     // props are used by templates
     this.props = {}
     this.props.adobeServices = this.options['adobe-services'].split(',').map(x => x.trim())
     this.props.projectName = this.options['project-name']
     this.props.sdkCodes = sdkCodes
+    this.props.hasBackend = this.options['has-backend']
   }
 
   // nothing for now
@@ -38,11 +40,21 @@ class ExcReactGenerator extends Generator {
   writing () {
     this.sourceRoot(path.join(__dirname, './templates/'))
     this.fs.copyTpl(this.templatePath('./**/*'), this.destinationPath(webAssetsDirname), this.props)
+    // add .babelrc
+    this.fs.writeJSON(this.destinationPath('.babelrc'), { presets: [['@babel/preset-env', { targets: { node: 'current' } }]] })
+    // add dependencies
     utils.addDependencies(this, {
-      react: '^16.9.0',
-      'react-dom': '^16.9.0',
-      'react-error-boundary': '^1.2.5'
+      'core-js': '^3.6.4',
+      react: '^16.13.1',
+      'react-dom': '^16.13.1',
+      'react-error-boundary': '^1.2.5',
+      'regenerator-runtime': '^0.13.5'
     })
+    utils.addDependencies(this, {
+      '@babel/core': '^7.8.7',
+      '@babel/polyfill': '^7.8.7',
+      '@babel/preset-env': '^7.8.7'
+    }, true)
     // add env variable to load ui in exc shell
     utils.appendOrWrite(this, this.destinationPath(dotenvFilename),
       'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/myapps/?localDevUrl="')

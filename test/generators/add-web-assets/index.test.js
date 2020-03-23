@@ -72,7 +72,25 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
-      'project-name': expectProjectName
+      'project-name': expectProjectName,
+      'has-backend': true
+    }))
+    expect(installDependencies).toHaveBeenCalledTimes(1)
+  })
+
+  test('--skip-prompt --has-backend false', async () => {
+    const dir = await helpers.run(theGeneratorPath)
+      .withOptions({ 'skip-prompt': true, 'skip-install': false, 'has-backend': false })
+
+    const expectProjectName = path.basename(dir)
+
+    expect(composeWith).toHaveBeenCalledTimes(1)
+    // calls default generator
+    expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
+      'skip-prompt': true,
+      'adobe-services': '',
+      'project-name': expectProjectName,
+      'has-backend': false
     }))
     expect(installDependencies).toHaveBeenCalledTimes(1)
   })
@@ -85,7 +103,8 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
-      'project-name': 'fake'
+      'project-name': 'fake',
+      'has-backend': true
     }))
     expect(installDependencies).toHaveBeenCalledTimes(1)
   })
@@ -98,7 +117,8 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
-      'project-name': 'fake'
+      'project-name': 'fake',
+      'has-backend': true
     }))
     expect(installDependencies).toHaveBeenCalledTimes(0)
   })
@@ -111,7 +131,8 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': 'some,string',
-      'project-name': 'fake'
+      'project-name': 'fake',
+      'has-backend': true
     }))
     expect(installDependencies).toHaveBeenCalledTimes(1)
   })
