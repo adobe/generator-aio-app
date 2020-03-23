@@ -23,21 +23,15 @@ function loadExcRuntime(e,t){if(t.location===t.parent.location)throw new Error("
  * Invokes a web action
  *
  * @param  {string} actionName
+ * @param {object} headers
  * @param  {object} params
  *
  * @returns {Promise<string|object>} the response
  *
  */
-async function actionWebInvoke (actionName, params = {}, headers = {}) {
+async function actionWebInvoke (actionName, headers = {}, params = {}) {
   if (!actionName || !actions[actionName]) {
     throw new Error(`Cannot fetch action '${actionName}' as it doesn't exist.`)
-  }
-  const definedHeaders = Object.keys(headers).map(k => k.toLowerCase())
-  if (!definedHeaders.includes('authorization') && window.imsToken) {
-    headers.Authorization = 'Bearer ' + window.imsToken
-  }
-  if (!definedHeaders.includes('x-org-id') && window.imsOrg) {
-    headers['x-org-id'] = window.imsOrg
   }
   const response = await fetch(actions[actionName], {
     method: 'post',
