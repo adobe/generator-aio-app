@@ -48,7 +48,8 @@ class ExcReactGenerator extends Generator {
       react: '^16.13.1',
       'react-dom': '^16.13.1',
       'react-error-boundary': '^1.2.5',
-      'regenerator-runtime': '^0.13.5'
+      'regenerator-runtime': '^0.13.5',
+      '@adobe/exc-app': '^0.2.10'
     })
     utils.addDependencies(this, {
       '@babel/core': '^7.8.7',

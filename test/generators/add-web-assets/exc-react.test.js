@@ -49,7 +49,8 @@ function assertDependencies () {
       'react-dom': expect.any(String),
       'react-error-boundary': expect.any(String),
       'core-js': expect.any(String),
-      'regenerator-runtime': expect.any(String)
+      'regenerator-runtime': expect.any(String),
+      '@adobe/exc-app': expect.any(String)
     },
     devDependencies: {
       '@babel/core': expect.any(String),

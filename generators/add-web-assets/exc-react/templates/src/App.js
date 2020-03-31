@@ -41,6 +41,25 @@ export default class App extends React.Component {
 
     console.log('runtime object:', this.props.runtime)
     console.log('ims object:', this.props.ims)
+
+    // respond to configuration change events (e.g. user switches org)
+    this.props.runtime.on('configuration', ({ imsOrg, imsToken, locale }) => {
+      console.log('configuration change', { imsOrg, imsToken, locale })
+      // if (imsOrg !== this.state.imsOrg) {
+      // /* org change */
+      // }
+      // this.setState({ imsOrg, imsToken, locale })
+    })
+
+    // respond to history change events
+    this.props.runtime.on('history', ({ type, path }) => {
+      console.log('history change', { type, path })
+      const cleanedPath = path[0] === '/' ? path : '/' + path
+      if (type === 'external' && this.props.runtime.history.location.pathname !== cleanedPath) {
+        // this.props.runtime.history.replace(cleanedPath)
+        // this.setState({ currentPath: cleanedPath })
+      }
+    })
   }
 
   static get propTypes () {
@@ -63,7 +82,7 @@ export default class App extends React.Component {
       // invoke backend action
       const response = await actionWebInvoke(action, headers, params)
       // store the response
-      this.setState({ response })
+      this.setState({ response, errorMessage: null })
       console.log(`Response from ${action}:`, response)
     } catch (e) {
       // log and store any error message
