@@ -67,7 +67,6 @@ function assertFiles () {
   assert.file('web-src/src/App.js')
   assert.file('web-src/src/App.css')
   assert.file('web-src/src/utils.js')
-  assert.file('web-src/src/exc-runtime.js')
 }
 
 function assertWithActions () {
