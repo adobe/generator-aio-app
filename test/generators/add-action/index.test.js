@@ -44,9 +44,9 @@ describe('prototype', () => {
 })
 
 describe('run', () => {
-  test('--skip-prompt --adobe-services="analytics,target,campaign-standard"', async () => {
+  test('--skip-prompt --adobe-services="analytics,target,campaign-standard,customer-profile"', async () => {
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'adobe-services': `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign}`, 'skip-install': false })
+      .withOptions({ 'skip-prompt': true, 'adobe-services': `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign},${sdkCodes.customerProfile}`, 'skip-install': false })
     // with skip prompt defaults to generic action
     // make sure sub generators have been called
     expect(composeWith).toHaveBeenCalledTimes(1)
@@ -120,10 +120,10 @@ describe('run', () => {
     expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 
-  test('--adobe-services="analytics,target,campaign-standard" and selects fake generators a,b,c', async () => {
+  test('--adobe-services="analytics,target,campaign-standard,customer-profile" and selects fake generators a,b,c,d', async () => {
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'adobe-services': `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign}`, 'skip-install': false })
-      .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
+      .withOptions({ 'adobe-services': `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign},${sdkCodes.customerProfile}`, 'skip-install': false })
+      .withPrompts({ actionGenerators: ['a', 'b', 'c', 'd'] })
 
     // first make sure choices are displayed
     expect(prompt).toHaveBeenCalledTimes(1)
@@ -136,12 +136,13 @@ describe('run', () => {
           { name: 'Adobe Analytics', value: expect.stringContaining(n('analytics/index.js')) },
           { name: 'Adobe Target', value: expect.stringContaining(n('target/index.js')) },
           { name: 'Adobe Campaign Standard', value: expect.stringContaining(n('campaign-standard/index.js')) },
+          { name: 'Adobe Customer Profile', value: expect.stringContaining(n('customer-profile/index.js')) },
           { name: 'Generic', value: expect.stringContaining(n('generic/index.js')), checked: true }
         ]
       })
     ])
 
-    expect(composeWith).toHaveBeenCalledTimes(3)
+    expect(composeWith).toHaveBeenCalledTimes(4)
     expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({
       'skip-prompt': false
     }))
@@ -149,6 +150,9 @@ describe('run', () => {
       'skip-prompt': false
     }))
     expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({
+      'skip-prompt': false
+    }))
+    expect(composeWith).toHaveBeenCalledWith('d', expect.objectContaining({
       'skip-prompt': false
     }))
     expect(installDependencies).toHaveBeenCalledTimes(1)
