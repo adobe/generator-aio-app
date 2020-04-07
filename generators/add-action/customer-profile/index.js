@@ -24,14 +24,18 @@ class CustomerProfileGenerator extends ActionGenerator {
       responseCode: `// initialize sdk
     const client = await CustomerProfileSDK.init(params.tenant, params.orgId, params.apiKey, token)
     // call methods, eg getSegmentRoute
-    const response = await client.getExperienceEvents({
+    const { status, body } = await client.getExperienceEvents({
       'schema.name': '_xdm.context.experienceevent',
       'relatedSchema.name': '_xdm.context.profile',
       entityIdNS: 'email',
       entityId: params.email,
       fields: params.fields,
       orderby: /^[+-]timestamp$/.test(params.orderby) ? params.orderby : '-timestamp'
-    })`
+    })
+    const response = {
+      statusCode: status,
+      body
+    }`
     }
   }
 
