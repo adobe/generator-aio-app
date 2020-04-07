@@ -41,7 +41,7 @@ beforeEach(() => {
   mockLoggerInstance.debug.mockReset()
   mockLoggerInstance.error.mockReset()
 })
-const fakeRequestParams = { tenantId: 'fakeId', iMSOrgId: 'fakeIMSOrgId', apiKey: 'fakeKey', __ow_headers: { authorization: 'Bearer fakeToken' } }
+const fakeRequestParams = { tenantId: 'fakeId', orgId: 'fakeOrgId', apiKey: 'fakeKey', __ow_headers: { authorization: 'Bearer fakeToken' } }
 describe('<%= actionName %>', () => {
   test('main should be defined', () => {
     expect(action.main).toBeInstanceOf(Function)
@@ -52,7 +52,7 @@ describe('<%= actionName %>', () => {
   })
   test('CustomerProfileSDK should be initialized with input credentials', async () => {
     await action.main({ ...fakeRequestParams, otherParam: 'fake4' })
-    expect(CustomerProfileSDK.init).toHaveBeenCalledWith('fakeId', 'fakeKey', 'fakeIMSOrgId', 'fakeToken')
+    expect(CustomerProfileSDK.init).toHaveBeenCalledWith('fakeId', 'fakeKey', 'fakeOrgId', 'fakeToken')
   })
   test('should return an http response with CustomerProfile API profile', async () => {
     const fakeResponse = { profiles: 'fake' }
@@ -80,7 +80,7 @@ describe('<%= actionName %>', () => {
     expect(response).toEqual({
       error: {
         statusCode: 400,
-        body: { error: 'missing header(s) \'authorization\' and missing parameter(s) \'tenantId,apiKey,iMSOrgId\'' }
+        body: { error: 'missing header(s) \'authorization\' and missing parameter(s) \'tenantId,apiKey,orgId\'' }
       }
     })
   })

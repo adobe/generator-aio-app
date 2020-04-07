@@ -60,7 +60,7 @@ function assertManifestContent (actionName) {
     inputs: {
       LOG_LEVEL: 'debug',
       tenantId: '$CUSTOMER_PROFILE_API_TENANT_ID',
-      iMSOrgId: '$CUSTOMER_PROFILE_API_IMS_ORG_ID',
+      orgId: '$CUSTOMER_PROFILE_API_IMS_ORG_ID',
       apiKey: '$CUSTOMER_PROFILE_API_API_KEY'
     },
     annotations: {
@@ -71,7 +71,7 @@ function assertManifestContent (actionName) {
 }
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', `## please provide your Adobe Experience Platform: Realtime Customer Profile integration tenantId, iMSOrgId and api key
+  assert.fileContent('.env', `## please provide your Adobe Experience Platform: Realtime Customer Profile integration tenantId, orgId and api key
 #CUSTOMER_PROFILE_API_TENANT_ID=
 #CUSTOMER_PROFILE_API_IMS_ORG_ID=
 #CUSTOMER_PROFILE_API_API_KEY=`)
@@ -83,11 +83,11 @@ function assertActionCodeContent (actionName) {
   // a few checks to make sure the action calls the sdk
   assert.fileContent(
     theFile,
-    'const requiredParams = [\'tenantId\', \'iMSOrgId\', \'apiKey\']'
+    'const requiredParams = [\'tenantId\', \'orgId\', \'apiKey\']'
   )
   assert.fileContent(
     theFile,
-    'const client = await CustomerProfileSDK.init(params.tenantId, params.iMSOrgId, params.apiKey, token)'
+    'const client = await CustomerProfileSDK.init(params.tenantId, params.orgId, params.apiKey, token)'
   )
   assert.fileContent(
     theFile,
