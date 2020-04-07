@@ -36,7 +36,7 @@ class CustomerProfileGenerator extends ActionGenerator {
   }
 
   async prompting () {
-    this.props.actionName = await this.promptForActionName('interacts with the Adobe Experience Platform: Realtime Customer Profile API', 'customer-profile')
+    this.props.actionName = await this.promptForActionName('interacts with the Adobe Experience Platform: Realtime Customer Profile', 'customer-profile')
   }
 
   writing () {

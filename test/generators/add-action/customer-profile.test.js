@@ -71,7 +71,7 @@ function assertManifestContent (actionName) {
 }
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', `## please provide your Adobe I/O Customer Profile integration tenantId, iMSOrgId and api key
+  assert.fileContent('.env', `## please provide your Adobe Experience Platform: Realtime Customer Profile integration tenantId, iMSOrgId and api key
 #CUSTOMER_PROFILE_API_TENANT_ID=
 #CUSTOMER_PROFILE_API_IMS_ORG_ID=
 #CUSTOMER_PROFILE_API_API_KEY=`)
