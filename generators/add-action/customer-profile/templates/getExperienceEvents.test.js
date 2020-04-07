@@ -18,9 +18,7 @@ jest.mock('@adobe/aio-sdk', () => ({
 }))
 
 jest.mock('@adobe/aio-lib-customer-profile', () => ({
-  CustomerProfileSDK: {
-    init: jest.fn()
-  }
+  init: jest.fn()
 }))
 
 const { Core } = require('@adobe/aio-sdk')
