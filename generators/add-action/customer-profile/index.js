@@ -18,11 +18,11 @@ class CustomerProfileGenerator extends ActionGenerator {
     this.props = {
       description: 'This is a sample action showcasing how to access an external Adobe Experience Platform: Realtime Customer Profile API',
       // eslint-disable-next-line quotes
-      requiredParams: `['tenantId', 'orgId', 'apiKey']`,
+      requiredParams: `['tenant', 'orgId', 'apiKey']`,
       // eslint-disable-next-line quotes
       importCode: `const CustomerProfileSDK = require('@adobe/aio-lib-customer-profile')`,
       responseCode: `// initialize sdk
-    const client = await CustomerProfileSDK.init(params.tenantId, params.orgId, params.apiKey, token)
+    const client = await CustomerProfileSDK.init(params.tenant, params.orgId, params.apiKey, token)
     // call methods, eg getSegmentRoute
     const response = await client.getExperienceEvents({
       'schema.name': '_xdm.context.experienceevent',
@@ -49,7 +49,7 @@ class CustomerProfileGenerator extends ActionGenerator {
       e2eTestFile: './stub-action.e2e.js',
       tplContext: this.props,
       dotenvStub: {
-        label: 'please provide your Adobe Experience Platform: Realtime Customer Profile integration tenantId, orgId and api key',
+        label: 'please provide your Adobe Experience Platform: Realtime Customer Profile integration tenant, orgId and api key',
         vars: [
           'CUSTOMER_PROFILE_API_TENANT_ID',
           'CUSTOMER_PROFILE_API_IMS_ORG_ID',
@@ -61,7 +61,7 @@ class CustomerProfileGenerator extends ActionGenerator {
         '@adobe/aio-lib-customer-profile': '^1.0.1'
       },
       actionManifestConfig: {
-        inputs: { LOG_LEVEL: 'debug', tenantId: '$CUSTOMER_PROFILE_API_TENANT_ID', orgId: '$CUSTOMER_PROFILE_API_IMS_ORG_ID', apiKey: '$CUSTOMER_PROFILE_API_API_KEY' },
+        inputs: { LOG_LEVEL: 'debug', tenant: '$CUSTOMER_PROFILE_API_TENANT_ID', orgId: '$CUSTOMER_PROFILE_API_IMS_ORG_ID', apiKey: '$CUSTOMER_PROFILE_API_API_KEY' },
         annotations: { final: true } // makes sure loglevel cannot be overwritten by request param
       }
     })

@@ -41,7 +41,7 @@ beforeEach(() => {
   mockLoggerInstance.debug.mockReset()
   mockLoggerInstance.error.mockReset()
 })
-const fakeRequestParams = { tenantId: 'fakeId', orgId: 'fakeOrgId', apiKey: 'fakeKey', __ow_headers: { authorization: 'Bearer fakeToken' } }
+const fakeRequestParams = { tenant: 'fakeId', orgId: 'fakeOrgId', apiKey: 'fakeKey', __ow_headers: { authorization: 'Bearer fakeToken' } }
 describe('<%= actionName %>', () => {
   test('main should be defined', () => {
     expect(action.main).toBeInstanceOf(Function)
@@ -80,7 +80,7 @@ describe('<%= actionName %>', () => {
     expect(response).toEqual({
       error: {
         statusCode: 400,
-        body: { error: 'missing header(s) \'authorization\' and missing parameter(s) \'tenantId,apiKey,orgId\'' }
+        body: { error: 'missing header(s) \'authorization\' and missing parameter(s) \'tenant,apiKey,orgId\'' }
       }
     })
   })
