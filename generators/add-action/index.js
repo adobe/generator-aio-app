@@ -28,7 +28,7 @@ const sdkCodeToTitle = {
   [sdkCodes.target]: 'Adobe Target',
   [sdkCodes.analytics]: 'Adobe Analytics',
   [sdkCodes.campaign]: 'Adobe Campaign Standard',
-  [sdkCodes.customerProfile]: 'Adobe Customer Profile'
+  [sdkCodes.customerProfile]: 'Adobe Experience Platform: Realtime Customer Profile'
 }
 
 const genericActionGenerator = path.join(__dirname, 'generic/index.js')

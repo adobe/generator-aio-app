@@ -16,7 +16,7 @@ class CustomerProfileGenerator extends ActionGenerator {
   constructor (args, opts) {
     super(args, opts)
     this.props = {
-      description: 'This is a sample action showcasing how to access an external Customer Profile API',
+      description: 'This is a sample action showcasing how to access an external Adobe Experience Platform: Realtime Customer Profile API',
       // eslint-disable-next-line quotes
       requiredParams: `['tenantId', 'iMSOrgId', 'apiKey']`,
       // eslint-disable-next-line quotes
@@ -36,7 +36,7 @@ class CustomerProfileGenerator extends ActionGenerator {
   }
 
   async prompting () {
-    this.props.actionName = await this.promptForActionName('interacts with the Customer Profile API', 'customer-profile')
+    this.props.actionName = await this.promptForActionName('interacts with the Adobe Experience Platform: Realtime Customer Profile API', 'customer-profile')
   }
 
   writing () {
@@ -49,7 +49,7 @@ class CustomerProfileGenerator extends ActionGenerator {
       e2eTestFile: './stub-action.e2e.js',
       tplContext: this.props,
       dotenvStub: {
-        label: 'please provide your Adobe I/O Customer Profile integration tenantId, iMSOrgId and api key',
+        label: 'please provide your Adobe Experience Platform: Realtime Customer Profile integration tenantId, iMSOrgId and api key',
         vars: [
           'CUSTOMER_PROFILE_API_TENANT_ID',
           'CUSTOMER_PROFILE_API_IMS_ORG_ID',
