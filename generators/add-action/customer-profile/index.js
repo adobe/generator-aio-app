@@ -51,9 +51,9 @@ class CustomerProfileGenerator extends ActionGenerator {
       dotenvStub: {
         label: 'please provide your Adobe Experience Platform: Realtime Customer Profile integration tenant, orgId and api key',
         vars: [
-          'CUSTOMER_PROFILE_API_TENANT_ID',
-          'CUSTOMER_PROFILE_API_IMS_ORG_ID',
-          'CUSTOMER_PROFILE_API_API_KEY'
+          'CUSTOMER_PROFILE_TENANT',
+          'CUSTOMER_PROFILE_ORG_ID',
+          'CUSTOMER_PROFILE_API_KEY'
         ]
       },
       dependencies: {
@@ -61,7 +61,7 @@ class CustomerProfileGenerator extends ActionGenerator {
         '@adobe/aio-lib-customer-profile': '^1.0.1'
       },
       actionManifestConfig: {
-        inputs: { LOG_LEVEL: 'debug', tenant: '$CUSTOMER_PROFILE_API_TENANT_ID', orgId: '$CUSTOMER_PROFILE_API_IMS_ORG_ID', apiKey: '$CUSTOMER_PROFILE_API_API_KEY' },
+        inputs: { LOG_LEVEL: 'debug', tenant: '$CUSTOMER_PROFILE_TENANT', orgId: '$CUSTOMER_PROFILE_ORG_ID', apiKey: '$CUSTOMER_PROFILE_API_KEY' },
         annotations: { final: true } // makes sure loglevel cannot be overwritten by request param
       }
     })

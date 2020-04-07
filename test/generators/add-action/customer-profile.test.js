@@ -59,9 +59,9 @@ function assertManifestContent (actionName) {
     runtime: 'nodejs:10',
     inputs: {
       LOG_LEVEL: 'debug',
-      tenant: '$CUSTOMER_PROFILE_API_TENANT_ID',
-      orgId: '$CUSTOMER_PROFILE_API_IMS_ORG_ID',
-      apiKey: '$CUSTOMER_PROFILE_API_API_KEY'
+      tenant: '$CUSTOMER_PROFILE_TENANT',
+      orgId: '$CUSTOMER_PROFILE_ORG_ID',
+      apiKey: '$CUSTOMER_PROFILE_API_KEY'
     },
     annotations: {
       final: true,
@@ -72,9 +72,9 @@ function assertManifestContent (actionName) {
 
 function assertEnvContent (prevContent) {
   assert.fileContent('.env', `## please provide your Adobe Experience Platform: Realtime Customer Profile integration tenant, orgId and api key
-#CUSTOMER_PROFILE_API_TENANT_ID=
-#CUSTOMER_PROFILE_API_IMS_ORG_ID=
-#CUSTOMER_PROFILE_API_API_KEY=`)
+#CUSTOMER_PROFILE_TENANT=
+#CUSTOMER_PROFILE_ORG_ID=
+#CUSTOMER_PROFILE_API_KEY=`)
   assert.fileContent('.env', prevContent)
 }
 
