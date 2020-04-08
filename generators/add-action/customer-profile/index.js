@@ -23,15 +23,11 @@ class CustomerProfileGenerator extends ActionGenerator {
       importCode: `const CustomerProfileSDK = require('@adobe/aio-lib-customer-profile')`,
       responseCode: `// initialize sdk
     const client = await CustomerProfileSDK.init(params.tenant, params.orgId, params.apiKey, token)
-    // call methods, eg getSegmentRoute
-    const { status, body } = await client.getExperienceEvents({
-      'schema.name': '_xdm.context.experienceevent',
-      'relatedSchema.name': '_xdm.context.profile',
-      entityIdNS: 'email',
-      entityId: params.email,
-      fields: params.fields,
-      orderby: /^[+-]timestamp$/.test(params.orderby) ? params.orderby : '-timestamp'
-    })
+    // call methods, eg getProfile
+    const { status, body } = await client.getProfile({
+      entityId: params.entityId,
+      entityIdNS: params.entityIdNS
+    });
     const response = {
       statusCode: status,
       body
@@ -47,7 +43,7 @@ class CustomerProfileGenerator extends ActionGenerator {
     this.sourceRoot(path.join(__dirname, '../templates'))
 
     this.addAction(this.props.actionName, './stub-action.js', {
-      testFile: '../customer-profile/templates/getExperienceEvents.test.js',
+      testFile: '../customer-profile/templates/getProfile.test.js',
       sharedLibFile: './utils.js',
       sharedLibTestFile: './utils.test.js',
       e2eTestFile: './stub-action.e2e.js',
