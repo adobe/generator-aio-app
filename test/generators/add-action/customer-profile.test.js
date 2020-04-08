@@ -91,14 +91,14 @@ function assertActionCodeContent (actionName) {
   )
   assert.fileContent(
     theFile,
-    `const response = await client.getExperienceEvents({
-      'schema.name': '_xdm.context.experienceevent',
-      'relatedSchema.name': '_xdm.context.profile',
-      entityIdNS: 'email',
-      entityId: params.email,
-      fields: params.fields,
-      orderby: /^[+-]timestamp$/.test(params.orderby) ? params.orderby : '-timestamp'
-    })`
+    `const { status, body } = await client.getProfile({
+      entityId: params.entityId,
+      entityIdNS: params.entityIdNS
+    });
+    const response = {
+      statusCode: status,
+      body
+    }`
   )
 }
 
