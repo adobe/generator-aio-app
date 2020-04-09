@@ -18,7 +18,7 @@ class CustomerProfileGenerator extends ActionGenerator {
     this.props = {
       description: 'This is a sample action showcasing how to access an external Adobe Experience Platform: Realtime Customer Profile API',
       // eslint-disable-next-line quotes
-      requiredParams: `['tenant', 'orgId', 'apiKey']`,
+      requiredParams: `['tenant', 'orgId', 'apiKey', 'entityId', 'entityIdNS']`,
       // eslint-disable-next-line quotes
       importCode: `const CustomerProfileSDK = require('@adobe/aio-lib-customer-profile')`,
       responseCode: `// initialize sdk

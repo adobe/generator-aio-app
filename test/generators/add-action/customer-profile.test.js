@@ -83,7 +83,7 @@ function assertActionCodeContent (actionName) {
   // a few checks to make sure the action calls the sdk
   assert.fileContent(
     theFile,
-    'const requiredParams = [\'tenant\', \'orgId\', \'apiKey\']'
+    'const requiredParams = [\'tenant\', \'orgId\', \'apiKey\', \'entityId\', \'entityIdNS\']'
   )
   assert.fileContent(
     theFile,
