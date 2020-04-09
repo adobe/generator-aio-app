@@ -24,13 +24,13 @@ class CustomerProfileGenerator extends ActionGenerator {
       responseCode: `// initialize sdk
     const client = await CustomerProfileSDK.init(params.tenant, params.orgId, params.apiKey, token)
     // call methods, eg getProfile
-    const { status, body } = await client.getProfile({
+    const profile = await client.getProfile({
       entityId: params.entityId,
       entityIdNS: params.entityIdNS
     });
     const response = {
-      statusCode: status,
-      body
+      statusCode: 200,
+      body: profile
     }`
     }
   }

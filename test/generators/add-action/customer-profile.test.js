@@ -91,13 +91,13 @@ function assertActionCodeContent (actionName) {
   )
   assert.fileContent(
     theFile,
-    `const { status, body } = await client.getProfile({
+    `const profile = await client.getProfile({
       entityId: params.entityId,
       entityIdNS: params.entityIdNS
     });
     const response = {
-      statusCode: status,
-      body
+      statusCode: 200,
+      body: profile
     }`
   )
 }
