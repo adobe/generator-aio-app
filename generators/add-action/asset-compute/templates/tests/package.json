@@ -1,0 +1,17 @@
+{
+    "name": "worker-template",
+    "author": "Adobe Systems Inc. <nui@adobe.com>",
+    "version": "1.0.0",
+    "description": "Example custom worker",
+    "dependencies": {
+        "@nui/library": "^19.0.0"
+    },
+    "private": true,
+    "devDependencies": {
+        "@nui/eslint-config": "^1.0.4"
+    },
+    "scripts": {
+        "pretest": "eslint ./",
+        "test": "nui test-worker"
+    }
+}

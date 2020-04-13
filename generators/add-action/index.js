@@ -20,13 +20,15 @@ const { sdkCodes } = require('../../lib/constants')
 const sdkCodeToActionGenerator = {
   [sdkCodes.target]: path.join(__dirname, 'target/index.js'),
   [sdkCodes.analytics]: path.join(__dirname, 'analytics/index.js'),
-  [sdkCodes.campaign]: path.join(__dirname, 'campaign-standard/index.js')
+  [sdkCodes.campaign]: path.join(__dirname, 'campaign-standard/index.js'),
+  [sdkCodes.assetCompute]: path.join(__dirname, 'asset-compute/index.js')
 }
 
 const sdkCodeToTitle = {
   [sdkCodes.target]: 'Adobe Target',
   [sdkCodes.analytics]: 'Adobe Analytics',
-  [sdkCodes.campaign]: 'Adobe Campaign Standard'
+  [sdkCodes.campaign]: 'Adobe Campaign Standard',
+  [sdkCodes.assetCompute]: 'Asset Compute'
 }
 
 const genericActionGenerator = path.join(__dirname, 'generic/index.js')
@@ -45,7 +47,7 @@ const genericActionGenerator = path.join(__dirname, 'generic/index.js')
 class AddActions extends Generator {
   constructor (args, opts) {
     super(args, opts)
-
+    console.log('>>>>>>>>>>>>>>>>>>>>> HELLO >>>>>>>>>>>>>>>>>>>>>>>>>>>.');
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
     this.option('adobe-services', { type: String, default: '' })
