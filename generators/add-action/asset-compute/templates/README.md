@@ -4,14 +4,6 @@ This is a very simple example of a 3rd party Asset Compute worker. It generates 
 
 It is based on [Project Firefly](https://wiki.corp.adobe.com/pages/viewpage.action?pageId=1776230957) and the [aio](https://github.com/adobe/aio-cli) developer tool.
 
-## URL
-
-The master version is deployed at:
-
-```
-https://105979_87271.adobeioruntime.net/api/v1/web/example-custom-worker-master/worker
-```
-
 ## Code
 
 The key elements are
