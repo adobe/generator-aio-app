@@ -17,7 +17,6 @@ import "regenerator-runtime/runtime"
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import { loadExcRuntime } from './utils'
 import Runtime, { init } from '@adobe/exc-app'
 
 import App from './App'
@@ -25,7 +24,7 @@ import App from './App'
 /* Here you can bootstrap your application and configure the integration with the Adobe Experience Cloud Shell */
 try {
   // attempt to load the Experience Cloud Runtime
-  loadExcRuntime()
+  require('./exc-runtime')
   // if there are no errors, bootstrap the app in the Experience Cloud Shell
   init(bootstrapInExcShell)
 } catch (e) {

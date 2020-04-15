@@ -63,6 +63,7 @@ function assertDependencies () {
 function assertFiles () {
   assert.file('web-src/index.html')
   assert.file('web-src/404.html')
+  assert.file('web-src/src/exc-runtime.js')
   assert.file('web-src/src/index.js')
   assert.file('web-src/src/App.js')
   assert.file('web-src/src/App.css')
