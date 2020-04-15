@@ -28,14 +28,13 @@ packages:
 Requirements:
 
 * [aio cli](https://github.com/adobe/aio-cli)
-* [nui cli](https://git.corp.adobe.com/nui/asset-compute-cli) (temporarily - until the [asset-compute plugin for aio](https://git.corp.adobe.com/nui/aio-cli-plugin-asset-compute) is ready)
+* [asset-compute plugin for aio](https://github.com/adobe/aio-cli-plugin-asset-compute) 
 * Adobe IO Runtime namespace where you want to install the worker into
 * `.env` file in the root directory with the credentials of the Runtime namespace, and these variables:
   - `AIO_RUNTIME_NAMESPACE` for the namespace name (`NAMESPACE` from `.wskprops`)
   - `AIO_RUNTIME_AUTH` for the namespace name (`AUTH` from `.wskprops`)
   - Make sure to not commit the `.env` file to git!
-  - Also note that `aio` & Firefly will soon offer a mechanism to get the credentials automatically from your Firefly Workspace, making this manual `.env` file setup obsolete.
-  
+
 ### Test
 
 This runs eslint and the worker test cases in [tests](tests):

@@ -10,10 +10,6 @@ coverage
 build/
 .releaserc.json
 
-# serverless stores its packages and temp files in here
-.serverless
-serverless.yml
-
 # npm pack leftovers
 *.tgz
 
