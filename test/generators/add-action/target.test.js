@@ -71,8 +71,8 @@ function assertManifestContent (actionName) {
 
 function assertEnvContent (prevContent) {
   assert.fileContent('.env', `## please provide your Adobe I/O Target integration tenant and api key
-#TARGET_TENANT=
-#TARGET_API_KEY=`)
+# TARGET_TENANT=
+# TARGET_API_KEY=`)
   assert.fileContent('.env', prevContent)
 }
 

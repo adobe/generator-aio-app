@@ -71,8 +71,8 @@ function assertManifestContent (actionName) {
 
 function assertEnvContent (prevContent) {
   assert.fileContent('.env', `## please provide your Adobe I/O Analytics integration company id and api key
-#ANALYTICS_COMPANY_ID=
-#ANALYTICS_API_KEY=`)
+# ANALYTICS_COMPANY_ID=
+# ANALYTICS_API_KEY=`)
   assert.fileContent('.env', prevContent)
 }
 

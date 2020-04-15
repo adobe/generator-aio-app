@@ -308,7 +308,7 @@ describe('implementation', () => {
       actionGenerator.addAction('myAction', './templateFile.js', { dotenvStub: { label: 'fake label', vars: ['FAKE', 'FAKE2'] } })
 
       // test manifest update with action information
-      expect(actionGenerator.fs.write).toHaveBeenCalledWith(n(`/fakeDestRoot/${constants.dotenvFilename}`), 'PREV=123\n\n## fake label\n#FAKE=\n#FAKE2=\n')
+      expect(actionGenerator.fs.write).toHaveBeenCalledWith(n(`/fakeDestRoot/${constants.dotenvFilename}`), 'PREV=123\n\n## fake label\n# FAKE=\n# FAKE2=\n')
     })
 
     test('with dotenvStub option but dotenv label is already set in dotenv (should ignore)', () => {

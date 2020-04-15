@@ -24,7 +24,7 @@ class AssetComputeGenerator extends ActionGenerator {
 
   async prompting () {
     this.props.actionName = await this.promptForActionName('contains a template for a JavaScript Asset Compute worker', 'worker')
-    this.props.actionDestPath = this.destinationPath('worker.js')
+    this.props.actionDestPath = this.destinationPath(`${this.props.actionName}.js`)
   }
 
   writing () {
@@ -37,6 +37,17 @@ class AssetComputeGenerator extends ActionGenerator {
       },
       devDependencies: {
         '@nui/eslint-config': '^1.0.4' // will be replaced with open sourced @adobe scope
+      },
+      dotenvStub: {
+        label: 'please provide the following environment variables for the Asset Compute devtool',
+        vars: [
+          'AIO_INTEGRATION_FILE_PATH',
+          'ASSET_COMPUTE_URL',
+          'S3_BUCKET',
+          'AWS_ACCESS_KEY_ID',
+          'AWS_SECRET_ACCESS_KEY',
+          'AWS_REGION'
+        ]
       },
       actionManifestConfig: {
         annotations: { 'require-adobe-auth': true }
