@@ -11,40 +11,72 @@ governing permissions and limitations under the License.
 * <license header>
 */
 
-#outerDiv {
-  text-align: center;
-  font-family: arial;
-  margin: 0 auto;
+
+html, body {
+  margin: 0;
 }
 
-#docList {
-  list-style-type: none;
+.provider {
+  height: 100vh;
 }
 
-.docListItem {
-  margin-bottom: 2px;
+.main {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-title {
+  margin: 15px auto 20px auto;
 }
 <% if (hasBackend) { %>
-.actionListItem {
-  margin-bottom: 2px;
-  justify-content: center;
-  display: grid;
-  grid-template-columns: 175px 75px;
+.main-actions {
+  margin: auto auto 20px auto;
+  flex-direction: column;
+  align-items: center;
 }
 
-.actionListItemLabel {
-  text-align: left;
+.actions-title {
+  margin: auto auto 10px auto;
 }
 
-#actionSuccessMessage {
-  color: green;
-  width: 50%;
-  margin: 20px auto;
+.actions-form {
+  width: 200px;
+  margin-bottom: 5px;
 }
 
-#actionErrorMessage {
-  color: red;
-  width: 50%;
-  margin: 20px auto;
+.actions-invoke {
+  margin-top: 10px !important;
+  flex-direction: column;
+}
+
+.actions-invoke-button {
+  width: 75px;
+  margin: auto;
+}
+
+.actions-invoke-progress {
+  margin: 10px auto;
+}
+
+.actions-invoke-success {
+  color: rgb(57, 185, 144);
+  margin: 10px auto;
+}
+
+.actions-invoke-error {
+  color: rgb(247, 109, 116);
+  margin: 10px auto;
 }
 <% } %>
+.main-doc {
+  margin: auto auto 20px auto;
+  flex-direction: column;
+}
+
+.doc-item {
+  margin: auto auto 3px auto;
+}
+
+.doc-title {
+  margin: auto auto 10px auto;
+}
