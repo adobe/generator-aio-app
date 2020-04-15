@@ -1,8 +1,6 @@
-# example-custom-worker
+# Worker Template
 
-This is a very simple example of a 3rd party Asset Compute worker. It generates a rendition by simply [copying](https://git.corp.adobe.com/nui/example-custom-worker/blob/master/worker.js#L31) the source file.
-
-It is based on [Project Firefly](https://wiki.corp.adobe.com/pages/viewpage.action?pageId=1776230957) and the [aio](https://github.com/adobe/aio-cli) developer tool.
+This is a very simple example of a custom Asset Compute worker. It generates a rendition by simply copying the source file.
 
 ## Code
 
@@ -56,14 +54,14 @@ The deployed version should look like this if you run `wsk action list`:
 
 ```
 actions
-/ns/example-custom-worker-1.0.0/worker                           private sequence
-/ns/example-custom-worker-1.0.0/__secured_worker                 private nodejs:10
+/ns/worker-1.0.0/worker                           private sequence
+/ns/worker-1.0.0/__secured_worker                 private nodejs:10
 ```
 
 The `aio app deploy` output will show the URL of the worker:
 
 ```
-https://ns.adobeioruntime.net/api/v1/web/example-custom-worker-1.0.0/worker
+https://ns.adobeioruntime.net/api/v1/web/worker-1.0.0/worker
 ```
 
 ### Use
@@ -73,7 +71,7 @@ To use the custom worker with the Asset Compute Service, include a new rendition
 ```
 "renditions": [
     {
-        "worker": "https://ns.adobeioruntime.net/api/v1/web/example-custom-worker-master/worker",
+        "worker": "https://ns.adobeioruntime.net/api/v1/web/worker-1.0.0/worker",
         "name": "image.jpg"
     }
 ]
