@@ -14,24 +14,22 @@ governing permissions and limitations under the License.
 jest.mock('@adobe/aio-sdk', () => ({
   Core: {
     Logger: jest.fn()
+  },
+  CustomerProfile: {
+    init: jest.fn()
   }
 }))
 
-jest.mock('@adobe/aio-lib-customer-profile', () => ({
-  init: jest.fn()
-}))
-
-const { Core } = require('@adobe/aio-sdk')
-const CustomerProfileSDK = require('@adobe/aio-lib-customer-profile')
+const { Core, CustomerProfile } = require('@adobe/aio-sdk')
 const mockCustomerProfileInstance = { getProfile: jest.fn() }
 const mockLoggerInstance = { info: jest.fn(), debug: jest.fn(), error: jest.fn() }
 Core.Logger.mockReturnValue(mockLoggerInstance)
-CustomerProfileSDK.init.mockResolvedValue(mockCustomerProfileInstance)
+CustomerProfile.init.mockResolvedValue(mockCustomerProfileInstance)
 
 const action = require('./<%= actionRelPath %>')
 
 beforeEach(() => {
-  CustomerProfileSDK.init.mockClear() // only clears calls stats
+  CustomerProfile.init.mockClear() // only clears calls stats
   mockCustomerProfileInstance.getProfile.mockReset() // clears calls + mock implementation
 
   Core.Logger.mockClear()
@@ -50,7 +48,7 @@ describe('<%= actionName %>', () => {
   })
   test('CustomerProfileSDK should be initialized with input credentials', async () => {
     await action.main({ ...fakeRequestParams, otherParam: 'fake4' })
-    expect(CustomerProfileSDK.init).toHaveBeenCalledWith('fakeId', 'fakeOrgId', 'fakeKey', 'fakeToken')
+    expect(CustomerProfile.init).toHaveBeenCalledWith('fakeId', 'fakeOrgId', 'fakeKey', 'fakeToken')
   })
   test('should return an http response with CustomerProfile API profile', async () => {
     const fakeResponse = { fakeHash: {} }
