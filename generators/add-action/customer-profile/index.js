@@ -21,9 +21,9 @@ class CustomerProfileGenerator extends ActionGenerator {
       // eslint-disable-next-line quotes
       requiredParams: `['tenant', 'orgId', 'apiKey', 'entityId', 'entityIdNS']`,
       // eslint-disable-next-line quotes
-      importCode: `const CustomerProfileSDK = require('@adobe/aio-lib-customer-profile')`,
+      importCode: `const { CustomerProfile } = require('@adobe/aio-sdk')`,
       responseCode: `// initialize sdk
-    const client = await CustomerProfileSDK.init(params.tenant, params.orgId, params.apiKey, token)
+    const client = await CustomerProfile.init(params.tenant, params.orgId, params.apiKey, token)
     // call methods, eg getProfile
     const profile = await client.getProfile({
       entityId: params.entityId,
