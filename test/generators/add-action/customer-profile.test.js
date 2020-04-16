@@ -87,7 +87,7 @@ function assertActionCodeContent (actionName) {
   )
   assert.fileContent(
     theFile,
-    'const client = await CustomerProfileSDK.init(params.tenant, params.orgId, params.apiKey, token)'
+    'const client = await CustomerProfile.init(params.tenant, params.orgId, params.apiKey, token)'
   )
   assert.fileContent(
     theFile,
@@ -105,8 +105,7 @@ function assertActionCodeContent (actionName) {
 function assertDependencies () {
   expect(JSON.parse(fs.readFileSync('package.json').toString())).toEqual({
     dependencies: {
-      '@adobe/aio-sdk': expect.any(String),
-      '@adobe/aio-lib-customer-profile': expect.any(String)
+      '@adobe/aio-sdk': expect.any(String)
     },
     devDependencies: {
       '@adobe/wskdebug': expect.any(String)

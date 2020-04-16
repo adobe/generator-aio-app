@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 
 const path = require('path')
 const ActionGenerator = require('../../../lib/ActionGenerator')
+const { commonDependencyVersions } = require('../../../lib/constants')
 
 class CustomerProfileGenerator extends ActionGenerator {
   constructor (args, opts) {
@@ -20,9 +21,9 @@ class CustomerProfileGenerator extends ActionGenerator {
       // eslint-disable-next-line quotes
       requiredParams: `['tenant', 'orgId', 'apiKey', 'entityId', 'entityIdNS']`,
       // eslint-disable-next-line quotes
-      importCode: `const CustomerProfileSDK = require('@adobe/aio-lib-customer-profile')`,
+      importCode: `const { CustomerProfile } = require('@adobe/aio-sdk')`,
       responseCode: `// initialize sdk
-    const client = await CustomerProfileSDK.init(params.tenant, params.orgId, params.apiKey, token)
+    const client = await CustomerProfile.init(params.tenant, params.orgId, params.apiKey, token)
     // call methods, eg getProfile
     const profile = await client.getProfile({
       entityId: params.entityId,
@@ -57,8 +58,7 @@ class CustomerProfileGenerator extends ActionGenerator {
         ]
       },
       dependencies: {
-        '@adobe/aio-sdk': '^2.0.0',
-        '@adobe/aio-lib-customer-profile': '^1.0.1'
+        '@adobe/aio-sdk': commonDependencyVersions['@adobe/aio-sdk']
       },
       actionManifestConfig: {
         inputs: { LOG_LEVEL: 'debug', tenant: '$CUSTOMER_PROFILE_TENANT', orgId: '$CUSTOMER_PROFILE_ORG_ID', apiKey: '$CUSTOMER_PROFILE_API_KEY' },
