@@ -12,6 +12,8 @@ governing permissions and limitations under the License.
 const path = require('path')
 const ActionGenerator = require('../../../lib/ActionGenerator')
 
+const { commonDependencyVersions } = require('../../../lib/constants')
+
 class TargetGenerator extends ActionGenerator {
   constructor (args, opts) {
     super(args, opts)
@@ -55,7 +57,7 @@ class TargetGenerator extends ActionGenerator {
         ]
       },
       dependencies: {
-        '@adobe/aio-sdk': '^2.0.0'
+        '@adobe/aio-sdk': commonDependencyVersions['@adobe/aio-sdk']
       },
       actionManifestConfig: {
         inputs: { LOG_LEVEL: 'debug', tenant: '$TARGET_TENANT', apiKey: '$TARGET_API_KEY' },

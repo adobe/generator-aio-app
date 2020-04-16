@@ -105,8 +105,7 @@ function assertActionCodeContent (actionName) {
 function assertDependencies () {
   expect(JSON.parse(fs.readFileSync('package.json').toString())).toEqual({
     dependencies: {
-      '@adobe/aio-sdk': expect.any(String),
-      '@adobe/aio-lib-customer-profile': expect.any(String)
+      '@adobe/aio-sdk': expect.any(String)
     },
     devDependencies: {
       '@adobe/wskdebug': expect.any(String)
