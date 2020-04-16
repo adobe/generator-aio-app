@@ -57,7 +57,7 @@ class AssetComputeGenerator extends ActionGenerator {
 
     // modify the package.json to contain the Asset Compute testing and development tools
     const packagejsonPath = this.destinationPath('package.json')
-    const packagejsonContent = this.fs.readJSON(packagejsonPath) || {}
+    const packagejsonContent = this.fs.readJSON(packagejsonPath)
     packagejsonContent.name = this.props.actionName
     if (!packagejsonContent.scripts) packagejsonContent.scripts = {}
     packagejsonContent.scripts.posttest = 'eslint ./'

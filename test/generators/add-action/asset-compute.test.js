@@ -155,6 +155,27 @@ describe('run', () => {
     assertDependencies(actionName)
   })
 
+  test('--skip-prompt, and action already has package.json with scripts', async () => {
+    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    await helpers.run(theGeneratorPath)
+      .withOptions({ 'skip-prompt': true })
+      .inTmpDir(dir => {
+        fs.writeFileSync('package.json', JSON.stringify({
+          scripts: {}
+        }))
+        fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
+      })
+
+    // default
+    const actionName = 'example'
+
+    assertGeneratedFiles(actionName)
+    assertActionCodeContent(actionName)
+    assertManifestContent(actionName)
+    assertEnvContent(prevDotEnvContent)
+    assertDependencies(actionName)
+  })
+
   test('user input actionName=yolo', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     await helpers.run(theGeneratorPath)
