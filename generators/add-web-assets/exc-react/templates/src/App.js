@@ -166,6 +166,7 @@ export default class App extends React.Component {
                 </Button>
                 <ProgressCircle
                   UNSAFE_className='actions-invoke-progress'
+                  aria-label='loading'
                   isIndeterminate
                   isHidden={ !this.state.actionInvokeInProgress }/>
                 </Flex>
