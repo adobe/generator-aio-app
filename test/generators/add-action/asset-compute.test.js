@@ -16,7 +16,7 @@ const fs = require('fs')
 const yaml = require('js-yaml')
 const path = require('path')
 
-const theGeneratorPath = require.resolve('../../../generators/add-action/analytics')
+const theGeneratorPath = require.resolve('../../../generators/add-action/asset-compute')
 const Generator = require('yeoman-generator')
 
 const constants = require('../../../lib/constants')
@@ -40,66 +40,71 @@ describe('prototype', () => {
 })
 
 function assertGeneratedFiles (actionName) {
-  assert.file(`${constants.actionsDirname}/${actionName}/index.js`)
-  assert.file(`test/${constants.actionsDirname}/${actionName}.test.js`)
-  assert.file(`e2e/${constants.actionsDirname}/${actionName}.e2e.js`)
-
-  assert.file(`${constants.actionsDirname}/utils.js`)
-  assert.file(`test/${constants.actionsDirname}/utils.test.js`)
+  assert.file(`worker-${actionName}.js`)
+  assert.file('tests/corrupt-input/file.jpg')
+  assert.file('tests/corrupt-input/params.json')
+  assert.file('tests/simple-test/file.jpg')
+  assert.file('tests/simple-test/params.json')
+  assert.file('tests/simple-test/rendition.jpg')
 
   assert.file('manifest.yml')
   assert.file('.env')
+  assert.file('package.json')
 }
 
 function assertManifestContent (actionName) {
   const json = yaml.safeLoad(fs.readFileSync('manifest.yml').toString())
   expect(json.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
-    function: path.normalize(`${constants.actionsDirname}/${actionName}/index.js`),
+    function: `worker-${actionName}.js`,
     web: 'yes',
     runtime: 'nodejs:10',
     inputs: {
-      LOG_LEVEL: 'debug',
-      apiKey: '$ANALYTICS_API_KEY',
-      companyId: '$ANALYTICS_COMPANY_ID'
+      LOG_LEVEL: 'debug'
     },
     annotations: {
-      final: true,
       'require-adobe-auth': true
     }
   })
 }
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', `## please provide your Adobe I/O Analytics integration company id and api key
-# ANALYTICS_COMPANY_ID=
-# ANALYTICS_API_KEY=`)
+  assert.fileContent('.env', `## please provide the following environment variables for the Asset Compute devtool
+# AIO_INTEGRATION_FILE_PATH=
+# ASSET_COMPUTE_URL=
+# S3_BUCKET=
+# AWS_ACCESS_KEY_ID=
+# AWS_SECRET_ACCESS_KEY=
+# AWS_REGION=`)
   assert.fileContent('.env', prevContent)
 }
 
 function assertActionCodeContent (actionName) {
-  const theFile = `${constants.actionsDirname}/${actionName}/index.js`
-  // a few checks to make sure the action calls the analytics sdk
+  const theFile = `worker-${actionName}.js`
+  // a few checks to make sure the action uses the asset compute sdk
   assert.fileContent(
     theFile,
-    'const requiredParams = [\'apiKey\', \'companyId\']'
+    'const { worker } = require(\'@nui/library\');'
   )
   assert.fileContent(
     theFile,
-    'const analyticsClient = await Analytics.init(params.companyId, params.apiKey, token)'
-  )
-  assert.fileContent(
-    theFile,
-    'const collections = await analyticsClient.getCollections({ limit: 5, page: 0 })'
+    'exports.main = worker(async (source, rendition) => {'
   )
 }
 
-function assertDependencies () {
+function assertDependencies (actionName) {
   expect(JSON.parse(fs.readFileSync('package.json').toString())).toEqual({
+    name: actionName,
+    scripts: {
+      deploy: 'aio app deploy && aio asset-compute devtool',
+      posttest: 'eslint ./',
+      test: 'aio asset-compute test-worker'
+    },
     dependencies: {
-      '@adobe/aio-sdk': expect.any(String)
+      '@nui/library': expect.any(String)
     },
     devDependencies: {
-      '@adobe/wskdebug': expect.any(String)
+      '@adobe/wskdebug': expect.any(String),
+      '@nui/eslint-config': expect.any(String)
     }
   })
 }
@@ -114,13 +119,13 @@ describe('run', () => {
       })
 
     // default
-    const actionName = 'analytics'
+    const actionName = 'example'
 
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies()
+    assertDependencies(actionName)
   })
 
   test('--skip-prompt, and action with default name already exists', async () => {
@@ -132,7 +137,7 @@ describe('run', () => {
           packages: {
             __APP_PACKAGE__: {
               actions: {
-                analytics: { function: 'fake.js' }
+                example: { function: 'fake.js' }
               }
             }
           }
@@ -141,13 +146,34 @@ describe('run', () => {
       })
 
     // default
-    const actionName = 'analytics-1'
+    const actionName = 'example-1'
 
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies()
+    assertDependencies(actionName)
+  })
+
+  test('--skip-prompt, and action already has package.json with scripts', async () => {
+    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    await helpers.run(theGeneratorPath)
+      .withOptions({ 'skip-prompt': true })
+      .inTmpDir(dir => {
+        fs.writeFileSync('package.json', JSON.stringify({
+          scripts: {}
+        }))
+        fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
+      })
+
+    // default
+    const actionName = 'example'
+
+    assertGeneratedFiles(actionName)
+    assertActionCodeContent(actionName)
+    assertManifestContent(actionName)
+    assertEnvContent(prevDotEnvContent)
+    assertDependencies(actionName)
   })
 
   test('user input actionName=yolo', async () => {
@@ -165,6 +191,6 @@ describe('run', () => {
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies()
+    assertDependencies(actionName)
   })
 })
