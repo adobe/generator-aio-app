@@ -50,6 +50,7 @@ class AssetComputeGenerator extends ActionGenerator {
         ]
       },
       actionManifestConfig: {
+        inputs: { LOG_LEVEL: 'debug' },
         annotations: { 'require-adobe-auth': true }
       }
     })
@@ -58,6 +59,7 @@ class AssetComputeGenerator extends ActionGenerator {
     const packagejsonPath = this.destinationPath('package.json')
     const packagejsonContent = this.fs.readJSON(packagejsonPath) || {}
     packagejsonContent.name = this.props.actionName
+    if (!packagejsonContent.scripts) packagejsonContent.scripts = {}
     packagejsonContent.scripts.posttest = 'eslint ./'
     packagejsonContent.scripts.test = 'aio asset-compute test-worker'
     packagejsonContent.scripts.deploy = 'aio app deploy && aio asset-compute devtool'
