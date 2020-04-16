@@ -87,7 +87,7 @@ function assertActionCodeContent (actionName) {
   )
   assert.fileContent(
     theFile,
-    'const client = await CustomerProfileSDK.init(params.tenant, params.orgId, params.apiKey, token)'
+    'const client = await CustomerProfile.init(params.tenant, params.orgId, params.apiKey, token)'
   )
   assert.fileContent(
     theFile,
