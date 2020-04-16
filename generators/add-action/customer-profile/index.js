@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 
 const path = require('path')
 const ActionGenerator = require('../../../lib/ActionGenerator')
+const { commonDependencyVersions } = require('../../../lib/constants')
 
 class CustomerProfileGenerator extends ActionGenerator {
   constructor (args, opts) {
@@ -57,8 +58,7 @@ class CustomerProfileGenerator extends ActionGenerator {
         ]
       },
       dependencies: {
-        '@adobe/aio-sdk': '^2.0.0',
-        '@adobe/aio-lib-customer-profile': '^1.0.1'
+        '@adobe/aio-sdk': commonDependencyVersions['@adobe/aio-sdk']
       },
       actionManifestConfig: {
         inputs: { LOG_LEVEL: 'debug', tenant: '$CUSTOMER_PROFILE_TENANT', orgId: '$CUSTOMER_PROFILE_ORG_ID', apiKey: '$CUSTOMER_PROFILE_API_KEY' },
