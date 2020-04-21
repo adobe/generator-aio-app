@@ -50,6 +50,7 @@ function assertDependencies () {
       'react-error-boundary': expect.any(String),
       'core-js': expect.any(String),
       'regenerator-runtime': expect.any(String),
+      '@adobe/exc-app': expect.any(String),
       '@react-spectrum/button': expect.any(String),
       '@react-spectrum/form': expect.any(String),
       '@react-spectrum/layout': expect.any(String),
@@ -72,11 +73,11 @@ function assertDependencies () {
 function assertFiles () {
   assert.file('web-src/index.html')
   assert.file('web-src/404.html')
+  assert.file('web-src/src/exc-runtime.js')
   assert.file('web-src/src/index.js')
   assert.file('web-src/src/App.js')
   assert.file('web-src/src/App.css')
   assert.file('web-src/src/utils.js')
-  assert.file('web-src/src/exc-runtime.js')
 }
 
 function assertWithActions () {

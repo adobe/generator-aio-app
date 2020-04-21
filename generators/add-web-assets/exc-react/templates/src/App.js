@@ -65,6 +65,16 @@ export default class App extends React.Component {
 <% } %>
     console.log('runtime object:', this.props.runtime)
     console.log('ims object:', this.props.ims)
+
+    // use exc runtime event handlers
+    // respond to configuration change events (e.g. user switches org)
+    this.props.runtime.on('configuration', ({ imsOrg, imsToken, locale }) => {
+      console.log('configuration change', { imsOrg, imsToken, locale })
+    })
+    // respond to history change events
+    this.props.runtime.on('history', ({ type, path }) => {
+      console.log('history change', { type, path })
+    })
   }
 
   static get propTypes () {

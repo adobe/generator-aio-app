@@ -49,6 +49,7 @@ class ExcReactGenerator extends Generator {
       'react-dom': '^16.13.1',
       'react-error-boundary': '^1.2.5',
       'regenerator-runtime': '^0.13.5',
+      '@adobe/exc-app': '^0.2.14',
       '@react-spectrum/button': '^3.0.0-rc.2',
       '@react-spectrum/form': '^3.0.0-rc.2',
       '@react-spectrum/layout': '^3.0.0-alpha.1',
