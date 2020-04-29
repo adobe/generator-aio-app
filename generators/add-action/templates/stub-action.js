@@ -34,7 +34,7 @@ async function main (params) {
     // check for missing request input parameters and headers
     const requiredParams = <%- requiredParams %>
     /* note: if in manifest.yml, require-adobe-auth is disabled and if this action doesn't
-      require an input token, then Authorization can be removed from the check below */
+      require an input token, then the Authorization header can be removed from the check below */
     const errorMessage = checkMissingRequestInputs(params, requiredParams, ['Authorization'])
     if (errorMessage) {
       // return and log client errors
