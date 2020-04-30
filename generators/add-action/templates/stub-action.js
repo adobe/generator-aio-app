@@ -14,7 +14,7 @@ governing permissions and limitations under the License.
 /**
  * <%= description %>
  */
-
+const AudienceManager = require('@adobe/aio-lib-audience-manager-cd')
 const { Core } = require('@adobe/aio-sdk')
 <% if (importCode) { %><%- importCode %><% } %>
 const { errorResponse, getBearerToken, stringParameters, checkMissingRequestInputs } = require('../utils')
