@@ -48,7 +48,18 @@ class ExcReactGenerator extends Generator {
       react: '^16.13.1',
       'react-dom': '^16.13.1',
       'react-error-boundary': '^1.2.5',
-      'regenerator-runtime': '^0.13.5'
+      'regenerator-runtime': '^0.13.5',
+      '@adobe/exc-app': '^0.2.14',
+      '@react-spectrum/button': '^3.0.0-rc.2',
+      '@react-spectrum/form': '^3.0.0-rc.2',
+      '@react-spectrum/layout': '^3.0.0-alpha.1',
+      '@react-spectrum/link': '^3.0.0-alpha.1',
+      '@react-spectrum/picker': '^3.0.0-alpha.1',
+      '@react-spectrum/progress': '^3.0.0-rc.2',
+      '@react-spectrum/provider': '^3.0.0-rc.2',
+      '@react-spectrum/textfield': '^3.0.0-rc.2',
+      '@react-spectrum/theme-default': '^3.0.0-rc.2',
+      '@react-spectrum/typography': '^3.0.0-alpha.1'
     })
     utils.addDependencies(this, {
       '@babel/core': '^7.8.7',
@@ -57,7 +68,7 @@ class ExcReactGenerator extends Generator {
     }, true)
     // add env variable to load ui in exc shell
     utils.appendOrWrite(this, this.destinationPath(dotenvFilename),
-      'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/myapps/?localDevUrl="')
+      'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/apps/?localDevUrl="')
   }
 
   async install () {

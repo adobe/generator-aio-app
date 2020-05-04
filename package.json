@@ -1,6 +1,6 @@
 {
   "name": "@adobe/generator-aio-app",
-  "version": "0.6.1",
+  "version": "0.7.3",
   "description": "Adobe I/O application yeoman code generator",
   "main": "generators/app/index.js",
   "scripts": {
@@ -42,6 +42,7 @@
   "dependencies": {
     "fs-extra": "^9.0.0",
     "js-yaml": "^3.13.1",
+    "upath": "^1.2.0",
     "yeoman-generator": "^4.2.0"
   }
 }

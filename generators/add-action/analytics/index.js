@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 
 const path = require('path')
 const ActionGenerator = require('../../../lib/ActionGenerator')
+const { commonDependencyVersions } = require('../../../lib/constants')
 
 class AnalyticsGenerator extends ActionGenerator {
   constructor (args, opts) {
@@ -49,7 +50,7 @@ class AnalyticsGenerator extends ActionGenerator {
       e2eTestFile: './stub-action.e2e.js',
       tplContext: this.props,
       dependencies: {
-        '@adobe/aio-sdk': '^2.0.0'
+        '@adobe/aio-sdk': commonDependencyVersions['@adobe/aio-sdk']
       },
       dotenvStub: {
         label: 'please provide your Adobe I/O Analytics integration company id and api key',
