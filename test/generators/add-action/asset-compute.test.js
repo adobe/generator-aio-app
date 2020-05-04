@@ -104,7 +104,7 @@ function assertDependencies (actionName) {
     },
     devDependencies: {
       '@adobe/wskdebug': expect.any(String),
-      '@nui/eslint-config': expect.any(String)
+      '@adobe/eslint-config-asset-compute': expect.any(String)
     }
   })
 }
