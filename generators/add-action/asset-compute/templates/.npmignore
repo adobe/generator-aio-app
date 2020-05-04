@@ -8,13 +8,17 @@ coverage
 .eslintrc.js
 .eslintignore
 build/
+coverage/
 .releaserc.json
+.travis.yml
+
+.aio
+.env
 
 # npm pack leftovers
 *.tgz
 
 .webpack
-
 
 # npm pack leftovers
 *.tgz

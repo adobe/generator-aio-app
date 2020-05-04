@@ -24,4 +24,4 @@ exports.main = worker(async (source, rendition) => {
     // process infile and write to outfile
     // parameters are in rendition.instructions
     await fs.copyFile(source.path, rendition.path);
-});
+})
