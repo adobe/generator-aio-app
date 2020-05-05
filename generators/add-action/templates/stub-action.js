@@ -21,7 +21,6 @@ governing permissions and limitations under the License.
  *   - The two steps above imply that every client knowing the URL to this deployed action will be able to invoke it without any authentication and authorization checks against Adobe Identity Management System
  *   - Make sure to validate these changes against your security requirements before deploying the action
  */
-const AudienceManager = require('@adobe/aio-lib-audience-manager-cd')
 const { Core } = require('@adobe/aio-sdk')
 <% if (importCode) { %><%- importCode %><% } %>
 const { errorResponse, getBearerToken, stringParameters, checkMissingRequestInputs } = require('../utils')
