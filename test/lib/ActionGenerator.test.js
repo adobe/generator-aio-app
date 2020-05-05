@@ -338,7 +338,7 @@ describe('implementation', () => {
       }
       actionGenerator.addAction('myAction', './templateFile.js', { testFile: './template.test.js' })
 
-      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/test/${constants.actionsDirname}/myAction.test.js`), { actionRelPath: n(`../../${constants.actionsDirname}/myAction/index.js`) }, {}, {})
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/test/${constants.actionsDirname}/myAction.test.js`), { actionRelPath: `../../${constants.actionsDirname}/myAction/index.js` }, {}, {})
     })
 
     test('with testFile option and tplContext option (should append relative path to tested file to test template context)', () => {
@@ -353,7 +353,7 @@ describe('implementation', () => {
       actionGenerator.addAction('myAction', './templateFile.js', { testFile: './template.test.js', tplContext: { fake: 'context', with: { fake: 'values' } } })
 
       // test manifest update with action information
-      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/test/${constants.actionsDirname}/myAction.test.js`), { actionRelPath: n(`../../${constants.actionsDirname}/myAction/index.js`), fake: 'context', with: { fake: 'values' } }, {}, {})
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/test/${constants.actionsDirname}/myAction.test.js`), { actionRelPath: (`../../${constants.actionsDirname}/myAction/index.js`), fake: 'context', with: { fake: 'values' } }, {}, {})
     })
 
     test('with e2eTestFile option', () => {

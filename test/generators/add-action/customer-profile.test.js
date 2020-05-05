@@ -16,7 +16,7 @@ const fs = require('fs')
 const yaml = require('js-yaml')
 const path = require('path')
 
-const theGeneratorPath = require.resolve('../../../generators/add-action/asset-compute')
+const theGeneratorPath = require.resolve('../../../generators/add-action/customer-profile')
 const Generator = require('yeoman-generator')
 
 const constants = require('../../../lib/constants')
@@ -40,71 +40,75 @@ describe('prototype', () => {
 })
 
 function assertGeneratedFiles (actionName) {
-  assert.file(`worker-${actionName}.js`)
-  assert.file('tests/corrupt-input/file.jpg')
-  assert.file('tests/corrupt-input/params.json')
-  assert.file('tests/simple-test/file.jpg')
-  assert.file('tests/simple-test/params.json')
-  assert.file('tests/simple-test/rendition.jpg')
+  assert.file(`${constants.actionsDirname}/${actionName}/index.js`)
+  assert.file(`test/${constants.actionsDirname}/${actionName}.test.js`)
+  assert.file(`e2e/${constants.actionsDirname}/${actionName}.e2e.js`)
+
+  assert.file(`${constants.actionsDirname}/utils.js`)
+  assert.file(`test/${constants.actionsDirname}/utils.test.js`)
 
   assert.file('manifest.yml')
   assert.file('.env')
-  assert.file('package.json')
 }
 
 function assertManifestContent (actionName) {
   const json = yaml.safeLoad(fs.readFileSync('manifest.yml').toString())
   expect(json.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
-    function: `worker-${actionName}.js`,
+    function: path.normalize(`${constants.actionsDirname}/${actionName}/index.js`),
     web: 'yes',
     runtime: 'nodejs:10',
     inputs: {
-      LOG_LEVEL: 'debug'
+      LOG_LEVEL: 'debug',
+      tenant: '$CUSTOMER_PROFILE_TENANT',
+      orgId: '$CUSTOMER_PROFILE_ORG_ID',
+      apiKey: '$CUSTOMER_PROFILE_API_KEY'
     },
     annotations: {
+      final: true,
       'require-adobe-auth': true
     }
   })
 }
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', `## please provide the following environment variables for the Asset Compute devtool
-# AIO_INTEGRATION_FILE_PATH=
-# ASSET_COMPUTE_URL=
-# S3_BUCKET=
-# AWS_ACCESS_KEY_ID=
-# AWS_SECRET_ACCESS_KEY=
-# AWS_REGION=`)
+  assert.fileContent('.env', `## please provide your Adobe Experience Platform: Realtime Customer Profile integration tenant, orgId and api key
+# CUSTOMER_PROFILE_TENANT=
+# CUSTOMER_PROFILE_ORG_ID=
+# CUSTOMER_PROFILE_API_KEY=`)
   assert.fileContent('.env', prevContent)
 }
 
 function assertActionCodeContent (actionName) {
-  const theFile = `worker-${actionName}.js`
-  // a few checks to make sure the action uses the asset compute sdk
+  const theFile = `${constants.actionsDirname}/${actionName}/index.js`
+  // a few checks to make sure the action calls the sdk
   assert.fileContent(
     theFile,
-    'const { worker } = require(\'@nui/library\');'
+    'const requiredParams = [\'tenant\', \'orgId\', \'apiKey\', \'entityId\', \'entityIdNS\']'
   )
   assert.fileContent(
     theFile,
-    'exports.main = worker(async (source, rendition) => {'
+    'const client = await CustomerProfile.init(params.tenant, params.orgId, params.apiKey, token)'
+  )
+  assert.fileContent(
+    theFile,
+    `const profile = await client.getProfile({
+      entityId: params.entityId,
+      entityIdNS: params.entityIdNS
+    });
+    const response = {
+      statusCode: 200,
+      body: profile
+    }`
   )
 }
 
-function assertDependencies (actionName) {
+function assertDependencies () {
   expect(JSON.parse(fs.readFileSync('package.json').toString())).toEqual({
-    name: actionName,
-    scripts: {
-      deploy: 'aio app deploy && aio asset-compute devtool',
-      posttest: 'eslint ./',
-      test: 'aio asset-compute test-worker'
-    },
     dependencies: {
-      '@nui/library': expect.any(String)
+      '@adobe/aio-sdk': expect.any(String)
     },
     devDependencies: {
-      '@adobe/wskdebug': expect.any(String),
-      '@adobe/eslint-config-asset-compute': expect.any(String)
+      '@adobe/wskdebug': expect.any(String)
     }
   })
 }
@@ -119,13 +123,13 @@ describe('run', () => {
       })
 
     // default
-    const actionName = 'example'
+    const actionName = 'customer-profile'
 
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies(actionName)
+    assertDependencies()
   })
 
   test('--skip-prompt, and action with default name already exists', async () => {
@@ -137,7 +141,7 @@ describe('run', () => {
           packages: {
             __APP_PACKAGE__: {
               actions: {
-                example: { function: 'fake.js' }
+                'customer-profile': { function: 'fake.js' }
               }
             }
           }
@@ -146,34 +150,13 @@ describe('run', () => {
       })
 
     // default
-    const actionName = 'example-1'
+    const actionName = 'customer-profile-1'
 
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies(actionName)
-  })
-
-  test('--skip-prompt, and action already has package.json with scripts', async () => {
-    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
-    await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true })
-      .inTmpDir(dir => {
-        fs.writeFileSync('package.json', JSON.stringify({
-          scripts: {}
-        }))
-        fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
-      })
-
-    // default
-    const actionName = 'example'
-
-    assertGeneratedFiles(actionName)
-    assertActionCodeContent(actionName)
-    assertManifestContent(actionName)
-    assertEnvContent(prevDotEnvContent)
-    assertDependencies(actionName)
+    assertDependencies()
   })
 
   test('user input actionName=yolo', async () => {
@@ -191,6 +174,6 @@ describe('run', () => {
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies(actionName)
+    assertDependencies()
   })
 })

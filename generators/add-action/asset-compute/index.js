@@ -36,7 +36,7 @@ class AssetComputeGenerator extends ActionGenerator {
         '@nui/library': '^19.0.0' // will be replaced with open sourced @adobe scope
       },
       devDependencies: {
-        '@nui/eslint-config': '^1.0.4' // will be replaced with open sourced @adobe scope
+        '@adobe/eslint-config-asset-compute': '^1.0.0'
       },
       dotenvStub: {
         label: 'please provide the following environment variables for the Asset Compute devtool',

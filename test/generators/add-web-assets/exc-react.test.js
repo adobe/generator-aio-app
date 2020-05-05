@@ -38,7 +38,7 @@ describe('prototype', () => {
 })
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', 'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/myapps/?localDevUrl="')
+  assert.fileContent('.env', 'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/apps/?localDevUrl="')
   assert.fileContent('.env', prevContent)
 }
 
@@ -49,7 +49,18 @@ function assertDependencies () {
       'react-dom': expect.any(String),
       'react-error-boundary': expect.any(String),
       'core-js': expect.any(String),
-      'regenerator-runtime': expect.any(String)
+      'regenerator-runtime': expect.any(String),
+      '@adobe/exc-app': expect.any(String),
+      '@react-spectrum/button': expect.any(String),
+      '@react-spectrum/form': expect.any(String),
+      '@react-spectrum/layout': expect.any(String),
+      '@react-spectrum/link': expect.any(String),
+      '@react-spectrum/picker': expect.any(String),
+      '@react-spectrum/progress': expect.any(String),
+      '@react-spectrum/provider': expect.any(String),
+      '@react-spectrum/textfield': expect.any(String),
+      '@react-spectrum/theme-default': expect.any(String),
+      '@react-spectrum/typography': expect.any(String)
     },
     devDependencies: {
       '@babel/core': expect.any(String),
@@ -62,30 +73,28 @@ function assertDependencies () {
 function assertFiles () {
   assert.file('web-src/index.html')
   assert.file('web-src/404.html')
+  assert.file('web-src/src/exc-runtime.js')
   assert.file('web-src/src/index.js')
   assert.file('web-src/src/App.js')
   assert.file('web-src/src/App.css')
   assert.file('web-src/src/utils.js')
-  assert.file('web-src/src/exc-runtime.js')
 }
 
 function assertWithActions () {
-  assert.fileContent('web-src/src/App.js', '<h3>Your application backend actions</h3>')
-  assert.fileContent('web-src/src/App.js', 'invoke</button>')
-  assert.fileContent('web-src/src/App.js', 'async invoke (')
-  assert.fileContent('web-src/src/App.js', '<a href="https://adobedocs.github.io/adobeio-runtime/">Adobe I/O Runtime</a>')
+  assert.fileContent('web-src/src/App.js', 'Run your application backend actions')
+  assert.fileContent('web-src/src/App.js', 'Adobe I/O Runtime')
 }
 
 function assertWithNoActions () {
-  assert.noFileContent('web-src/src/App.js', '<h3>Your application backend actions</h3>')
-  assert.noFileContent('web-src/src/App.js', 'invoke</button>')
-  assert.noFileContent('web-src/src/App.js', 'async invoke (')
-  assert.noFileContent('web-src/src/App.js', '<a href="https://adobedocs.github.io/adobeio-runtime/">Adobe I/O Runtime</a>')
+  assert.noFileContent('web-src/src/App.js', 'Run your application backend actions')
+  assert.noFileContent('web-src/src/App.js', 'Adobe I/O Runtime')
 }
 
 function assertWithDoc () {
-  assert.fileContent('web-src/src/App.js', '<h3>Useful documentation for your app</h3>')
-  assert.fileContent('web-src/src/App.js', '<a href="https://github.com/AdobeDocs/adobe-custom-applications/blob/master/README.md">Adobe I/O Custom Applications</a>')
+  assert.fileContent('web-src/src/App.js', 'Useful documentation for your app')
+  assert.fileContent('web-src/src/App.js', 'Firefly Apps')
+  assert.fileContent('web-src/src/App.js', 'Firefly SDKs')
+  assert.fileContent('web-src/src/App.js', 'React Spectrum')
 }
 
 const prevDotEnv = 'FAKECONTENT'
@@ -103,7 +112,7 @@ describe('run', () => {
     assertEnvContent(prevDotEnv)
 
     // greats with projectName
-    assert.fileContent('web-src/src/App.js', '<h1>Welcome to abc!</h1>')
+    assert.fileContent('web-src/src/App.js', 'Welcome to abc!</Heading>')
 
     // make sure html calls js files
     assert.fileContent('web-src/index.html', '<script src="./src/index.js"')
@@ -126,7 +135,7 @@ describe('run', () => {
     assertEnvContent(prevDotEnv)
 
     // greats with projectName
-    assert.fileContent('web-src/src/App.js', '<h1>Welcome to abc!</h1>')
+    assert.fileContent('web-src/src/App.js', 'Welcome to abc!</Heading>')
 
     // make sure html calls js files
     assert.fileContent('web-src/index.html', '<script src="./src/index.js"')

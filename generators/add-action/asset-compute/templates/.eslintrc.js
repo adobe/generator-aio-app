@@ -1,3 +1,3 @@
 module.exports = {
-    "extends": "@nui/eslint-config",
+    "@adobe/eslint-config-asset-compute": "^1.0.0"
 };
