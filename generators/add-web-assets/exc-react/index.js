@@ -14,7 +14,7 @@ const Generator = require('yeoman-generator')
 const utils = require('../../../lib/utils')
 
 const { webAssetsDirname, dotenvFilename } = require('../../../lib/constants')
-const { sdkCodes } = require('../../../lib/constants')
+const { sdkCodes, eventCodes } = require('../../../lib/constants')
 
 class ExcReactGenerator extends Generator {
   constructor (args, opts) {
@@ -31,6 +31,7 @@ class ExcReactGenerator extends Generator {
     this.props.adobeServices = this.options['adobe-services'].split(',').map(x => x.trim())
     this.props.projectName = this.options['project-name']
     this.props.sdkCodes = sdkCodes
+    this.props.eventCodes = eventCodes
     this.props.hasBackend = this.options['has-backend']
   }
 

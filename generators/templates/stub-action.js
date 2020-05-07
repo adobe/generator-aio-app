@@ -19,6 +19,7 @@ const { Core } = require('@adobe/aio-sdk')
 <% if (importCode) { %><%- importCode %><% } %>
 const { errorResponse, getBearerToken, stringParameters, checkMissingRequestInputs } = require('../utils')
 
+<% if (utilFunction) { %><%- utilFunction %><% } %>
 // main function that will be executed by Adobe I/O Runtime
 async function main (params) {
   // create a Logger

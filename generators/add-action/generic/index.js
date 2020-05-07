@@ -35,7 +35,8 @@ class GenericGenerator extends ActionGenerator {
     const response = {
       statusCode: 200,
       body: content
-    }`
+    }`,
+      utilFunction: undefined
     }
   }
 
@@ -44,10 +45,10 @@ class GenericGenerator extends ActionGenerator {
   }
 
   writing () {
-    this.sourceRoot(path.join(__dirname, '../templates'))
+    this.sourceRoot(path.join(__dirname, '../../templates'))
 
     this.addAction(this.props.actionName, './stub-action.js', {
-      testFile: '../generic/templates/fetchExample.test.js',
+      testFile: '../add-action/generic/templates/fetchExample.test.js',
       sharedLibFile: './utils.js',
       sharedLibTestFile: './utils.test.js',
       e2eTestFile: './stub-action.e2e.js',

@@ -32,7 +32,8 @@ class CustomerProfileGenerator extends ActionGenerator {
     const response = {
       statusCode: 200,
       body: profile
-    }`
+    }`,
+      utilFunction: undefined
     }
   }
 
@@ -41,10 +42,10 @@ class CustomerProfileGenerator extends ActionGenerator {
   }
 
   writing () {
-    this.sourceRoot(path.join(__dirname, '../templates'))
+    this.sourceRoot(path.join(__dirname, '../../templates'))
 
     this.addAction(this.props.actionName, './stub-action.js', {
-      testFile: '../customer-profile/templates/getProfile.test.js',
+      testFile: '../add-action/customer-profile/templates/getProfile.test.js',
       sharedLibFile: './utils.js',
       sharedLibTestFile: './utils.test.js',
       e2eTestFile: './stub-action.e2e.js',

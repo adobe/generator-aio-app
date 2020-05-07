@@ -31,7 +31,8 @@ class CampaignStandardGenerator extends ActionGenerator {
     const response = {
       statusCode: 200,
       body: profiles
-    }`
+    }`,
+      utilFunction: undefined
     }
   }
 
@@ -41,10 +42,10 @@ class CampaignStandardGenerator extends ActionGenerator {
 
   writing () {
     // this.registerTransformStream(beautify({ indent_size: 2 }))
-    this.sourceRoot(path.join(__dirname, '../templates'))
+    this.sourceRoot(path.join(__dirname, '../../templates'))
 
     this.addAction(this.props.actionName, './stub-action.js', {
-      testFile: '../campaign-standard/templates/getAllProfiles.test.js',
+      testFile: '../add-action/campaign-standard/templates/getAllProfiles.test.js',
       sharedLibFile: './utils.js',
       sharedLibTestFile: './utils.test.js',
       e2eTestFile: './stub-action.e2e.js',
