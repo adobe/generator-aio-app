@@ -21,6 +21,8 @@ class GenericGenerator extends ActionGenerator {
       // eslint-disable-next-line quotes
       requiredParams: `[/* add required params */]`,
       // eslint-disable-next-line quotes
+      requiredHeaders: `['Authorization']`,
+      // eslint-disable-next-line quotes
       importCode: `const fetch = require('node-fetch')`,
       responseCode: `// replace this with the api you want to access
     const apiEndpoint = 'https://adobeioruntime.net/api/v1/api-docs'

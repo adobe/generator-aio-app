@@ -37,7 +37,7 @@ beforeEach(() => {
   mockLoggerInstance.debug.mockReset()
   mockLoggerInstance.error.mockReset()
 })
-const fakeRequestParams = { tenant: 'fakeId', orgId: 'fakeOrgId', apiKey: 'fakeKey', entityId: 'fakeEntityId', entityIdNS: 'fakeEntityIdNS', __ow_headers: { authorization: 'Bearer fakeToken' } }
+const fakeRequestParams = { tenant: 'fakeId', apiKey: 'fakeKey', entityId: 'fakeEntityId', entityIdNS: 'fakeEntityIdNS', __ow_headers: { authorization: 'Bearer fakeToken', 'x-gw-ims-org-id': 'fakeOrgId' } }
 describe('<%= actionName %>', () => {
   test('main should be defined', () => {
     expect(action.main).toBeInstanceOf(Function)
@@ -76,7 +76,7 @@ describe('<%= actionName %>', () => {
     expect(response).toEqual({
       error: {
         statusCode: 400,
-        body: { error: 'missing header(s) \'authorization\' and missing parameter(s) \'tenant,orgId,apiKey,entityId,entityIdNS\'' }
+        body: { error: 'missing header(s) \'authorization,x-gw-ims-org-id\' and missing parameter(s) \'tenant,apiKey,entityId,entityIdNS\'' }
       }
     })
   })
