@@ -19,17 +19,20 @@ class AudienceManagerCDGenerator extends ActionGenerator {
     this.props = {
       description: 'This is a sample action showcasing how to access the Adobe Audience Manager Customer Data API',
       // eslint-disable-next-line quotes
-      requiredParams: `['apiKey', 'orgId']`,
+      requiredParams: `['apiKey', 'id', 'dataSourceId']`,
+      // eslint-disable-next-line quotes
+      requiredHeaders: `['Authorization', 'x-gw-ims-org-id']`,
       // eslint-disable-next-line quotes
       importCode: `const { AudienceManagerCD } = require('@adobe/aio-sdk')`,
       responseCode: `// initialize the sdk
-    const audienceManagerClient = await AudienceManagerCD.init(params.orgId, params.apiKey, token)
+    const orgId = params.__ow_headers['x-gw-ims-org-id']
+    const audienceManagerClient = await AudienceManagerCD.init(orgId, params.apiKey, token)
 
     // get Customer Profile from Audience Manager Customer Data API
-    const profiles = await audienceManagerClient.getProfile(
-      { dataSourceId: params.dataSourceId,
-        id: params.id 
-      });
+    const profiles = await audienceManagerClient.getProfile({
+      dataSourceId: params.dataSourceId,
+      id: params.id
+    })
     logger.debug('profiles = ' + JSON.stringify(profiles, null, 2))
     const response = {
       statusCode: 200,
@@ -56,14 +59,15 @@ class AudienceManagerCDGenerator extends ActionGenerator {
         '@adobe/aio-sdk': commonDependencyVersions['@adobe/aio-sdk']
       },
       dotenvStub: {
-        label: 'please provide your Adobe I/O Audience Manager Customer Data integration org id and api key',
+        label: '## please provide your Adobe I/O Audience Manager Customer Data integration api key, id and dataSourceId',
         vars: [
-          'AUDIENCE_MANAGER_CD_ORG_ID',
-          'AUDIENCE_MANAGER_CD_API_KEY'
+          'AUDIENCE_MANAGER_CD_API_KEY',
+          'AUDIENCE_MANAGER_CD_ID',
+          'AUDIENCE_MANAGER_CD_DATASOURCE_ID'
         ]
       },
       actionManifestConfig: {
-        inputs: { LOG_LEVEL: 'debug', orgId: '$AUDIENCE_MANAGER_CD_ORG_ID', apiKey: '$AUDIENCE_MANAGER_CD_API_KEY' },
+        inputs: { LOG_LEVEL: 'debug', apiKey: '$AUDIENCE_MANAGER_CD_API_KEY', id: '$AUDIENCE_MANAGER_CD_ID', dataSourceId: '$AUDIENCE_MANAGER_CD_DATASOURCE_ID' },
         annotations: { final: true }
       }
     })

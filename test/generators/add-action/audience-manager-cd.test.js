@@ -59,8 +59,9 @@ function assertManifestContent (actionName) {
     runtime: 'nodejs:10',
     inputs: {
       LOG_LEVEL: 'debug',
-      orgId: '$AUDIENCE_MANAGER_CD_ORG_ID',
-      apiKey: '$AUDIENCE_MANAGER_CD_API_KEY'
+      apiKey: '$AUDIENCE_MANAGER_CD_API_KEY',
+      id: '$AUDIENCE_MANAGER_CD_ID',
+      dataSourceId: '$AUDIENCE_MANAGER_CD_DATASOURCE_ID'
     },
     annotations: {
       final: true,
@@ -70,9 +71,10 @@ function assertManifestContent (actionName) {
 }
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', `## please provide your Adobe I/O Audience Manager Customer Data integration org id and api key
-#AUDIENCE_MANAGER_CD_ORG_ID=
-#AUDIENCE_MANAGER_CD_API_KEY=`)
+  assert.fileContent('.env', `## please provide your Adobe I/O Audience Manager Customer Data integration api key, id and dataSourceId
+#AUDIENCE_MANAGER_CD_API_KEY=
+#AUDIENCE_MANAGER_CD_ID=
+#AUDIENCE_MANAGER_CD_DATASOURCE_ID=`)
   assert.fileContent('.env', prevContent)
 }
 
@@ -81,18 +83,22 @@ function assertActionCodeContent (actionName) {
   // a few checks to make sure the action calls the audienceManagerCD sdk
   assert.fileContent(
     theFile,
-    'const requiredParams = [\'apiKey\', \'orgId\']'
+    'const requiredParams = [\'apiKey\', \'id\', \'dataSourceId\']'
   )
   assert.fileContent(
     theFile,
-    'const audienceManagerClient = await AudienceManagerCD.init(params.orgId, params.apiKey, token)'
+    'const requiredHeaders = [\'Authorization\', \'x-gw-ims-org-id\']'
   )
   assert.fileContent(
     theFile,
-    `const profiles = await audienceManagerClient.getProfile(
-      { dataSourceId: params.dataSourceId,
-        id: params.id 
-      });`
+    'const audienceManagerClient = await AudienceManagerCD.init(orgId, params.apiKey, token)'
+  )
+  assert.fileContent(
+    theFile,
+    `const profiles = await audienceManagerClient.getProfile({
+      dataSourceId: params.dataSourceId,
+      id: params.id
+    })`
   )
 }
 
@@ -152,16 +158,16 @@ describe('run', () => {
     assertDependencies()
   })
 
-  test('user input actionName=yolo', async () => {
+  test('user input actionName=fakeAction', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': false })
-      .withPrompts({ actionName: 'yolo' })
+      .withPrompts({ actionName: 'fakeAction' })
       .inTmpDir(dir => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
       })
 
-    const actionName = 'yolo'
+    const actionName = 'fakeAction'
 
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)
