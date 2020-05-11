@@ -61,13 +61,13 @@ class AudienceManagerCDGenerator extends ActionGenerator {
       dotenvStub: {
         label: '## please provide your Adobe I/O Audience Manager Customer Data integration api key, id and dataSourceId',
         vars: [
-          'AUDIENCE_MANAGER_CD_API_KEY',
-          'AUDIENCE_MANAGER_CD_ID',
-          'AUDIENCE_MANAGER_CD_DATASOURCE_ID'
+          'AUDIENCE_MANAGER_API_KEY',
+          'AUDIENCE_MANAGER_ID',
+          'AUDIENCE_MANAGER_DATA_SOURCE_ID'
         ]
       },
       actionManifestConfig: {
-        inputs: { LOG_LEVEL: 'debug', apiKey: '$AUDIENCE_MANAGER_CD_API_KEY', id: '$AUDIENCE_MANAGER_CD_ID', dataSourceId: '$AUDIENCE_MANAGER_CD_DATASOURCE_ID' },
+        inputs: { LOG_LEVEL: 'debug', apiKey: '$AUDIENCE_MANAGER_API_KEY', id: '$AUDIENCE_MANAGER_ID', dataSourceId: '$AUDIENCE_MANAGER_DATA_SOURCE_ID' },
         annotations: { final: true }
       }
     })

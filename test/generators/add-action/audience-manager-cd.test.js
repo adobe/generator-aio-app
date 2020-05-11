@@ -59,9 +59,9 @@ function assertManifestContent (actionName) {
     runtime: 'nodejs:10',
     inputs: {
       LOG_LEVEL: 'debug',
-      apiKey: '$AUDIENCE_MANAGER_CD_API_KEY',
-      id: '$AUDIENCE_MANAGER_CD_ID',
-      dataSourceId: '$AUDIENCE_MANAGER_CD_DATASOURCE_ID'
+      apiKey: '$AUDIENCE_MANAGER_API_KEY',
+      id: '$AUDIENCE_MANAGER_ID',
+      dataSourceId: '$AUDIENCE_MANAGER_DATA_SOURCE_ID'
     },
     annotations: {
       final: true,
@@ -72,9 +72,9 @@ function assertManifestContent (actionName) {
 
 function assertEnvContent (prevContent) {
   assert.fileContent('.env', `## please provide your Adobe I/O Audience Manager Customer Data integration api key, id and dataSourceId
-#AUDIENCE_MANAGER_CD_API_KEY=
-#AUDIENCE_MANAGER_CD_ID=
-#AUDIENCE_MANAGER_CD_DATASOURCE_ID=`)
+#AUDIENCE_MANAGER_API_KEY=
+#AUDIENCE_MANAGER_ID=
+#AUDIENCE_MANAGER_DATA_SOURCE_ID=`)
   assert.fileContent('.env', prevContent)
 }
 
