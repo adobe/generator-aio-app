@@ -85,6 +85,10 @@ function assertActionCodeContent (actionName) {
   )
   assert.fileContent(
     theFile,
+    'const requiredHeaders = [\'Authorization\']'
+  )
+  assert.fileContent(
+    theFile,
     'const targetClient = await Target.init(params.tenant, params.apiKey, token)'
   )
   assert.fileContent(

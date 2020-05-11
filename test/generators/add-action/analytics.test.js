@@ -85,6 +85,10 @@ function assertActionCodeContent (actionName) {
   )
   assert.fileContent(
     theFile,
+    'const requiredHeaders = [\'Authorization\']'
+  )
+  assert.fileContent(
+    theFile,
     'const analyticsClient = await Analytics.init(params.companyId, params.apiKey, token)'
   )
   assert.fileContent(

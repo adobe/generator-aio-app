@@ -19,11 +19,14 @@ class CustomerProfileGenerator extends ActionGenerator {
     this.props = {
       description: 'This is a sample action showcasing how to access an external Adobe Experience Platform: Realtime Customer Profile API',
       // eslint-disable-next-line quotes
-      requiredParams: `['tenant', 'orgId', 'apiKey', 'entityId', 'entityIdNS']`,
+      requiredParams: `['tenant', 'apiKey', 'entityId', 'entityIdNS']`,
+      // eslint-disable-next-line quotes
+      requiredHeaders: `['Authorization', 'x-gw-ims-org-id']`,
       // eslint-disable-next-line quotes
       importCode: `const { CustomerProfile } = require('@adobe/aio-sdk')`,
       responseCode: `// initialize sdk
-    const client = await CustomerProfile.init(params.tenant, params.orgId, params.apiKey, token)
+    const orgId = params.__ow_headers['x-gw-ims-org-id']
+    const client = await CustomerProfile.init(params.tenant, orgId, params.apiKey, token)
     // call methods, eg getProfile
     const profile = await client.getProfile({
       entityId: params.entityId,
@@ -53,7 +56,6 @@ class CustomerProfileGenerator extends ActionGenerator {
         label: 'please provide your Adobe Experience Platform: Realtime Customer Profile integration tenant, orgId and api key',
         vars: [
           'CUSTOMER_PROFILE_TENANT',
-          'CUSTOMER_PROFILE_ORG_ID',
           'CUSTOMER_PROFILE_API_KEY'
         ]
       },
@@ -61,7 +63,7 @@ class CustomerProfileGenerator extends ActionGenerator {
         '@adobe/aio-sdk': commonDependencyVersions['@adobe/aio-sdk']
       },
       actionManifestConfig: {
-        inputs: { LOG_LEVEL: 'debug', tenant: '$CUSTOMER_PROFILE_TENANT', orgId: '$CUSTOMER_PROFILE_ORG_ID', apiKey: '$CUSTOMER_PROFILE_API_KEY' },
+        inputs: { LOG_LEVEL: 'debug', tenant: '$CUSTOMER_PROFILE_TENANT', apiKey: '$CUSTOMER_PROFILE_API_KEY' },
         annotations: { final: true } // makes sure loglevel cannot be overwritten by request param
       }
     })
