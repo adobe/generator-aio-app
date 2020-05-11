@@ -38,7 +38,7 @@ jest.mock('@adobe/aio-sdk', () => ({
     mockLoggerInstance.error.mockReset()
   })
   
-  const fakeRequestParams = { apiKey: 'fakeKey', id: 'fakeId', dataSourceId: 'fakeDataSourceId', __ow_headers: { authorization: 'Bearer fakeToken', 'x-gw-ims-org-id': 'fakeOrgId' } }
+  const fakeRequestParams = { apiKey: 'fakeKey', __ow_headers: { authorization: 'Bearer fakeToken', 'x-gw-ims-org-id': 'fakeOrgId' } }
   describe('<%= actionName %>', () => {
     test('main should be defined', () => {
       expect(action.main).toBeInstanceOf(Function)
@@ -77,9 +77,8 @@ jest.mock('@adobe/aio-sdk', () => ({
       expect(response).toEqual({
         error: {
           statusCode: 400,
-          body: { error: 'missing header(s) \'authorization,x-gw-ims-org-id\' and missing parameter(s) \'apiKey,id,dataSourceId\'' }
+          body: { error: 'missing header(s) \'authorization,x-gw-ims-org-id\' and missing parameter(s) \'apiKey\'' }
         }
       })
     })
   })
-  

@@ -19,7 +19,7 @@ class AudienceManagerCDGenerator extends ActionGenerator {
     this.props = {
       description: 'This is a sample action showcasing how to access the Adobe Audience Manager Customer Data API',
       // eslint-disable-next-line quotes
-      requiredParams: `['apiKey', 'id', 'dataSourceId']`,
+      requiredParams: `['apiKey']`,
       // eslint-disable-next-line quotes
       requiredHeaders: `['Authorization', 'x-gw-ims-org-id']`,
       // eslint-disable-next-line quotes
@@ -59,15 +59,13 @@ class AudienceManagerCDGenerator extends ActionGenerator {
         '@adobe/aio-sdk': commonDependencyVersions['@adobe/aio-sdk']
       },
       dotenvStub: {
-        label: '## please provide your Adobe I/O Audience Manager Customer Data integration api key, id and dataSourceId',
+        label: 'please provide your Adobe I/O Audience Manager Customer Data integration api key',
         vars: [
-          'AUDIENCE_MANAGER_API_KEY',
-          'AUDIENCE_MANAGER_ID',
-          'AUDIENCE_MANAGER_DATA_SOURCE_ID'
+          'AUDIENCE_MANAGER_API_KEY'
         ]
       },
       actionManifestConfig: {
-        inputs: { LOG_LEVEL: 'debug', apiKey: '$AUDIENCE_MANAGER_API_KEY', id: '$AUDIENCE_MANAGER_ID', dataSourceId: '$AUDIENCE_MANAGER_DATA_SOURCE_ID' },
+        inputs: { LOG_LEVEL: 'debug', apiKey: '$AUDIENCE_MANAGER_API_KEY' },
         annotations: { final: true }
       }
     })

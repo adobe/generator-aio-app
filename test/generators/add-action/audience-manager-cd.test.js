@@ -59,9 +59,7 @@ function assertManifestContent (actionName) {
     runtime: 'nodejs:10',
     inputs: {
       LOG_LEVEL: 'debug',
-      apiKey: '$AUDIENCE_MANAGER_API_KEY',
-      id: '$AUDIENCE_MANAGER_ID',
-      dataSourceId: '$AUDIENCE_MANAGER_DATA_SOURCE_ID'
+      apiKey: '$AUDIENCE_MANAGER_API_KEY'
     },
     annotations: {
       final: true,
@@ -71,10 +69,8 @@ function assertManifestContent (actionName) {
 }
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', `## please provide your Adobe I/O Audience Manager Customer Data integration api key, id and dataSourceId
-#AUDIENCE_MANAGER_API_KEY=
-#AUDIENCE_MANAGER_ID=
-#AUDIENCE_MANAGER_DATA_SOURCE_ID=`)
+  assert.fileContent('.env', `## please provide your Adobe I/O Audience Manager Customer Data integration api key
+#AUDIENCE_MANAGER_API_KEY=`)
   assert.fileContent('.env', prevContent)
 }
 
@@ -83,7 +79,7 @@ function assertActionCodeContent (actionName) {
   // a few checks to make sure the action calls the audienceManagerCD sdk
   assert.fileContent(
     theFile,
-    'const requiredParams = [\'apiKey\', \'id\', \'dataSourceId\']'
+    'const requiredParams = [\'apiKey\']'
   )
   assert.fileContent(
     theFile,
