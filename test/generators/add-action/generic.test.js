@@ -72,6 +72,10 @@ function assertActionCodeContent (actionName) {
     theFile,
     'const res = await fetch(apiEndpoint)'
   )
+  assert.fileContent(
+    theFile,
+    'const requiredHeaders = [\'Authorization\']'
+  )
 }
 
 function assertDependencies () {

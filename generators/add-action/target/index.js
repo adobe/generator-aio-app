@@ -22,6 +22,8 @@ class TargetGenerator extends ActionGenerator {
       // eslint-disable-next-line quotes
       requiredParams: `['apiKey', 'tenant']`,
       // eslint-disable-next-line quotes
+      requiredHeaders: `['Authorization']`,
+      // eslint-disable-next-line quotes
       importCode: `const { Target } = require('@adobe/aio-sdk')`,
       responseCode: `// initialize the sdk
     const targetClient = await Target.init(params.tenant, params.apiKey, token)
