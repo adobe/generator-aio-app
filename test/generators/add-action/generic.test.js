@@ -72,6 +72,10 @@ function assertActionCodeContent (actionName) {
     theFile,
     'const res = await fetch(apiEndpoint)'
   )
+  assert.fileContent(
+    theFile,
+    'const requiredHeaders = [\'Authorization\']'
+  )
 }
 
 function assertDependencies () {
@@ -124,12 +128,12 @@ describe('run', () => {
     assertDependencies()
   })
 
-  test('user input actionName=yolo', async () => {
+  test('user input actionName=fakeAction', async () => {
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': false })
-      .withPrompts({ actionName: 'yolo' })
+      .withPrompts({ actionName: 'fakeAction' })
 
-    const actionName = 'yolo'
+    const actionName = 'fakeAction'
 
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)

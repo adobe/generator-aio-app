@@ -85,6 +85,10 @@ function assertActionCodeContent (actionName) {
   )
   assert.fileContent(
     theFile,
+    'const requiredHeaders = [\'Authorization\']'
+  )
+  assert.fileContent(
+    theFile,
     'const campaignClient = await CampaignStandard.init(params.tenant, params.apiKey, token)'
   )
   assert.fileContent(
@@ -150,16 +154,16 @@ describe('run', () => {
     assertDependencies()
   })
 
-  test('user input actionName=yolo', async () => {
+  test('user input actionName=fakeAction', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': false })
-      .withPrompts({ actionName: 'yolo' })
+      .withPrompts({ actionName: 'fakeAction' })
       .inTmpDir(dir => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
       })
 
-    const actionName = 'yolo'
+    const actionName = 'fakeAction'
 
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)
