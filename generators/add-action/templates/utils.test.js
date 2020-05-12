@@ -84,6 +84,18 @@ describe('checkMissingRequestInputs', () => {
   test('({ c: 1, __ow_headers: { f: 2 } }, [a, b], [h, i])', () => {
     expect(utils.checkMissingRequestInputs({ c: 1 }, ['a', 'b'], ['h', 'i'])).toEqual('missing header(s) \'h,i\' and missing parameter(s) \'a,b\'')
   })
+  test('({ a: 0 }, [a])', () => {
+    expect(utils.checkMissingRequestInputs({ a: 0 }, ['a'])).toEqual(null)
+  })
+  test('({ a: null }, [a])', () => {
+    expect(utils.checkMissingRequestInputs({ a: null }, ['a'])).toEqual(null)
+  })
+  test('({ a: \'\' }, [a])', () => {
+    expect(utils.checkMissingRequestInputs({ a: '' }, ['a'])).toEqual('missing parameter(s) \'a\'')
+  })
+  test('({ a: undefined }, [a])', () => {
+    expect(utils.checkMissingRequestInputs({ a: undefined }, ['a'])).toEqual('missing parameter(s) \'a\'')
+  })
 })
 
 describe('getBearerToken', () => {
