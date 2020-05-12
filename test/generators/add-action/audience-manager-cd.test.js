@@ -79,7 +79,7 @@ function assertActionCodeContent (actionName) {
   // a few checks to make sure the action calls the audienceManagerCD sdk
   assert.fileContent(
     theFile,
-    'const requiredParams = [\'apiKey\']'
+    'const requiredParams = [\'apiKey\', \'id\', \'dataSourceId\']'
   )
   assert.fileContent(
     theFile,
@@ -91,10 +91,7 @@ function assertActionCodeContent (actionName) {
   )
   assert.fileContent(
     theFile,
-    `const profiles = await audienceManagerClient.getProfile({
-      dataSourceId: params.dataSourceId,
-      id: params.id
-    })`
+    'const profiles = await audienceManagerClient.getProfile(params.id, params.dataSourceId)'
   )
 }
 

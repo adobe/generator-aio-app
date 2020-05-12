@@ -19,7 +19,7 @@ class AudienceManagerCDGenerator extends ActionGenerator {
     this.props = {
       description: 'This is a sample action showcasing how to access the Adobe Audience Manager Customer Data API',
       // eslint-disable-next-line quotes
-      requiredParams: `['apiKey']`,
+      requiredParams: `['apiKey', 'id', 'dataSourceId']`,
       // eslint-disable-next-line quotes
       requiredHeaders: `['Authorization', 'x-gw-ims-org-id']`,
       // eslint-disable-next-line quotes
@@ -29,10 +29,7 @@ class AudienceManagerCDGenerator extends ActionGenerator {
     const audienceManagerClient = await AudienceManagerCD.init(orgId, params.apiKey, token)
 
     // get Customer Profile from Audience Manager Customer Data API
-    const profiles = await audienceManagerClient.getProfile({
-      dataSourceId: params.dataSourceId,
-      id: params.id
-    })
+    const profiles = await audienceManagerClient.getProfile(params.id, params.dataSourceId)
     logger.debug('profiles = ' + JSON.stringify(profiles, null, 2))
     const response = {
       statusCode: 200,
