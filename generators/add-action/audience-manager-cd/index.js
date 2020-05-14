@@ -1,5 +1,5 @@
 /*
-Copyright 2019 Adobe. All rights reserved.
+Copyright 2020 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -13,41 +13,41 @@ const path = require('path')
 const ActionGenerator = require('../../../lib/ActionGenerator')
 const { commonDependencyVersions } = require('../../../lib/constants')
 
-class AnalyticsGenerator extends ActionGenerator {
+class AudienceManagerCDGenerator extends ActionGenerator {
   constructor (args, opts) {
     super(args, opts)
     this.props = {
-      description: 'This is a sample action showcasing how to access the Adobe Analytics API',
+      description: 'This is a sample action showcasing how to access the Adobe Audience Manager Customer Data API',
       // eslint-disable-next-line quotes
-      requiredParams: `['apiKey', 'companyId']`,
+      requiredParams: `['apiKey', 'id', 'dataSourceId']`,
       // eslint-disable-next-line quotes
-      requiredHeaders: `['Authorization']`,
+      requiredHeaders: `['Authorization', 'x-gw-ims-org-id']`,
       // eslint-disable-next-line quotes
-      importCode: `const { Analytics } = require('@adobe/aio-sdk')`,
+      importCode: `const { AudienceManagerCD } = require('@adobe/aio-sdk')`,
       responseCode: `// initialize the sdk
-    const analyticsClient = await Analytics.init(params.companyId, params.apiKey, token)
+    const orgId = params.__ow_headers['x-gw-ims-org-id']
+    const audienceManagerClient = await AudienceManagerCD.init(orgId, params.apiKey, token)
 
-    // get collections from analytics API
-    const collections = await analyticsClient.getCollections({ limit: 5, page: 0 })
-    logger.debug('collections = ' + JSON.stringify(collections, null, 2))
+    // get Customer Profile from Audience Manager Customer Data API
+    const profiles = await audienceManagerClient.getProfile(params.id, params.dataSourceId)
+    logger.debug('profiles = ' + JSON.stringify(profiles, null, 2))
     const response = {
       statusCode: 200,
-      body: collections
-    }`,
-      utilFunction: undefined
+      body: profiles
+    }`
     }
   }
 
   async prompting () {
-    this.props.actionName = await this.promptForActionName('interacts with the Adobe Analytics API', 'analytics')
+    this.props.actionName = await this.promptForActionName('interacts with the Adobe Audience Manager Customer Data API', 'audience-manager-cd')
   }
 
   writing () {
     // this.registerTransformStream(beautify({ indent_size: 2 }))
-    this.sourceRoot(path.join(__dirname, '../../templates'))
+    this.sourceRoot(path.join(__dirname, '../templates'))
 
     this.addAction(this.props.actionName, './stub-action.js', {
-      testFile: '../add-action/analytics/templates/getCollections.test.js',
+      testFile: '../audience-manager-cd/templates/getProfile.test.js',
       sharedLibFile: './utils.js',
       sharedLibTestFile: './utils.test.js',
       e2eTestFile: './stub-action.e2e.js',
@@ -56,18 +56,17 @@ class AnalyticsGenerator extends ActionGenerator {
         '@adobe/aio-sdk': commonDependencyVersions['@adobe/aio-sdk']
       },
       dotenvStub: {
-        label: 'please provide your Adobe I/O Analytics integration company id and api key',
+        label: 'please provide your Adobe I/O Audience Manager Customer Data integration api key',
         vars: [
-          'ANALYTICS_COMPANY_ID',
-          'ANALYTICS_API_KEY'
+          'AUDIENCE_MANAGER_API_KEY'
         ]
       },
       actionManifestConfig: {
-        inputs: { LOG_LEVEL: 'debug', companyId: '$ANALYTICS_COMPANY_ID', apiKey: '$ANALYTICS_API_KEY' },
+        inputs: { LOG_LEVEL: 'debug', apiKey: '$AUDIENCE_MANAGER_API_KEY' },
         annotations: { final: true }
       }
     })
   }
 }
 
-module.exports = AnalyticsGenerator
+module.exports = AudienceManagerCDGenerator

@@ -60,7 +60,6 @@ function assertManifestContent (actionName) {
     inputs: {
       LOG_LEVEL: 'debug',
       tenant: '$CUSTOMER_PROFILE_TENANT',
-      orgId: '$CUSTOMER_PROFILE_ORG_ID',
       apiKey: '$CUSTOMER_PROFILE_API_KEY'
     },
     annotations: {
@@ -73,7 +72,6 @@ function assertManifestContent (actionName) {
 function assertEnvContent (prevContent) {
   assert.fileContent('.env', `## please provide your Adobe Experience Platform: Realtime Customer Profile integration tenant, orgId and api key
 #CUSTOMER_PROFILE_TENANT=
-#CUSTOMER_PROFILE_ORG_ID=
 #CUSTOMER_PROFILE_API_KEY=`)
   assert.fileContent('.env', prevContent)
 }
@@ -83,11 +81,15 @@ function assertActionCodeContent (actionName) {
   // a few checks to make sure the action calls the sdk
   assert.fileContent(
     theFile,
-    'const requiredParams = [\'tenant\', \'orgId\', \'apiKey\', \'entityId\', \'entityIdNS\']'
+    'const requiredParams = [\'tenant\', \'apiKey\', \'entityId\', \'entityIdNS\']'
   )
   assert.fileContent(
     theFile,
-    'const client = await CustomerProfile.init(params.tenant, params.orgId, params.apiKey, token)'
+    'const requiredHeaders = [\'Authorization\', \'x-gw-ims-org-id\']'
+  )
+  assert.fileContent(
+    theFile,
+    'const client = await CustomerProfile.init(params.tenant, orgId, params.apiKey, token)'
   )
   assert.fileContent(
     theFile,
@@ -159,16 +161,16 @@ describe('run', () => {
     assertDependencies()
   })
 
-  test('user input actionName=yolo', async () => {
+  test('user input actionName=fakeAction', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': false })
-      .withPrompts({ actionName: 'yolo' })
+      .withPrompts({ actionName: 'fakeAction' })
       .inTmpDir(dir => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
       })
 
-    const actionName = 'yolo'
+    const actionName = 'fakeAction'
 
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)

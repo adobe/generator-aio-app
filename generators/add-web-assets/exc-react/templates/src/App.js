@@ -120,8 +120,8 @@ export default class App extends React.Component {
     if (this.props.ims.token && !headers.authorization) {
       headers.authorization = 'Bearer ' + this.props.ims.token
     }
-    if (this.props.ims.org && !headers['x-org-id']) {
-      headers['x-org-id'] = this.props.ims.org
+    if (this.props.ims.org && !headers['x-gw-ims-org-id']) {
+      headers['x-gw-ims-org-id'] = this.props.ims.org
     }
     try {
       // invoke backend action

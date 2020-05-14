@@ -21,7 +21,6 @@ governing permissions and limitations under the License.
  *   - The two steps above imply that every client knowing the URL to this deployed action will be able to invoke it without any authentication and authorization checks against Adobe Identity Management System
  *   - Make sure to validate these changes against your security requirements before deploying the action
  */
-
 const { Core } = require('@adobe/aio-sdk')
 <% if (importCode) { %><%- importCode %><% } %>
 const { errorResponse, getBearerToken, stringParameters, checkMissingRequestInputs } = require('../utils')
@@ -41,13 +40,14 @@ async function main (params) {
 
     // check for missing request input parameters and headers
     const requiredParams = <%- requiredParams %>
-    const errorMessage = checkMissingRequestInputs(params, requiredParams, ['Authorization'])
+    const requiredHeaders = <%- requiredHeaders %>
+    const errorMessage = checkMissingRequestInputs(params, requiredParams, requiredHeaders)
     if (errorMessage) {
       // return and log client errors
       return errorResponse(400, errorMessage, logger)
     }
 
-    // extract the user Bearer token from the input request parameters
+    // extract the user Bearer token from the Authorization header
     const token = getBearerToken(params)
 
     <%- responseCode %>
