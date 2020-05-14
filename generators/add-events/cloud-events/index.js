@@ -13,7 +13,7 @@ const path = require('path')
 const ActionGenerator = require('../../../lib/ActionGenerator')
 const { commonDependencyVersions } = require('../../../lib/constants')
 
-class CustomEventsGenerator extends ActionGenerator {
+class CloudEventsGenerator extends ActionGenerator {
   constructor (args, opts) {
     super(args, opts)
     this.props = {
@@ -66,7 +66,7 @@ function createCloudEvent(providerId, eventCode, payload) {
     this.sourceRoot(path.join(__dirname, '../../templates'))
 
     this.addAction(this.props.actionName, './stub-action.js', {
-      testFile: '../add-events/custom-events/templates/publishEvents.test.js',
+      testFile: '../add-events/cloud-events/templates/publishEvents.test.js',
       sharedLibFile: './utils.js',
       sharedLibTestFile: './utils.test.js',
       e2eTestFile: './stub-action.e2e.js',
@@ -95,4 +95,4 @@ function createCloudEvent(providerId, eventCode, payload) {
   }
 }
 
-module.exports = CustomEventsGenerator
+module.exports = CloudEventsGenerator

@@ -57,7 +57,7 @@ class CodeGenerator extends Generator {
               checked: true
             },
             {
-              name: 'Events: Subscribe to Adobe Events or create custom events',
+              name: 'Events: Publish to Adobe I/O Events',
               value: 'events',
               checked: true
             },

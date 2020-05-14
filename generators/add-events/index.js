@@ -18,15 +18,11 @@ const { eventCodes } = require('../../lib/constants')
 
 // we have one actions generator per service, an action generator could generate different types of actions
 const eventCodeToActionGenerator = {
-  [eventCodes.webhook]: path.join(__dirname, 'webhook/index.js'),
-  [eventCodes.journal]: path.join(__dirname, 'journal/index.js'),
-  [eventCodes.customEvents]: path.join(__dirname, 'custom-events/index.js')
+  [eventCodes.cloudEvents]: path.join(__dirname, 'cloud-events/index.js')
 }
 
 const eventCodeToTitle = {
-  [eventCodes.webhook]: 'Subscribe to Adobe Events via Webhook',
-  [eventCodes.journal]: 'Subscribe to Adobe Events via Journaling API',
-  [eventCodes.customEvents]: 'Publish Cloud Events to Adobe I/O'
+  [eventCodes.cloudEvents]: 'Publish Cloud Events to Adobe I/O'
 }
 
 /*
@@ -53,8 +49,7 @@ class AddEvents extends Generator {
   }
 
   async prompting () {
-    const eventCodesList = [eventCodes.webhook, eventCodes.journal,
-      eventCodes.customEvents]
+    const eventCodesList = [eventCodes.cloudEvents]
     let eventGenerator = []
     // default if skip-prompt = true
     if (!this.options['skip-prompt']) {
