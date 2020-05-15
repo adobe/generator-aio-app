@@ -49,13 +49,13 @@ describe('errorResponse', () => {
 describe('stringParameters', () => {
   test('no auth header', () => {
     const params = {
-      a: 1, b: 2, __ow_headers: { 'x-api-key': 'yolo' }
+      a: 1, b: 2, __ow_headers: { 'x-api-key': 'fake-api-key' }
     }
     expect(utils.stringParameters(params)).toEqual(JSON.stringify(params))
   })
   test('with auth header', () => {
     const params = {
-      a: 1, b: 2, __ow_headers: { 'x-api-key': 'yolo', authorization: 'secret' }
+      a: 1, b: 2, __ow_headers: { 'x-api-key': 'fake-api-key', authorization: 'secret' }
     }
     expect(utils.stringParameters(params)).toEqual(expect.stringContaining('"authorization":"<hidden>"'))
     expect(utils.stringParameters(params)).not.toEqual(expect.stringContaining('secret'))
@@ -83,6 +83,18 @@ describe('checkMissingRequestInputs', () => {
   })
   test('({ c: 1, __ow_headers: { f: 2 } }, [a, b], [h, i])', () => {
     expect(utils.checkMissingRequestInputs({ c: 1 }, ['a', 'b'], ['h', 'i'])).toEqual('missing header(s) \'h,i\' and missing parameter(s) \'a,b\'')
+  })
+  test('({ a: 0 }, [a])', () => {
+    expect(utils.checkMissingRequestInputs({ a: 0 }, ['a'])).toEqual(null)
+  })
+  test('({ a: null }, [a])', () => {
+    expect(utils.checkMissingRequestInputs({ a: null }, ['a'])).toEqual(null)
+  })
+  test('({ a: \'\' }, [a])', () => {
+    expect(utils.checkMissingRequestInputs({ a: '' }, ['a'])).toEqual('missing parameter(s) \'a\'')
+  })
+  test('({ a: undefined }, [a])', () => {
+    expect(utils.checkMissingRequestInputs({ a: undefined }, ['a'])).toEqual('missing parameter(s) \'a\'')
   })
 })
 

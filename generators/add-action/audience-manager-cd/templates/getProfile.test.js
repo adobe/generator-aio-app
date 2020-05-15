@@ -1,5 +1,5 @@
 /*<% if (false) { %>
-Copyright 2019 Adobe. All rights reserved.
+Copyright 2020 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -12,32 +12,33 @@ governing permissions and limitations under the License.
 */
 
 jest.mock('@adobe/aio-sdk', () => ({
+  AudienceManagerCD: {
+    init: jest.fn()
+  },
   Core: {
     Logger: jest.fn()
-  },
-  CustomerProfile: {
-    init: jest.fn()
   }
 }))
-
-const { Core, CustomerProfile } = require('@adobe/aio-sdk')
-const mockCustomerProfileInstance = { getProfile: jest.fn() }
+  
+const { Core, AudienceManagerCD } = require('@adobe/aio-sdk')
+const mockAudienceManagerCDInstance = { getProfile: jest.fn() }
 const mockLoggerInstance = { info: jest.fn(), debug: jest.fn(), error: jest.fn() }
 Core.Logger.mockReturnValue(mockLoggerInstance)
-CustomerProfile.init.mockResolvedValue(mockCustomerProfileInstance)
+AudienceManagerCD.init.mockResolvedValue(mockAudienceManagerCDInstance)
 
 const action = require('./<%= actionRelPath %>')
-
+  
 beforeEach(() => {
-  CustomerProfile.init.mockClear() // only clears calls stats
-  mockCustomerProfileInstance.getProfile.mockReset() // clears calls + mock implementation
+  AudienceManagerCD.init.mockClear() // only clears calls stats
+  mockAudienceManagerCDInstance.getProfile.mockReset() // clears calls + mock implementation
 
   Core.Logger.mockClear()
   mockLoggerInstance.info.mockReset()
   mockLoggerInstance.debug.mockReset()
   mockLoggerInstance.error.mockReset()
 })
-const fakeRequestParams = { tenant: 'fakeId', apiKey: 'fakeKey', entityId: 'fakeEntityId', entityIdNS: 'fakeEntityIdNS', __ow_headers: { authorization: 'Bearer fakeToken', 'x-gw-ims-org-id': 'fakeOrgId' } }
+  
+const fakeRequestParams = { apiKey: 'fakeKey', id: 'fakeId', dataSourceId: 'fakeDataSourceId', __ow_headers: { authorization: 'Bearer fakeToken', 'x-gw-ims-org-id': 'fakeOrgId' } }
 describe('<%= actionName %>', () => {
   test('main should be defined', () => {
     expect(action.main).toBeInstanceOf(Function)
@@ -46,13 +47,13 @@ describe('<%= actionName %>', () => {
     await action.main({ ...fakeRequestParams, LOG_LEVEL: 'fakeLevel' })
     expect(Core.Logger).toHaveBeenCalledWith(expect.any(String), { level: 'fakeLevel' })
   })
-  test('CustomerProfileSDK should be initialized with input credentials', async () => {
+  test('AudienceManagerCD sdk should be initialized with input credentials', async () => {
     await action.main({ ...fakeRequestParams, otherParam: 'fake4' })
-    expect(CustomerProfile.init).toHaveBeenCalledWith('fakeId', 'fakeOrgId', 'fakeKey', 'fakeToken')
+    expect(AudienceManagerCD.init).toHaveBeenCalledWith('fakeOrgId', 'fakeKey', 'fakeToken')
   })
-  test('should return an http response with CustomerProfile API profile', async () => {
-    const fakeResponse = { fakeHash: {} }
-    mockCustomerProfileInstance.getProfile.mockResolvedValue(fakeResponse)
+  test('should return an http response with AudienceManagerCD profiles', async () => {
+    const fakeResponse = { profiles: 'fake' }
+    mockAudienceManagerCDInstance.getProfile.mockResolvedValue(fakeResponse)
     const response = await action.main(fakeRequestParams)
     expect(response).toEqual({
       statusCode: 200,
@@ -61,7 +62,7 @@ describe('<%= actionName %>', () => {
   })
   test('if there is an error should return a 500 and log the error', async () => {
     const fakeError = new Error('fake')
-    mockCustomerProfileInstance.getProfile.mockRejectedValue(fakeError)
+    mockAudienceManagerCDInstance.getProfile.mockRejectedValue(fakeError)
     const response = await action.main(fakeRequestParams)
     expect(response).toEqual({
       error: {
@@ -76,7 +77,7 @@ describe('<%= actionName %>', () => {
     expect(response).toEqual({
       error: {
         statusCode: 400,
-        body: { error: 'missing header(s) \'authorization,x-gw-ims-org-id\' and missing parameter(s) \'tenant,apiKey,entityId,entityIdNS\'' }
+        body: { error: 'missing header(s) \'authorization,x-gw-ims-org-id\' and missing parameter(s) \'apiKey,id,dataSourceId\'' }
       }
     })
   })
