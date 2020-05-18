@@ -36,12 +36,6 @@ local serverless stack and also run your actions locally use the `aio app run --
 # AIO_RUNTIME_NAMESPACE=
 ```
 
-### `package.json`
-
-- We use the `name` and `version` fields for the deployment. Make sure to fill
-  those out. Do not use illegal characters as this might break the deployment
-  (e.g. `/`, `@`, `#`, ..).
-
 ### `manifest.yml`
 
 - List your backend actions under the `actions` field within the `__APP_PACKAGE__`
