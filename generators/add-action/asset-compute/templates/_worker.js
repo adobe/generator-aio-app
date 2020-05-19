@@ -11,8 +11,8 @@ governing permissions and limitations under the License.
 
 'use strict'
 
-const { worker } = require('@nui/library');
-const { SourceUnsupportedError } = require('@nui/library/errors');
+const { worker } = require('@adobe/asset-compute-sdk');
+const { SourceUnsupportedError } = require('@adobe/asset-compute-sdk/errors');
 const fs = require('fs').promises;
 
 exports.main = worker(async (source, rendition) => {
