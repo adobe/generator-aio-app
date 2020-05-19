@@ -4,7 +4,7 @@
   "description": "Adobe I/O application yeoman code generator",
   "main": "generators/app/index.js",
   "scripts": {
-    "test": "eslint . && jest -c ./jest.config.js"
+    "test": "jest -c ./jest.config.js && eslint"
   },
   "repository": {
     "type": "git",
