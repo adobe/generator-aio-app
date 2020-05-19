@@ -35,6 +35,8 @@ function stringParameters (params) {
 /**
  *
  * Returns the list of missing keys giving an object and its required keys.
+ * A parameter is missing if its value is undefined or ''.
+ * A value of 0 or null is not considered as missing.
  *
  * @param {object} obj object to check.
  * @param {array} required list of required keys.
@@ -48,13 +50,15 @@ function getMissingKeys (obj, required) {
     const splits = r.split('.')
     const last = splits[splits.length - 1]
     const traverse = splits.slice(0, -1).reduce((tObj, split) => { tObj = (tObj[split] || {}); return tObj }, obj)
-    return !traverse[last]
+    return traverse[last] === undefined || traverse[last] === '' // missing default params are empty string
   })
 }
 
 /**
  *
  * Returns the list of missing keys giving an object and its required keys.
+ * A parameter is missing if its value is undefined or ''.
+ * A value of 0 or null is not considered as missing.
  *
  * @param {object} params action input parameters.
  * @param {array} requiredHeaders list of required input headers.
