@@ -83,7 +83,7 @@ function assertActionCodeContent (actionName) {
   // a few checks to make sure the action uses the asset compute sdk
   assert.fileContent(
     theFile,
-    'const { worker } = require(\'@nui/library\');'
+    'const { worker } = require(\'@adobe/asset-compute-sdk\');'
   )
   assert.fileContent(
     theFile,
@@ -100,7 +100,7 @@ function assertDependencies (actionName) {
       test: 'aio asset-compute test-worker'
     },
     dependencies: {
-      '@nui/library': expect.any(String)
+      '@adobe/asset-compute-sdk': expect.any(String)
     },
     devDependencies: {
       '@adobe/wskdebug': expect.any(String),
