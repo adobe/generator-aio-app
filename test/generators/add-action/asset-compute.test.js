@@ -110,7 +110,7 @@ function assertDependencies (actionName) {
 }
 
 describe('run', () => {
-  test('--skip-prompt', async () => {
+  test('asset-compute: --skip-prompt', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
@@ -128,7 +128,7 @@ describe('run', () => {
     assertDependencies(actionName)
   })
 
-  test('--skip-prompt, and action with default name already exists', async () => {
+  test('asset-compute: --skip-prompt, and action with default name already exists', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
@@ -155,7 +155,7 @@ describe('run', () => {
     assertDependencies(actionName)
   })
 
-  test('--skip-prompt, and action already has package.json with scripts', async () => {
+  test('asset-compute: --skip-prompt, and action already has package.json with scripts', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
@@ -176,7 +176,7 @@ describe('run', () => {
     assertDependencies(actionName)
   })
 
-  test('user input actionName=yolo', async () => {
+  test('asset-compute: user input actionName=yolo', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': false })

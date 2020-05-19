@@ -33,10 +33,10 @@ class AssetComputeGenerator extends ActionGenerator {
     this.addAction(this.props.actionName, './_worker.js', {
       tplContext: this.props,
       dependencies: {
-        '@adobe/asset-compute-sdk': '^1.0.2' // will be replaced with open sourced @adobe scope
+        '@adobe/asset-compute-sdk': '^1.0.2'
       },
       devDependencies: {
-        '@adobe/eslint-config-asset-compute': '^1.0.0'
+        '@adobe/eslint-config-asset-compute': '^1.2.0'
       },
       dotenvStub: {
         label: 'please provide the following environment variables for the Asset Compute devtool',
