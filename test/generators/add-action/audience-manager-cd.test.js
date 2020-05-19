@@ -70,7 +70,7 @@ function assertManifestContent (actionName) {
 
 function assertEnvContent (prevContent) {
   assert.fileContent('.env', `## please provide your Adobe I/O Audience Manager Customer Data integration api key
-#AUDIENCE_MANAGER_API_KEY=`)
+# AUDIENCE_MANAGER_API_KEY=`)
   assert.fileContent('.env', prevContent)
 }
 
