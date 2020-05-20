@@ -37,7 +37,7 @@ Requirements:
 
 ### Test
 
-This runs eslint and the worker test cases in [tests](tests):
+This runs the worker test cases in [tests](tests):
 
 ```
 npm test
@@ -76,4 +76,4 @@ To use the custom worker with the Asset Compute Service, include a new rendition
 ]
 ```
 
-(The `name` field is only needed for use in Meahana to display image renditions in the browser).
+(The `name` field is only needed for use in Asset Compute Devtool to display image renditions in the browser).

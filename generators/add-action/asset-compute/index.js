@@ -35,9 +35,6 @@ class AssetComputeGenerator extends ActionGenerator {
       dependencies: {
         '@adobe/asset-compute-sdk': '^1.0.2'
       },
-      devDependencies: {
-        '@adobe/eslint-config-asset-compute': '^1.2.0'
-      },
       dotenvStub: {
         label: 'please provide the following environment variables for the Asset Compute devtool',
         vars: [
