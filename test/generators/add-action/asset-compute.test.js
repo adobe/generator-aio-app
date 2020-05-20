@@ -96,15 +96,13 @@ function assertDependencies (actionName) {
     name: actionName,
     scripts: {
       deploy: 'aio app deploy && aio asset-compute devtool',
-      posttest: 'eslint ./',
       test: 'aio asset-compute test-worker'
     },
     dependencies: {
       '@adobe/asset-compute-sdk': expect.any(String)
     },
     devDependencies: {
-      '@adobe/wskdebug': expect.any(String),
-      '@adobe/eslint-config-asset-compute': expect.any(String)
+      '@adobe/wskdebug': expect.any(String)
     }
   })
 }
@@ -176,16 +174,16 @@ describe('run', () => {
     assertDependencies(actionName)
   })
 
-  test('asset-compute: user input actionName=yolo', async () => {
+  test('asset-compute: user input actionName=new-action', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': false })
-      .withPrompts({ actionName: 'yolo' })
+      .withPrompts({ actionName: 'new-asset-compute-action' })
       .inTmpDir(dir => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
       })
 
-    const actionName = 'yolo'
+    const actionName = 'new-asset-compute-action'
 
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)

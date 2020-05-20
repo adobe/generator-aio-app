@@ -134,7 +134,7 @@ describe('run', () => {
     assertDependencies()
   })
 
-  test.only('--skip-prompt, and action with default name already exists', async () => {
+  test('--skip-prompt, and action with default name already exists', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })

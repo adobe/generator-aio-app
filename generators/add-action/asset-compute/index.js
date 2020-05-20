@@ -57,7 +57,6 @@ class AssetComputeGenerator extends ActionGenerator {
     const packagejsonContent = this.fs.readJSON(packagejsonPath)
     packagejsonContent.name = this.props.actionName
     if (!packagejsonContent.scripts) packagejsonContent.scripts = {}
-    packagejsonContent.scripts.posttest = 'eslint ./'
     packagejsonContent.scripts.test = 'aio asset-compute test-worker'
     packagejsonContent.scripts.deploy = 'aio app deploy && aio asset-compute devtool'
     // remove e2e test script and jest dependency
