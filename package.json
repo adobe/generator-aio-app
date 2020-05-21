@@ -5,7 +5,7 @@
   "main": "generators/app/index.js",
   "scripts": {
     "test": "eslint . && jest -c ./jest.config.js",
-    "unittest": "jest -c ./jest.config.js"
+    "unit-test": "jest -c ./jest.config.js"
   },
   "repository": {
     "type": "git",
