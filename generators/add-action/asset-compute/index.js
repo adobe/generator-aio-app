@@ -58,7 +58,8 @@ class AssetComputeGenerator extends ActionGenerator {
     packagejsonContent.name = this.props.actionName
     if (!packagejsonContent.scripts) packagejsonContent.scripts = {}
     packagejsonContent.scripts.test = 'aio asset-compute test-worker'
-    packagejsonContent.scripts.deploy = 'aio app deploy && aio asset-compute devtool'
+    //packagejsonContent.scripts.deploy = 'aio app deploy' // deploy only
+    packagejsonContent.scripts.debug = 'aio app run && aio asset-compute devtool'
     // remove e2e test script and jest dependency
     delete packagejsonContent.scripts.e2e
     delete packagejsonContent.devDependencies.jest
