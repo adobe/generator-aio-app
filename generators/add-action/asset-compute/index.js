@@ -39,14 +39,16 @@ class AssetComputeGenerator extends ActionGenerator {
         '@adobe/aio-cli-plugin-asset-compute': '^1.0.1'
       },
       dotenvStub: {
-        label: 'please provide the following environment variables for the Asset Compute devtool',
+        label: 'please provide the following environment variables for the Asset Compute devtool. You can use AWS or Azure, not both:',
         vars: [
-          'AIO_INTEGRATION_FILE_PATH',
-          'ASSET_COMPUTE_URL',
+          'ASSET_COMPUTE_INTEGRATION_FILE_PATH',
           'S3_BUCKET',
           'AWS_ACCESS_KEY_ID',
           'AWS_SECRET_ACCESS_KEY',
-          'AWS_REGION'
+          'AWS_REGION',
+          'AZURE_STORAGE_ACCOUNT',
+          'AZURE_STORAGE_KEY',
+          'AZURE_STORAGE_CONTAINER_NAME'
         ]
       },
       actionManifestConfig: {
