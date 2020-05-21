@@ -95,14 +95,15 @@ function assertDependencies (actionName) {
   expect(JSON.parse(fs.readFileSync('package.json').toString())).toEqual({
     name: actionName,
     scripts: {
-      deploy: 'aio app deploy && aio asset-compute devtool',
-      test: 'aio asset-compute test-worker'
+      test: 'aio asset-compute test-worker',
+      debug: 'aio app run && aio asset-compute devtool'
     },
     dependencies: {
       '@adobe/asset-compute-sdk': expect.any(String)
     },
     devDependencies: {
-      '@adobe/wskdebug': expect.any(String)
+      '@adobe/wskdebug': expect.any(String),
+      '@adobe/aio-cli-plugin-asset-compute': expect.any(String)
     }
   })
 }

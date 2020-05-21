@@ -35,6 +35,9 @@ class AssetComputeGenerator extends ActionGenerator {
       dependencies: {
         '@adobe/asset-compute-sdk': '^1.0.2'
       },
+      devDependencies: {
+        '@adobe/aio-cli-plugin-asset-compute': '^1.0.1'
+      },
       dotenvStub: {
         label: 'please provide the following environment variables for the Asset Compute devtool',
         vars: [
@@ -58,7 +61,7 @@ class AssetComputeGenerator extends ActionGenerator {
     packagejsonContent.name = this.props.actionName
     if (!packagejsonContent.scripts) packagejsonContent.scripts = {}
     packagejsonContent.scripts.test = 'aio asset-compute test-worker'
-    //packagejsonContent.scripts.deploy = 'aio app deploy' // deploy only
+    // packagejsonContent.scripts.deploy = 'aio app deploy' // deploy only
     packagejsonContent.scripts.debug = 'aio app run && aio asset-compute devtool'
     // remove e2e test script and jest dependency
     delete packagejsonContent.scripts.e2e
