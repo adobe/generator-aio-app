@@ -40,7 +40,7 @@ describe('prototype', () => {
 })
 
 function assertGeneratedFiles (actionName) {
-  assert.file(`worker-${actionName}.js`)
+  assert.file(`${constants.actionsDirname}/${actionName}/_worker.js`)
   assert.file('tests/corrupt-input/file.jpg')
   assert.file('tests/corrupt-input/params.json')
   assert.file('tests/simple-test/file.jpg')
@@ -55,7 +55,7 @@ function assertGeneratedFiles (actionName) {
 function assertManifestContent (actionName) {
   const json = yaml.safeLoad(fs.readFileSync('manifest.yml').toString())
   expect(json.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
-    function: `worker-${actionName}.js`,
+    function: `${actionName}.js`,
     web: 'yes',
     runtime: 'nodejs:10',
     inputs: {
@@ -81,7 +81,8 @@ function assertEnvContent (prevContent) {
 }
 
 function assertActionCodeContent (actionName) {
-  const theFile = `worker-${actionName}.js`
+  const theFile = `${actionName}.js`
+
   // a few checks to make sure the action uses the asset compute sdk
   assert.fileContent(
     theFile,
@@ -113,14 +114,13 @@ function assertDependencies (actionName) {
 describe('run', () => {
   test('asset-compute: --skip-prompt', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const actionName = 'example'
+    
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
       .inTmpDir(dir => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
       })
-
-    // default
-    const actionName = 'example'
 
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)
@@ -131,6 +131,8 @@ describe('run', () => {
 
   test('asset-compute: --skip-prompt, and action with default name already exists', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const actionName = 'example-1'
+
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
       .inTmpDir(dir => {
@@ -146,9 +148,6 @@ describe('run', () => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
       })
 
-    // default
-    const actionName = 'example-1'
-
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
@@ -158,6 +157,8 @@ describe('run', () => {
 
   test('asset-compute: --skip-prompt, and action already has package.json with scripts', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const actionName = 'example-2'
+
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
       .inTmpDir(dir => {
@@ -166,9 +167,6 @@ describe('run', () => {
         }))
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
       })
-
-    // default
-    const actionName = 'example'
 
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)
