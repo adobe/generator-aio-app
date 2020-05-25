@@ -109,7 +109,7 @@ function assertDependencies () {
 
 describe('run', () => {
   test('--skip-prompt', async () => {
-    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
       .inTmpDir(dir => {
@@ -127,7 +127,7 @@ describe('run', () => {
   })
 
   test('--skip-prompt, and action with default name already exists', async () => {
-    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
       .inTmpDir(dir => {
@@ -154,7 +154,7 @@ describe('run', () => {
   })
 
   test('user input actionName=fakeAction', async () => {
-    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': false })
       .withPrompts({ actionName: 'fakeAction' })
