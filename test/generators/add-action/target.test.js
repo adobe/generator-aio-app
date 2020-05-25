@@ -59,7 +59,7 @@ function assertManifestContent (actionName) {
     runtime: 'nodejs:10',
     inputs: {
       LOG_LEVEL: 'debug',
-      apiKey: '$TARGET_API_KEY',
+      apiKey: '$SERVICE_API_KEY',
       tenant: '$TARGET_TENANT'
     },
     annotations: {
@@ -70,9 +70,8 @@ function assertManifestContent (actionName) {
 }
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', `## please provide your Adobe I/O Target integration tenant and api key
-#TARGET_TENANT=
-#TARGET_API_KEY=`)
+  assert.fileContent('.env', `## please provide your Adobe I/O Target tenant
+#TARGET_TENANT=`)
   assert.fileContent('.env', prevContent)
 }
 

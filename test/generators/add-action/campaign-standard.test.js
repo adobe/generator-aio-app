@@ -59,7 +59,7 @@ function assertManifestContent (actionName) {
     runtime: 'nodejs:10',
     inputs: {
       LOG_LEVEL: 'debug',
-      apiKey: '$CAMPAIGN_STANDARD_API_KEY',
+      apiKey: '$SERVICE_API_KEY',
       tenant: '$CAMPAIGN_STANDARD_TENANT'
     },
     annotations: {
@@ -70,9 +70,8 @@ function assertManifestContent (actionName) {
 }
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', `## please provide your Adobe I/O Campaign Standard integration tenant and api key
-#CAMPAIGN_STANDARD_TENANT=
-#CAMPAIGN_STANDARD_API_KEY=`)
+  assert.fileContent('.env', `## please provide your Adobe I/O Campaign Standard tenant
+#CAMPAIGN_STANDARD_TENANT=`)
   assert.fileContent('.env', prevContent)
 }
 

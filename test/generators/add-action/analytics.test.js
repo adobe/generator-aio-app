@@ -59,7 +59,7 @@ function assertManifestContent (actionName) {
     runtime: 'nodejs:10',
     inputs: {
       LOG_LEVEL: 'debug',
-      apiKey: '$ANALYTICS_API_KEY',
+      apiKey: '$SERVICE_API_KEY',
       companyId: '$ANALYTICS_COMPANY_ID'
     },
     annotations: {
@@ -70,9 +70,8 @@ function assertManifestContent (actionName) {
 }
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', `## please provide your Adobe I/O Analytics integration company id and api key
-#ANALYTICS_COMPANY_ID=
-#ANALYTICS_API_KEY=`)
+  assert.fileContent('.env', `## please provide your Adobe I/O Analytics company id
+#ANALYTICS_COMPANY_ID=`)
   assert.fileContent('.env', prevContent)
 }
 
