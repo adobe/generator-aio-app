@@ -15,6 +15,7 @@ const assert = require('yeoman-assert')
 const fs = require('fs')
 const yaml = require('js-yaml')
 const path = require('path')
+const { EOL } = require('os')
 
 const theGeneratorPath = require.resolve('../../../generators/add-action/analytics')
 const Generator = require('yeoman-generator')
@@ -70,8 +71,7 @@ function assertManifestContent (actionName) {
 }
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', `## please provide your Adobe I/O Analytics company id
-#ANALYTICS_COMPANY_ID=`)
+  assert.fileContent('.env', `## please provide your Adobe I/O Analytics company id${EOL}#ANALYTICS_COMPANY_ID=`)
   assert.fileContent('.env', prevContent)
 }
 

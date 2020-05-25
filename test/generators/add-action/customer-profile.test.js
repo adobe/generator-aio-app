@@ -15,6 +15,7 @@ const assert = require('yeoman-assert')
 const fs = require('fs')
 const yaml = require('js-yaml')
 const path = require('path')
+const { EOL } = require('os')
 
 const theGeneratorPath = require.resolve('../../../generators/add-action/customer-profile')
 const Generator = require('yeoman-generator')
@@ -70,8 +71,7 @@ function assertManifestContent (actionName) {
 }
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', `## please provide your Adobe Experience Platform Realtime Customer Profile tenant
-#CUSTOMER_PROFILE_TENANT=`)
+  assert.fileContent('.env', `## please provide your Adobe Experience Platform Realtime Customer Profile tenant${EOL}#CUSTOMER_PROFILE_TENANT=`)
   assert.fileContent('.env', prevContent)
 }
 
