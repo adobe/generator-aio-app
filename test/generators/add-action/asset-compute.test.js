@@ -99,7 +99,7 @@ function assertDependencies () {
 
 describe('run', () => {
   test('asset-compute: --skip-prompt', async () => {
-    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     const actionName = 'worker-example' // default value
 
     await helpers.run(theGeneratorPath)
@@ -116,7 +116,7 @@ describe('run', () => {
   })
 
   test('asset-compute: --skip-prompt, and action with default name already exists', async () => {
-    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     const actionName = 'worker-example'
 
     await helpers.run(theGeneratorPath)
@@ -142,7 +142,7 @@ describe('run', () => {
   })
 
   test('asset-compute: --skip-prompt, and action already has package.json with scripts', async () => {
-    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     const actionName = 'worker-example'
 
     await helpers.run(theGeneratorPath)
@@ -162,7 +162,7 @@ describe('run', () => {
   })
 
   test('asset-compute: user input actionName=new-action', async () => {
-    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     const actionName = 'new-asset-compute-action'
 
     await helpers.run(theGeneratorPath)
