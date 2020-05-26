@@ -39,10 +39,10 @@ class AssetComputeGenerator extends ActionGenerator {
       devDependencies: {
         '@adobe/aio-cli-plugin-asset-compute': '^1.0.1'
       },
-      scripts: { // where to put the scripts?
-        'asset-compute-debug': 'aio app run && aio asset-compute devtool',
-        'asset-compute-test': 'aio app run && aio asset-compute test-worker'
-      },
+    //   scripts: { // where to put the scripts?
+    //     'asset-compute-debug': 'aio app run && aio asset-compute devtool',
+    //     'asset-compute-test': 'aio app run && aio asset-compute test-worker'
+    //   },
       dotenvStub: {
         label: 'please provide the following environment variables for the Asset Compute devtool. You can use AWS or Azure, not both:',
         vars: [
@@ -64,33 +64,21 @@ class AssetComputeGenerator extends ActionGenerator {
 
     const destinationFolder = this.destinationPath(actionsDirname, this.props.actionName)
     console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH')
+    console.log(actionsDirname)
+    console.log(this.props.actionName)
+    console.log(this.destinationPath())
     console.log(destinationFolder)
     console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH')
 
     this.fs.delete(path.join(destinationFolder, 'test')) // remove jest test setup since Asset Compute workers do not use jest
 
-    // // modify the package.json to contain the Asset Compute testing and development tools
-    // const packagejsonPath = path.join(this.destinationPath(), 'package.json')
-    // const packagejsonContent = this.fs.readJSON(packagejsonPath)
-    // // packagejsonContent.name = this.props.actionName
-    // if (!packagejsonContent.scripts) packagejsonContent.scripts = {}
-    // packagejsonContent.scripts['asset-compute-test'] = 'aio asset-compute test-worker'
-    // // packagejsonContent.scripts.deploy = 'aio app deploy' // deploy only
-    // packagejsonContent.scripts['asset-compute-debug'] = 'aio app run && aio asset-compute devtool'
-    // // remove e2e test script and jest dependency
-    // delete packagejsonContent.scripts.e2e
-    // delete packagejsonContent.devDependencies.jest
-    // this.fs.writeJSON(this.destinationPath(), packagejsonContent, { spaces: 2 })
-
-    const workerTemplateFiles = `${this.templatePath()}/**/!(_)*/` // copy the rest of the worker template files
-
-    
+    const workerTemplateFiles = `${this.templatePath()}/**/!(_)*/` // copy the rest of the worker template files   
     this.fs.copyTpl(
       workerTemplateFiles,
       destinationFolder,
       this.props
     )
-    
+
   }
 }
 
