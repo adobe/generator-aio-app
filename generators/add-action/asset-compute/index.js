@@ -15,6 +15,7 @@ governing permissions and limitations under the License.
 
 const path = require('path')
 const ActionGenerator = require('../../../lib/ActionGenerator')
+const { actionsDirname } = require('../../../lib/constants')
 
 class AssetComputeGenerator extends ActionGenerator {
   constructor (args, opts) {
@@ -38,6 +39,10 @@ class AssetComputeGenerator extends ActionGenerator {
       devDependencies: {
         '@adobe/aio-cli-plugin-asset-compute': '^1.0.1'
       },
+      scripts: { // where to put the scripts?
+        'asset-compute-debug': 'aio app run && aio asset-compute devtool',
+        'asset-compute-test': 'aio app run && aio asset-compute test-worker'
+      },
       dotenvStub: {
         label: 'please provide the following environment variables for the Asset Compute devtool. You can use AWS or Azure, not both:',
         vars: [
@@ -57,27 +62,35 @@ class AssetComputeGenerator extends ActionGenerator {
       }
     })
 
-    // modify the package.json to contain the Asset Compute testing and development tools
-    const packagejsonPath = this.destinationPath('package.json')
-    const packagejsonContent = this.fs.readJSON(packagejsonPath)
-    packagejsonContent.name = this.props.actionName
-    if (!packagejsonContent.scripts) packagejsonContent.scripts = {}
-    packagejsonContent.scripts.test = 'aio asset-compute test-worker'
-    // packagejsonContent.scripts.deploy = 'aio app deploy' // deploy only
-    packagejsonContent.scripts.debug = 'aio app run && aio asset-compute devtool'
-    // remove e2e test script and jest dependency
-    delete packagejsonContent.scripts.e2e
-    delete packagejsonContent.devDependencies.jest
-    this.fs.writeJSON(packagejsonPath, packagejsonContent)
+    const destinationFolder = this.destinationPath(actionsDirname, this.props.actionName)
+    console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH')
+    console.log(destinationFolder)
+    console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH')
+
+    this.fs.delete(path.join(destinationFolder, 'test')) // remove jest test setup since Asset Compute workers do not use jest
+
+    // // modify the package.json to contain the Asset Compute testing and development tools
+    // const packagejsonPath = path.join(this.destinationPath(), 'package.json')
+    // const packagejsonContent = this.fs.readJSON(packagejsonPath)
+    // // packagejsonContent.name = this.props.actionName
+    // if (!packagejsonContent.scripts) packagejsonContent.scripts = {}
+    // packagejsonContent.scripts['asset-compute-test'] = 'aio asset-compute test-worker'
+    // // packagejsonContent.scripts.deploy = 'aio app deploy' // deploy only
+    // packagejsonContent.scripts['asset-compute-debug'] = 'aio app run && aio asset-compute devtool'
+    // // remove e2e test script and jest dependency
+    // delete packagejsonContent.scripts.e2e
+    // delete packagejsonContent.devDependencies.jest
+    // this.fs.writeJSON(this.destinationPath(), packagejsonContent, { spaces: 2 })
 
     const workerTemplateFiles = `${this.templatePath()}/**/!(_)*/` // copy the rest of the worker template files
 
+    
     this.fs.copyTpl(
       workerTemplateFiles,
-      this.destinationPath(),
+      destinationFolder,
       this.props
     )
-    this.fs.delete(this.destinationPath('test')) // remove jest test setup since Asset Compute workers do not use jest
+    
   }
 }
 
