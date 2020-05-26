@@ -42,12 +42,12 @@ describe('prototype', () => {
 function assertGeneratedFiles (actionName) {
   const targetPath = `actions/${actionName}`
 
-   assert.file(`${targetPath}/index.js`)
-   assert.file(`${targetPath}/tests/corrupt-input/file.jpg`)
-   assert.file(`${targetPath}/tests/corrupt-input/params.json`)
-   assert.file(`${targetPath}/tests/simple-test/file.jpg`)
-   assert.file(`${targetPath}/tests/simple-test/params.json`)
-   assert.file(`${targetPath}/tests/simple-test/rendition.jpg`)
+  assert.file(`${targetPath}/index.js`)
+  assert.file(`${targetPath}/tests/corrupt-input/file.jpg`)
+  assert.file(`${targetPath}/tests/corrupt-input/params.json`)
+  assert.file(`${targetPath}/tests/simple-test/file.jpg`)
+  assert.file(`${targetPath}/tests/simple-test/params.json`)
+  assert.file(`${targetPath}/tests/simple-test/rendition.jpg`)
 
   assert.file('manifest.yml')
   assert.file('.env')
@@ -96,18 +96,19 @@ function assertActionCodeContent (actionName) {
   )
 }
 
-function assertDependencies (actionName) {
+function assertDependencies () {
   const jsonContent = JSON.parse(fs.readFileSync('package.json').toString())
-  assert.equal(jsonContent.name, actionName)
-  assert.ok(!!jsonContent.dependencies['@adobe/asset-compute-sdk'])
-  assert.ok(!!jsonContent.devDependencies['@adobe/aio-cli-plugin-asset-compute'])
+  assert.ok(jsonContent.dependencies['@adobe/asset-compute-sdk'] !== null)
+  assert.ok(jsonContent.dependencies['@adobe/asset-compute-sdk'] !== undefined)
+  assert.ok(jsonContent.devDependencies['@adobe/aio-cli-plugin-asset-compute'] !== null)
+  assert.ok(jsonContent.devDependencies['@adobe/aio-cli-plugin-asset-compute'] !== undefined)
 }
 
 describe('run', () => {
-  test.only('asset-compute: --skip-prompt', async () => {
+  test('asset-compute: --skip-prompt', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     const actionName = 'worker-example' // default value
-    
+
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
       .inTmpDir(dir => {
@@ -118,7 +119,7 @@ describe('run', () => {
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies(actionName)
+    assertDependencies()
   })
 
   test('asset-compute: --skip-prompt, and action with default name already exists', async () => {
@@ -144,7 +145,7 @@ describe('run', () => {
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies(actionName)
+    assertDependencies()
   })
 
   test('asset-compute: --skip-prompt, and action already has package.json with scripts', async () => {
@@ -164,11 +165,13 @@ describe('run', () => {
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies(actionName)
+    assertDependencies()
   })
 
   test('asset-compute: user input actionName=new-action', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const actionName = 'new-asset-compute-action'
+
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': false })
       .withPrompts({ actionName: 'new-asset-compute-action' })
@@ -176,12 +179,10 @@ describe('run', () => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
       })
 
-    const actionName = 'new-asset-compute-action'
-
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies(actionName)
+    assertDependencies()
   })
 })

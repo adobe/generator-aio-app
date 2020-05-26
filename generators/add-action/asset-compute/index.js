@@ -25,7 +25,6 @@ class AssetComputeGenerator extends ActionGenerator {
 
   async prompting () {
     this.props.actionName = await this.promptForActionName('example of a custom worker for the Adobe Asset Compute service', 'worker-example')
-    // this.props.actionDestPath = this.destinationPath(`${this.props.actionName}.js`)
   }
 
   writing () {
@@ -39,10 +38,10 @@ class AssetComputeGenerator extends ActionGenerator {
       devDependencies: {
         '@adobe/aio-cli-plugin-asset-compute': '^1.0.1'
       },
-    //   scripts: { // where to put the scripts?
-    //     'asset-compute-debug': 'aio app run && aio asset-compute devtool',
-    //     'asset-compute-test': 'aio app run && aio asset-compute test-worker'
-    //   },
+      //   scripts: { // where to put the scripts?
+      //     'asset-compute-debug': 'aio app run && aio asset-compute devtool',
+      //     'asset-compute-test': 'aio app run && aio asset-compute test-worker'
+      //   },
       dotenvStub: {
         label: 'please provide the following environment variables for the Asset Compute devtool. You can use AWS or Azure, not both:',
         vars: [
@@ -63,22 +62,14 @@ class AssetComputeGenerator extends ActionGenerator {
     })
 
     const destinationFolder = this.destinationPath(actionsDirname, this.props.actionName)
-    console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH')
-    console.log(actionsDirname)
-    console.log(this.props.actionName)
-    console.log(this.destinationPath())
-    console.log(destinationFolder)
-    console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH')
-
     this.fs.delete(path.join(destinationFolder, 'test')) // remove jest test setup since Asset Compute workers do not use jest
 
-    const workerTemplateFiles = `${this.templatePath()}/**/!(_)*/` // copy the rest of the worker template files   
+    const workerTemplateFiles = `${this.templatePath()}/**/!(_)*/` // copy the rest of the worker template files
     this.fs.copyTpl(
       workerTemplateFiles,
       destinationFolder,
       this.props
     )
-
   }
 }
 
