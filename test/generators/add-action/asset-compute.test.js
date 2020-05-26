@@ -15,6 +15,7 @@ const assert = require('yeoman-assert')
 const fs = require('fs')
 const yaml = require('js-yaml')
 const path = require('path')
+const { EOL } = require('os')
 
 const theGeneratorPath = require.resolve('../../../generators/add-action/asset-compute')
 const Generator = require('yeoman-generator')
@@ -70,15 +71,7 @@ function assertManifestContent (actionName) {
 }
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', `## please provide the following environment variables for the Asset Compute devtool. You can use AWS or Azure, not both:
-# ASSET_COMPUTE_INTEGRATION_FILE_PATH=
-# S3_BUCKET=
-# AWS_ACCESS_KEY_ID=
-# AWS_SECRET_ACCESS_KEY=
-# AWS_REGION=
-# AZURE_STORAGE_ACCOUNT=
-# AZURE_STORAGE_KEY=
-# AZURE_STORAGE_CONTAINER_NAME=`)
+  assert.fileContent('.env', `## please provide the following environment variables for the Asset Compute devtool. You can use AWS or Azure, not both:${EOL}#ASSET_COMPUTE_INTEGRATION_FILE_PATH=${EOL}#S3_BUCKET=${EOL}#AWS_ACCESS_KEY_ID=${EOL}#AWS_SECRET_ACCESS_KEY=${EOL}#AWS_REGION=${EOL}#AZURE_STORAGE_ACCOUNT=${EOL}#AZURE_STORAGE_KEY=${EOL}#AZURE_STORAGE_CONTAINER_NAME=`)
   assert.fileContent('.env', prevContent)
 }
 
