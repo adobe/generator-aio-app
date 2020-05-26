@@ -52,17 +52,16 @@ class TargetGenerator extends ActionGenerator {
       e2eTestFile: './stub-action.e2e.js',
       tplContext: this.props,
       dotenvStub: {
-        label: 'please provide your Adobe I/O Target integration tenant and api key',
+        label: 'please provide your Adobe I/O Target tenant',
         vars: [
-          'TARGET_TENANT',
-          'TARGET_API_KEY'
+          'TARGET_TENANT'
         ]
       },
       dependencies: {
         '@adobe/aio-sdk': commonDependencyVersions['@adobe/aio-sdk']
       },
       actionManifestConfig: {
-        inputs: { LOG_LEVEL: 'debug', tenant: '$TARGET_TENANT', apiKey: '$TARGET_API_KEY' },
+        inputs: { LOG_LEVEL: 'debug', tenant: '$TARGET_TENANT', apiKey: '$SERVICE_API_KEY' },
         annotations: { final: true }
       }
     })
