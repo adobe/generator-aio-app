@@ -83,7 +83,7 @@ function assertEnvContent (prevContent) {
 }
 
 function assertActionCodeContent (actionName) {
-  const theFile = `${actionName}.js`
+  const theFile = `actions/${actionName}/index.js`
 
   // a few checks to make sure the action uses the asset compute sdk
   assert.fileContent(
@@ -97,20 +97,10 @@ function assertActionCodeContent (actionName) {
 }
 
 function assertDependencies (actionName) {
-  expect(JSON.parse(fs.readFileSync('package.json').toString())).toEqual({
-    name: actionName,
-    // scripts: {
-    //   test: 'aio asset-compute test-worker',
-    //   debug: 'aio app run && aio asset-compute devtool'
-    // },
-    dependencies: {
-      '@adobe/asset-compute-sdk': expect.any(String)
-    },
-    devDependencies: {
-      '@adobe/wskdebug': expect.any(String),
-      '@adobe/aio-cli-plugin-asset-compute': expect.any(String)
-    }
-  })
+  const jsonContent = JSON.parse(fs.readFileSync('package.json').toString())
+  assert.equal(jsonContent.name, actionName)
+  assert.ok(!!jsonContent.dependencies['@adobe/asset-compute-sdk'])
+  assert.ok(!!jsonContent.devDependencies['@adobe/aio-cli-plugin-asset-compute'])
 }
 
 describe('run', () => {
@@ -125,10 +115,10 @@ describe('run', () => {
       })
 
     assertGeneratedFiles(actionName)
-    //assertActionCodeContent(actionName)
+    assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    //assertDependencies(actionName)
+    assertDependencies(actionName)
   })
 
   test('asset-compute: --skip-prompt, and action with default name already exists', async () => {
