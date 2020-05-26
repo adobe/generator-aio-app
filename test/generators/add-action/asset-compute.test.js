@@ -58,7 +58,7 @@ function assertGeneratedFiles (actionName) {
 function assertManifestContent (actionName) {
   const json = yaml.safeLoad(fs.readFileSync('manifest.yml').toString())
   expect(json.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
-    function: `actions/${actionName}/index.js`,
+    function: `actions${path.sep}${actionName}${path.sep}index.js`,
     web: 'yes',
     runtime: 'nodejs:10',
     inputs: {
