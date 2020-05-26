@@ -15,6 +15,7 @@ const assert = require('yeoman-assert')
 const fs = require('fs')
 const yaml = require('js-yaml')
 const path = require('path')
+const { EOL } = require('os')
 
 const theGeneratorPath = require.resolve('../../../generators/add-action/campaign-standard')
 const Generator = require('yeoman-generator')
@@ -59,7 +60,7 @@ function assertManifestContent (actionName) {
     runtime: 'nodejs:10',
     inputs: {
       LOG_LEVEL: 'debug',
-      apiKey: '$CAMPAIGN_STANDARD_API_KEY',
+      apiKey: '$SERVICE_API_KEY',
       tenant: '$CAMPAIGN_STANDARD_TENANT'
     },
     annotations: {
@@ -70,9 +71,7 @@ function assertManifestContent (actionName) {
 }
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', `## please provide your Adobe I/O Campaign Standard integration tenant and api key
-# CAMPAIGN_STANDARD_TENANT=
-# CAMPAIGN_STANDARD_API_KEY=`)
+  assert.fileContent('.env', `## please provide your Adobe I/O Campaign Standard tenant${EOL}#CAMPAIGN_STANDARD_TENANT=`)
   assert.fileContent('.env', prevContent)
 }
 
@@ -110,7 +109,7 @@ function assertDependencies () {
 
 describe('run', () => {
   test('--skip-prompt', async () => {
-    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
       .inTmpDir(dir => {
@@ -128,7 +127,7 @@ describe('run', () => {
   })
 
   test('--skip-prompt, and action with default name already exists', async () => {
-    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
       .inTmpDir(dir => {
@@ -155,7 +154,7 @@ describe('run', () => {
   })
 
   test('user input actionName=fakeAction', async () => {
-    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': false })
       .withPrompts({ actionName: 'fakeAction' })
