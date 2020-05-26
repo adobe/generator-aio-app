@@ -78,4 +78,8 @@ describe('guessProjectName', () => {
       }
     })).toEqual('FAKENAME')
   })
+
+  test('addPkgScript adds scripts to package.json', () => {
+
+  })
 })
