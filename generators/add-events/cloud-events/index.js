@@ -78,16 +78,10 @@ function createCloudEvent(providerId, eventCode, payload) {
         'cloudevents-sdk': '^1.0.0',
         uuid: '^8.0.0'
       },
-      dotenvStub: {
-        label: 'please provide your Adobe I/O Events organization id and api key',
-        vars: [
-          'EVENTS_API_KEY'
-        ]
-      },
       actionManifestConfig: {
         inputs: {
           LOG_LEVEL: 'debug',
-          apiKey: '$EVENTS_API_KEY'
+          apiKey: '$SERVICE_API_KEY'
         },
         annotations: { final: true }
       }
