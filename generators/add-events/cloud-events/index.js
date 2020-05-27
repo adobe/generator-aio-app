@@ -60,7 +60,7 @@ function createCloudEvent(providerId, eventCode, payload) {
   async prompting () {
     this.props.actionName = await this.promptForActionName(
       'creates messages in Cloud events format and publishes to Adobe I/O Events',
-      'events')
+      'cloud-events')
   }
 
   writing () {
