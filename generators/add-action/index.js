@@ -23,7 +23,6 @@ const sdkCodeToActionGenerator = {
   [sdkCodes.campaign]: path.join(__dirname, 'campaign-standard/index.js'),
   [sdkCodes.assetCompute]: path.join(__dirname, 'asset-compute/index.js'),
   [sdkCodes.customerProfile]: path.join(__dirname, 'customer-profile/index.js'),
-  [sdkCodes.customerProfile]: path.join(__dirname, 'customer-profile/index.js'),
   [sdkCodes.audienceManagerCD]: path.join(__dirname, 'audience-manager-cd/index.js')
 }
 
@@ -32,7 +31,6 @@ const sdkCodeToTitle = {
   [sdkCodes.analytics]: 'Adobe Analytics',
   [sdkCodes.campaign]: 'Adobe Campaign Standard',
   [sdkCodes.assetCompute]: 'Asset Compute',
-  [sdkCodes.customerProfile]: 'Adobe Experience Platform: Realtime Customer Profile',
   [sdkCodes.customerProfile]: 'Adobe Experience Platform: Realtime Customer Profile',
   [sdkCodes.audienceManagerCD]: 'Adobe Audience Manager: Customer Data'
 }
@@ -84,10 +82,23 @@ class AddActions extends Generator {
       actionGenerators = promptProps.actionGenerators
     }
 
+    /*
+    // Asset compute debug
+    const promptProps = await this.prompt([
+        //     {
+        //       type: 'checkbox',
+        //       name: 'actionGenerators',
+        //       message: 'Which type of sample actions do you want to create?\nselect type of actions to generate',
+        //       choices: [{ name: 'Generic', value: genericActionGenerator, checked: false }, 
+        //                 { name: 'Asset Compute', value: path.join(__dirname, 'asset-compute/index.js'), checked: true }],
+        //       validate: atLeastOne
+        //     }
+        //   ])
+
     // run action generators
     actionGenerators.forEach(gen => this.composeWith(gen, {
       'skip-prompt': this.options['skip-prompt']
-    }))
+    }))*/
   }
 
   async install () {
