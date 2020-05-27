@@ -23,6 +23,7 @@ class CloudEventsGenerator extends ActionGenerator {
       // eslint-disable-next-line quotes
       requiredHeaders: `['Authorization', 'x-gw-ims-org-id']`,
       importCode: `const { Events } = require('@adobe/aio-sdk')
+const uuid = require('uuid')
 const cloudEventV1 = require('cloudevents-sdk/v1')`,
       inlineUtilityFunctions: `
 function createCloudEvent(providerId, eventCode, payload) {
@@ -30,10 +31,9 @@ function createCloudEvent(providerId, eventCode, payload) {
     .data(payload)
     .source('urn:uuid:' + providerId)
     .type(eventCode)
-    .id('randomId')
+    .id(uuid.v4())
   return cloudevent.format()
-}
-      `,
+}`,
       responseCode: `
     // initialize the client
     const orgId = params.__ow_headers['x-gw-ims-org-id']
@@ -50,7 +50,7 @@ function createCloudEvent(providerId, eventCode, payload) {
     } else if (published === undefined) {
       logger.info('Published to I/O Events but there were not interested registrations')
       statusCode = 204
-    } 
+    }
     const response = {
       statusCode: statusCode,
     }`
@@ -59,7 +59,7 @@ function createCloudEvent(providerId, eventCode, payload) {
 
   async prompting () {
     this.props.actionName = await this.promptForActionName(
-      'creates messages in Cloud events format and publishes to Adobe I/O Events',
+      'creates messages in cloud events format and publishes to Adobe I/O Events',
       'cloud-events')
   }
 

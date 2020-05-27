@@ -61,7 +61,5 @@ async function main (params) {
     return errorResponse(500, 'server error', logger)
   }
 }
-
 <% if (locals.inlineUtilityFunctions) { %><%- inlineUtilityFunctions %><% } %>
-
 exports.main = main
