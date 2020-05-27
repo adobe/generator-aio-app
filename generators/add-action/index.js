@@ -89,16 +89,17 @@ class AddActions extends Generator {
         //       type: 'checkbox',
         //       name: 'actionGenerators',
         //       message: 'Which type of sample actions do you want to create?\nselect type of actions to generate',
-        //       choices: [{ name: 'Generic', value: genericActionGenerator, checked: false }, 
+        //       choices: [{ name: 'Generic', value: genericActionGenerator, checked: false },
         //                 { name: 'Asset Compute', value: path.join(__dirname, 'asset-compute/index.js'), checked: true }],
         //       validate: atLeastOne
         //     }
         //   ])
+        */
 
     // run action generators
     actionGenerators.forEach(gen => this.composeWith(gen, {
       'skip-prompt': this.options['skip-prompt']
-    }))*/
+    }))
   }
 
   async install () {
