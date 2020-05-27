@@ -36,6 +36,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "jest": "^24.9.0",
+    "stdout-stderr": "^0.1.13",
     "yeoman-assert": "^3.1.1",
     "yeoman-test": "^2.0.0"
   },
