@@ -19,11 +19,12 @@ class CloudEventsGenerator extends ActionGenerator {
     this.props = {
       description: 'This is a sample action showcasing how to create a cloud event and publish to I/O Events',
       // eslint-disable-next-line quotes
-      requiredParams: `['organizationId', 'apiKey', 'providerId', 'eventCode', 'payload']`,
+      requiredParams: `['apiKey', 'providerId', 'eventCode', 'payload']`,
       // eslint-disable-next-line quotes
+      requiredHeaders: `['Authorization', 'x-gw-ims-org-id']`,
       importCode: `const { Events } = require('@adobe/aio-sdk')
 const cloudEventV1 = require('cloudevents-sdk/v1')`,
-      utilFunction: `
+      inlineUtilityFunctions: `
 function createCloudEvent(providerId, eventCode, payload) {
   let cloudevent = cloudEventV1.event()
     .data(payload)
@@ -35,7 +36,8 @@ function createCloudEvent(providerId, eventCode, payload) {
       `,
       responseCode: `
     // initialize the client
-    const eventsClient = await Events.init(params.organizationId, params.apiKey, token)
+    const orgId = params.__ow_headers['x-gw-ims-org-id']
+    const eventsClient = await Events.init(orgId, params.apiKey, token)
 
     // Create cloud event for the given payload
     const cloudEvent = createCloudEvent(params.providerId, params.eventCode, params.payload)
@@ -63,13 +65,13 @@ function createCloudEvent(providerId, eventCode, payload) {
 
   writing () {
     // this.registerTransformStream(beautify({ indent_size: 2 }))
-    this.sourceRoot(path.join(__dirname, '../../templates'))
+    this.sourceRoot(path.join(__dirname, '.'))
 
-    this.addAction(this.props.actionName, './stub-action.js', {
-      testFile: '../add-events/cloud-events/templates/publishEvents.test.js',
-      sharedLibFile: './utils.js',
-      sharedLibTestFile: './utils.test.js',
-      e2eTestFile: './stub-action.e2e.js',
+    this.addAction(this.props.actionName, '../../common-templates/stub-action.js', {
+      testFile: './templates/publishEvents.test.js',
+      sharedLibFile: '../../common-templates/utils.js',
+      sharedLibTestFile: '../../common-templates/utils.test.js',
+      e2eTestFile: '../../common-templates/stub-action.e2e.js',
       tplContext: this.props,
       dependencies: {
         '@adobe/aio-sdk': commonDependencyVersions['@adobe/aio-sdk'],
@@ -79,14 +81,12 @@ function createCloudEvent(providerId, eventCode, payload) {
       dotenvStub: {
         label: 'please provide your Adobe I/O Events organization id and api key',
         vars: [
-          'EVENTS_ORGANIZATION_ID',
           'EVENTS_API_KEY'
         ]
       },
       actionManifestConfig: {
         inputs: {
           LOG_LEVEL: 'debug',
-          organizationId: '$EVENTS_ORGANIZATION_ID',
           apiKey: '$EVENTS_API_KEY'
         },
         annotations: { final: true }

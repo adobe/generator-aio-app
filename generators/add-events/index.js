@@ -12,18 +12,7 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const { atLeastOne } = require('../../lib/utils')
-
-const { eventCodes } = require('../../lib/constants')
-
-// we have one actions generator per service, an action generator could generate different types of actions
-const eventCodeToActionGenerator = {
-  [eventCodes.cloudEvents]: path.join(__dirname, 'cloud-events/index.js')
-}
-
-const eventCodeToTitle = {
-  [eventCodes.cloudEvents]: 'Publish Cloud Events to Adobe I/O'
-}
+const excPublishEventsGenerator = path.join(__dirname, 'cloud-events/index.js')
 
 /*
       'initializing',
@@ -42,37 +31,36 @@ class AddEvents extends Generator {
 
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
-    this.option('adobe-services', { type: String, default: '' })
     this.option('skip-install', { type: String, default: false })
 
     // todo throw meaningful error if add actions in a non existing project, but what defines a project?
   }
 
   async prompting () {
-    const eventCodesList = [eventCodes.cloudEvents]
-    let eventGenerator = []
+    const eventGenerator = excPublishEventsGenerator
     // default if skip-prompt = true
-    if (!this.options['skip-prompt']) {
-      const promptProps = await this.prompt([
-        {
-          type: 'checkbox',
-          name: 'eventGenerator',
-          message: 'Select the type of integration with I/O Events to generate',
-          choices: eventCodesList.map(s => ({
-            name: eventCodeToTitle[s],
-            value: eventCodeToActionGenerator[s]
-          }))
-            .filter(entry => !!entry.value),
-          validate: atLeastOne
-        }
-      ])
-      eventGenerator = promptProps.eventGenerator
-    }
+
+    // code for later -> as of now support only publish events
+    // const eventGeneratorChoices = [{ name: 'Publish Cloud Events to Adobe I/O', value: path.join(__dirname, 'cloud-events/index.js') }]
+    // if (!this.options['skip-prompt']) {
+    // const promptProps = await this.prompt([
+    //    {
+    //      type: 'checkbox',
+    //      name: 'eventGenerator',
+    //      message: 'Select the type of integration with I/O Events to generate',
+    //      choices: eventGeneratorChoices
+    //        .filter(entry => !!entry.value),
+    //      validate: atLeastOne
+    //    }
+    //  ])
+    //  eventGenerator = promptProps.eventGenerator
+    // }
+    // eventGenerator.forEach(gen => this.composeWith(gen, {
+    //  'skip-prompt': this.options['skip-prompt']
+    // }))
 
     // run action generators
-    eventGenerator.forEach(gen => this.composeWith(gen, {
-      'skip-prompt': this.options['skip-prompt']
-    }))
+    this.composeWith(eventGenerator, this.options)
   }
 
   async install () {

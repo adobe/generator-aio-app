@@ -65,7 +65,7 @@ describe('run', () => {
     expectDotEnv()
     assert.JSONFileContent('package.json', { name: 'fake-name', version: '0.0.1' })
     // make sure sub generators have been called
-    expect(composeWith).toHaveBeenCalledTimes(2)
+    expect(composeWith).toHaveBeenCalledTimes(3)
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-web-assets/index.js')), expect.objectContaining({
       'skip-install': true,
       'skip-prompt': true,
@@ -73,6 +73,11 @@ describe('run', () => {
       'project-name': 'fake-name'
     }))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-action/index.js')), expect.objectContaining({
+      'skip-install': true,
+      'skip-prompt': true,
+      'adobe-services': ''
+    }))
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-events/index.js')), expect.objectContaining({
       'skip-install': true,
       'skip-prompt': true,
       'adobe-services': ''
@@ -90,7 +95,7 @@ describe('run', () => {
     const expectedProjectName = path.basename(dir)
     assert.JSONFileContent('package.json', { name: expectedProjectName, version: '0.0.1' })
     // make sure sub generators have been called
-    expect(composeWith).toHaveBeenCalledTimes(2)
+    expect(composeWith).toHaveBeenCalledTimes(3)
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-web-assets/index.js')), expect.objectContaining({
       'skip-install': true,
       'skip-prompt': true,
@@ -98,6 +103,11 @@ describe('run', () => {
       'project-name': expectedProjectName
     }))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-action/index.js')), expect.objectContaining({
+      'skip-install': true,
+      'skip-prompt': true,
+      'adobe-services': 'some,string'
+    }))
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-events/index.js')), expect.objectContaining({
       'skip-install': true,
       'skip-prompt': true,
       'adobe-services': 'some,string'
@@ -222,12 +232,15 @@ describe('run', () => {
     const expectedProjectName = path.basename(dir)
     assert.JSONFileContent('package.json', { name: expectedProjectName, version: '0.0.1' })
     // make sure sub generators have been called
-    expect(composeWith).toHaveBeenCalledTimes(2)
+    expect(composeWith).toHaveBeenCalledTimes(3)
 
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-web-assets/index.js')), expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-action/index.js')), expect.objectContaining({
       'skip-install': true,
-      'adobe-services': '',
-      'project-name': expectedProjectName
+      'adobe-services': ''
+    }))
+    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-events/index.js')), expect.objectContaining({
+      'skip-install': true,
+      'adobe-services': ''
     }))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('add-web-assets/index.js')), expect.objectContaining({
       'skip-install': true,

@@ -38,7 +38,7 @@ beforeEach(() => {
   mockLoggerInstance.error.mockReset()
 })
 
-const fakeRequestParams = { organizationId: 'fakeOrgId', apiKey: 'fakeKey', providerId: 'fakeProvider', eventCode: 'fakeEventCode', payload: {hello: 'world'}, __ow_headers: { authorization: 'Bearer fakeToken' } }
+const fakeRequestParams = { apiKey: 'fakeKey', providerId: 'fakeProvider', eventCode: 'fakeEventCode', payload: {hello: 'world'}, __ow_headers: { authorization: 'Bearer fakeToken', 'x-gw-ims-org-id': 'fakeOrgId' } }
 describe('<%= actionName %>', () => {
   test('main should be defined', () => {
     expect(action.main).toBeInstanceOf(Function)
@@ -82,7 +82,7 @@ describe('<%= actionName %>', () => {
     expect(response).toEqual({
       error: {
         statusCode: 400,
-        body: { error: 'missing header(s) \'authorization\' and missing parameter(s) \'organizationId,apiKey,providerId,eventCode,payload\'' }
+        body: { error: 'missing header(s) \'authorization,x-gw-ims-org-id\' and missing parameter(s) \'apiKey,providerId,eventCode,payload\'' }
       }
     })
   })
