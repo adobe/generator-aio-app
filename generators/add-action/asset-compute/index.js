@@ -61,6 +61,21 @@ class AssetComputeGenerator extends ActionGenerator {
       }
     })
 
+    // modify the package.json to contain the Asset Compute testing and development tools
+    const packagejsonPath = this.destinationPath('package.json')
+    const packagejsonContent = this.fs.readJSON(packagejsonPath)
+
+    // add asset compute worker-tests in packages.json scripts
+    if (!packagejsonContent.scripts) {
+      packagejsonContent.scripts = {}
+      packagejsonContent.scripts.test = 'aio asset-compute test-worker'
+      packagejsonContent.scripts.debug = 'aio app run && aio asset-compute devtool'
+    } else {
+      packagejsonContent.scripts.test = packagejsonContent.scripts.test ? packagejsonContent.scripts.test.concat(' && aio asset-compute test-worker') : 'aio asset-compute test-worker'
+      packagejsonContent.scripts.debug = packagejsonContent.scripts.debug ? packagejsonContent.scripts.test.concat(' && aio app run && aio asset-compute devtool') : 'aio app run && aio asset-compute devtool'
+    }
+    this.fs.writeJSON(packagejsonPath, packagejsonContent)
+
     const destinationFolder = this.destinationPath(actionsDirname, this.props.actionName)
     this.fs.delete(path.join(destinationFolder, 'test')) // remove jest test setup since Asset Compute workers do not use jest
 
