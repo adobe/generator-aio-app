@@ -71,8 +71,17 @@ class AssetComputeGenerator extends ActionGenerator {
       packagejsonContent.scripts.test = 'aio asset-compute test-worker'
       packagejsonContent.scripts.debug = 'aio app run && aio asset-compute devtool'
     } else {
-      packagejsonContent.scripts.test = packagejsonContent.scripts.test ? packagejsonContent.scripts.test.concat(' && aio asset-compute test-worker') : 'aio asset-compute test-worker'
-      packagejsonContent.scripts.debug = packagejsonContent.scripts.debug ? packagejsonContent.scripts.test.concat(' && aio app run && aio asset-compute devtool') : 'aio app run && aio asset-compute devtool'
+      if (packagejsonContent.scripts.test && !packagejsonContent.scripts.test.includes('aio asset-compute test-worker')) {
+        packagejsonContent.scripts.test = packagejsonContent.scripts.test.concat(' && aio asset-compute test-worker')
+      } else {
+        packagejsonContent.scripts.test = 'aio asset-compute test-worker'
+      }
+
+      if (packagejsonContent.scripts.debug && !packagejsonContent.scripts.debug.includes('aio app run && aio asset-compute devtool')) {
+        packagejsonContent.scripts.debug = packagejsonContent.scripts.debug.concat(' && aio app run && aio asset-compute devtool')
+      } else {
+        packagejsonContent.scripts.debug = 'aio app run && aio asset-compute devtool'
+      }
     }
     this.fs.writeJSON(packagejsonPath, packagejsonContent)
 

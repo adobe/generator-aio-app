@@ -97,6 +97,12 @@ function assertDependencies () {
   assert.ok(jsonContent.devDependencies['@adobe/aio-cli-plugin-asset-compute'] !== undefined)
 }
 
+function assertScripts () {
+  const jsonContent = JSON.parse(fs.readFileSync('package.json').toString())
+  assert.ok(jsonContent.scripts.test.includes('aio asset-compute test-worker'))
+  assert.ok(jsonContent.scripts.debug.includes('aio app run && aio asset-compute devtool'))
+}
+
 describe('run', () => {
   test('asset-compute: --skip-prompt', async () => {
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
@@ -177,5 +183,56 @@ describe('run', () => {
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
     assertDependencies()
+  })
+
+  test('asset-compute: adding an action 2 times', async () => {
+    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
+
+    await helpers.run(theGeneratorPath)
+      .withOptions({ 'skip-prompt': false })
+      .withPrompts({ actionName: 'new-asset-compute-action' })
+      .inTmpDir(dir => {
+        fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
+      })
+
+    const actionName2 = 'new-asset-compute-action-second-of-its-name'
+    await helpers.run(theGeneratorPath)
+      .withOptions({ 'skip-prompt': false })
+      .withPrompts({ actionName: 'new-asset-compute-action-second-of-its-name' })
+
+    assertScripts(actionName2)
+  })
+
+  test('asset-compute: verifying scripts are not overridden', async () => {
+    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
+    const dummyPackageJson = JSON.stringify({
+      name: 'dummy-app',
+      version: '0.0.1',
+      dependencies: {
+        '@adobe/asset-compute-sdk': '^1.0.2'
+      },
+      devDependencies: {
+        jest: '^24.9.0'
+      },
+      scripts: {
+        test: 'nothing meaningful here',
+        debug: 'nothing meaningful here'
+      }
+    })
+
+    await helpers.run(theGeneratorPath)
+      .withOptions({ 'skip-prompt': false })
+      .withPrompts({ actionName: 'new-asset-compute-action' })
+      .inTmpDir(dir => {
+        fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
+        fs.writeFileSync(path.join(dir, 'package.json'), dummyPackageJson)
+      })
+
+    const actionName2 = 'new-asset-compute-action-second-of-its-name'
+    await helpers.run(theGeneratorPath)
+      .withOptions({ 'skip-prompt': false })
+      .withPrompts({ actionName: 'new-asset-compute-action-second-of-its-name' })
+
+    assertScripts(actionName2)
   })
 })
