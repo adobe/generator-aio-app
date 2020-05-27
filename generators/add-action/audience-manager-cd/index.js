@@ -55,14 +55,8 @@ class AudienceManagerCDGenerator extends ActionGenerator {
       dependencies: {
         '@adobe/aio-sdk': commonDependencyVersions['@adobe/aio-sdk']
       },
-      dotenvStub: {
-        label: 'please provide your Adobe I/O Audience Manager Customer Data integration api key',
-        vars: [
-          'AUDIENCE_MANAGER_API_KEY'
-        ]
-      },
       actionManifestConfig: {
-        inputs: { LOG_LEVEL: 'debug', apiKey: '$AUDIENCE_MANAGER_API_KEY' },
+        inputs: { LOG_LEVEL: 'debug', apiKey: '$SERVICE_API_KEY' },
         annotations: { final: true }
       }
     })

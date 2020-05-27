@@ -53,17 +53,16 @@ class CustomerProfileGenerator extends ActionGenerator {
       e2eTestFile: '../../common-templates/stub-action.e2e.js',
       tplContext: this.props,
       dotenvStub: {
-        label: 'please provide your Adobe Experience Platform: Realtime Customer Profile integration tenant, orgId and api key',
+        label: 'please provide your Adobe Experience Platform Realtime Customer Profile tenant',
         vars: [
-          'CUSTOMER_PROFILE_TENANT',
-          'CUSTOMER_PROFILE_API_KEY'
+          'CUSTOMER_PROFILE_TENANT'
         ]
       },
       dependencies: {
         '@adobe/aio-sdk': commonDependencyVersions['@adobe/aio-sdk']
       },
       actionManifestConfig: {
-        inputs: { LOG_LEVEL: 'debug', tenant: '$CUSTOMER_PROFILE_TENANT', apiKey: '$CUSTOMER_PROFILE_API_KEY' },
+        inputs: { LOG_LEVEL: 'debug', tenant: '$CUSTOMER_PROFILE_TENANT', apiKey: '$SERVICE_API_KEY' },
         annotations: { final: true } // makes sure loglevel cannot be overwritten by request param
       }
     })

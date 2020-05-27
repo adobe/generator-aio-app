@@ -53,8 +53,9 @@ describe('run', () => {
   }
 
   function expectDotEnv () {
-    assert.fileContent('.env', '# AIO_RUNTIME_AUTH=')
-    assert.fileContent('.env', '# AIO_RUNTIME_NAMESPACE=')
+    assert.fileContent('.env', 'AIO_runtime_auth=')
+    assert.fileContent('.env', 'AIO_runtime_namespace=')
+    assert.fileContent('.env', 'SERVICE_API_KEY=')
   }
 
   test('--skip-prompt --project-name fake', async () => {

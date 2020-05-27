@@ -11,8 +11,8 @@ governing permissions and limitations under the License.
 
 const path = require('path')
 const Generator = require('yeoman-generator')
-const utils = require('../../../lib/utils')
 
+const utils = require('../../../lib/utils')
 const { webAssetsDirname, dotenvFilename } = require('../../../lib/constants')
 const { sdkCodes, eventCodes } = require('../../../lib/constants')
 
@@ -69,7 +69,9 @@ class ExcReactGenerator extends Generator {
     }, true)
     // add env variable to load ui in exc shell
     utils.appendOrWrite(this, this.destinationPath(dotenvFilename),
-      'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/custom-apps/?localDevUrl="\n')
+      `## URL prefix used to run your application in the Adobe Experience Cloud Shell
+AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/custom-apps/?localDevUrl="
+`, 'AIO_LAUNCH_URL_PREFIX')
   }
 
   async install () {
