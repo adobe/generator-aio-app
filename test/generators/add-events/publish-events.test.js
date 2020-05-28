@@ -16,7 +16,7 @@ const fs = require('fs')
 const yaml = require('js-yaml')
 const path = require('path')
 
-const theGeneratorPath = require.resolve('../../../generators/add-events/cloud-events')
+const theGeneratorPath = require.resolve('../../../generators/add-events/publish-events')
 const Generator = require('yeoman-generator')
 
 const constants = require('../../../lib/constants')
@@ -117,7 +117,7 @@ describe('run', () => {
       })
 
     // default
-    const actionName = 'cloud-events'
+    const actionName = 'publish-events'
 
     assertGeneratedFiles(actionName)
     assertEventCodeContent(actionName)
@@ -135,7 +135,7 @@ describe('run', () => {
           packages: {
             __APP_PACKAGE__: {
               actions: {
-                'cloud-events': { function: 'fake.js' }
+                'publish-events': { function: 'fake.js' }
               }
             }
           }
@@ -144,7 +144,7 @@ describe('run', () => {
       })
 
     // default
-    const actionName = 'cloud-events-1'
+    const actionName = 'publish-events-1'
 
     assertGeneratedFiles(actionName)
     assertEventCodeContent(actionName)
