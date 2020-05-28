@@ -32,7 +32,7 @@ afterAll(() => {
   installDependencies.mockRestore()
 })
 
-const expectedDefaultEventsGenerator = expect.stringContaining(n('cloud-events/index.js'))
+const expectedDefaultEventsGenerator = expect.stringContaining(n('publish-events/index.js'))
 
 jest.mock('../../../lib/utils')
 
