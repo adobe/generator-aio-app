@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const excPublishEventsGenerator = path.join(__dirname, 'cloud-events/index.js')
+const excPublishEventsGenerator = path.join(__dirname, 'publish-events/index.js')
 
 /*
       'initializing',
