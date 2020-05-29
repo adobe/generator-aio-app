@@ -22,7 +22,7 @@ governing permissions and limitations under the License.
  *   - Make sure to validate these changes against your security requirements before deploying the action
  */
 const { Core } = require('@adobe/aio-sdk')
-<% if (importCode) { %><%- importCode %><% } %>
+<% if (locals.importCode) { %><%- importCode %><% } %>
 const { errorResponse, getBearerToken, stringParameters, checkMissingRequestInputs } = require('../utils')
 
 // main function that will be executed by Adobe I/O Runtime
@@ -61,5 +61,5 @@ async function main (params) {
     return errorResponse(500, 'server error', logger)
   }
 }
-
+<% if (locals.inlineUtilityFunctions) { %><%- inlineUtilityFunctions %><% } %>
 exports.main = main

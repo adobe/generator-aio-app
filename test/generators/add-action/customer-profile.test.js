@@ -15,6 +15,7 @@ const assert = require('yeoman-assert')
 const fs = require('fs')
 const yaml = require('js-yaml')
 const path = require('path')
+const { EOL } = require('os')
 
 const theGeneratorPath = require.resolve('../../../generators/add-action/customer-profile')
 const Generator = require('yeoman-generator')
@@ -60,7 +61,7 @@ function assertManifestContent (actionName) {
     inputs: {
       LOG_LEVEL: 'debug',
       tenant: '$CUSTOMER_PROFILE_TENANT',
-      apiKey: '$CUSTOMER_PROFILE_API_KEY'
+      apiKey: '$SERVICE_API_KEY'
     },
     annotations: {
       final: true,
@@ -70,9 +71,7 @@ function assertManifestContent (actionName) {
 }
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', `## please provide your Adobe Experience Platform: Realtime Customer Profile integration tenant, orgId and api key
-#CUSTOMER_PROFILE_TENANT=
-#CUSTOMER_PROFILE_API_KEY=`)
+  assert.fileContent('.env', `## please provide your Adobe Experience Platform Realtime Customer Profile tenant${EOL}#CUSTOMER_PROFILE_TENANT=`)
   assert.fileContent('.env', prevContent)
 }
 
@@ -117,7 +116,7 @@ function assertDependencies () {
 
 describe('run', () => {
   test('--skip-prompt', async () => {
-    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
       .inTmpDir(dir => {
@@ -135,7 +134,7 @@ describe('run', () => {
   })
 
   test('--skip-prompt, and action with default name already exists', async () => {
-    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
       .inTmpDir(dir => {
@@ -162,7 +161,7 @@ describe('run', () => {
   })
 
   test('user input actionName=fakeAction', async () => {
-    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
+    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': false })
       .withPrompts({ actionName: 'fakeAction' })

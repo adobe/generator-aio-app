@@ -18,7 +18,8 @@ module.exports = {
   collectCoverageFrom: [
     'lib/**/*.js',
     'generators/**/*.js',
-    '!generators/**/templates/**/*.js'
+    '!generators/**/templates/**/*.js',
+    '!generators/**/common-templates/**/*.js'
   ],
   testPathIgnorePatterns: [
     '<rootDir>/generators/',

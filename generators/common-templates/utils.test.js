@@ -1,4 +1,4 @@
-/*<% if (false) {%>
+/* <% if (false) {%>
 Copyright 2019 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
@@ -76,10 +76,10 @@ describe('checkMissingRequestInputs', () => {
     expect(utils.checkMissingRequestInputs({ a: { b: { c: 1 } }, f: { g: 2 } }, ['a.b.c', 'f'])).toEqual(null)
   })
   test('({ a: 1, __ow_headers: { h: 1, i: 2 } }, undefined, [h])', () => {
-    expect(utils.checkMissingRequestInputs({ a: 1, __ow_headers: { h:1, i:2 } }, undefined, ['h'])).toEqual(null)
+    expect(utils.checkMissingRequestInputs({ a: 1, __ow_headers: { h: 1, i: 2 } }, undefined, ['h'])).toEqual(null)
   })
   test('({ a: 1, __ow_headers: { f: 2 } }, [a], [h, i])', () => {
-    expect(utils.checkMissingRequestInputs({ a: 1, __ow_headers: { f:2 } }, ['a'], ['h', 'i'])).toEqual('missing header(s) \'h,i\'')
+    expect(utils.checkMissingRequestInputs({ a: 1, __ow_headers: { f: 2 } }, ['a'], ['h', 'i'])).toEqual('missing header(s) \'h,i\'')
   })
   test('({ c: 1, __ow_headers: { f: 2 } }, [a, b], [h, i])', () => {
     expect(utils.checkMissingRequestInputs({ c: 1 }, ['a', 'b'], ['h', 'i'])).toEqual('missing header(s) \'h,i\' and missing parameter(s) \'a,b\'')
