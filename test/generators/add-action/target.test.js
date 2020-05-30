@@ -102,7 +102,7 @@ function assertDependencies () {
       '@adobe/aio-sdk': expect.any(String)
     },
     devDependencies: {
-      '@adobe/wskdebug': expect.any(String)
+      '@openwhisk/wskdebug': expect.any(String)
     }
   })
 }
