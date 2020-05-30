@@ -7,7 +7,7 @@ A Yeoman generator for Adobe I/O Applications.
 [![Build Status](https://travis-ci.com/adobe/generator-aio-app.svg)](https://travis-ci.com/adobe/generator-aio-app)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/adobe/generator-aio-app/master.svg?style=flat-square)](https://codecov.io/gh/adobe/generator-aio-app/)
-[![Greenkeeper badge](https://badges.greenkeeper.io/adobe/generator-aio-app.svg)](https://greenkeeper.io/)
+
 
 ## Usage
 

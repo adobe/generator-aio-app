@@ -29,7 +29,7 @@
   "devDependencies": {
     "@types/jest": "^25.1.0",
     "codecov": "^3.6.5",
-    "eslint": "^6.7.2",
+    "eslint": "^7.1.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-jest": "^23.1.1",
@@ -38,12 +38,12 @@
     "eslint-plugin-standard": "^4.0.1",
     "jest": "^24.9.0",
     "yeoman-assert": "^3.1.1",
-    "yeoman-test": "^2.0.0"
+    "yeoman-test": "^2.6.0"
   },
   "dependencies": {
     "fs-extra": "^9.0.0",
-    "js-yaml": "^3.13.1",
+    "js-yaml": "^3.14.0",
     "upath": "^1.2.0",
-    "yeoman-generator": "^4.2.0"
+    "yeoman-generator": "^4.10.1"
   }
 }

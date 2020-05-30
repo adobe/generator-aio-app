@@ -44,13 +44,13 @@ class CustomerProfileGenerator extends ActionGenerator {
   }
 
   writing () {
-    this.sourceRoot(path.join(__dirname, '../templates'))
+    this.sourceRoot(path.join(__dirname, '.'))
 
-    this.addAction(this.props.actionName, './stub-action.js', {
-      testFile: '../customer-profile/templates/getProfile.test.js',
-      sharedLibFile: './utils.js',
-      sharedLibTestFile: './utils.test.js',
-      e2eTestFile: './stub-action.e2e.js',
+    this.addAction(this.props.actionName, '../../common-templates/stub-action.js', {
+      testFile: './templates/getProfile.test.js',
+      sharedLibFile: '../../common-templates/utils.js',
+      sharedLibTestFile: '../../common-templates/utils.test.js',
+      e2eTestFile: '../../common-templates/stub-action.e2e.js',
       tplContext: this.props,
       dotenvStub: {
         label: 'please provide your Adobe Experience Platform Realtime Customer Profile tenant',

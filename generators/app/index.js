@@ -43,7 +43,7 @@ class CodeGenerator extends Generator {
   async prompting () {
     this.log(`Generating code in: ${this.destinationPath()}`)
 
-    let components = ['actions', 'webAssets'] // defaults when skip prompt
+    let components = ['actions', 'events', 'webAssets'] // defaults when skip prompt
     if (!this.options['skip-prompt']) {
       const res = await this.prompt([
         {
@@ -54,6 +54,11 @@ class CodeGenerator extends Generator {
             {
               name: 'Actions: Deploy Runtime actions',
               value: 'actions',
+              checked: true
+            },
+            {
+              name: 'Events: Publish to Adobe I/O Events',
+              value: 'events',
               checked: true
             },
             {
@@ -73,6 +78,7 @@ class CodeGenerator extends Generator {
       components = res.components
     }
     const addActions = components.includes('actions')
+    const addEvents = components.includes('events')
     const addWebAssets = components.includes('webAssets')
     const addCI = components.includes('ci')
 
@@ -84,13 +90,20 @@ class CodeGenerator extends Generator {
         'adobe-services': this.options['adobe-services']
       })
     }
+    if (addEvents) {
+      this.composeWith(path.join(__dirname, '../add-events/index.js'), {
+        'skip-install': true,
+        'skip-prompt': this.options['skip-prompt'],
+        'adobe-services': this.options['adobe-services']
+      })
+    }
     if (addWebAssets) {
       this.composeWith(path.join(__dirname, '../add-web-assets/index.js'), {
         'skip-install': true,
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
         'project-name': this.options['project-name'],
-        'has-backend': addActions
+        'has-backend': addActions || addEvents
       })
     }
     if (addCI) {
