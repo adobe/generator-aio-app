@@ -15,9 +15,8 @@ const assert = require('yeoman-assert')
 const fs = require('fs')
 const yaml = require('js-yaml')
 const path = require('path')
-const { EOL } = require('os')
 
-const theGeneratorPath = require.resolve('../../../generators/add-action/analytics')
+const theGeneratorPath = require.resolve('../../../generators/add-events/publish-events')
 const Generator = require('yeoman-generator')
 
 const constants = require('../../../lib/constants')
@@ -26,6 +25,7 @@ const installDependencies = jest.spyOn(Generator.prototype, 'installDependencies
 beforeAll(() => {
   // mock implementations
   installDependencies.mockReturnValue(undefined)
+  jest.setTimeout(300000)
 })
 beforeEach(() => {
   installDependencies.mockClear()
@@ -60,8 +60,7 @@ function assertManifestContent (actionName) {
     runtime: 'nodejs:10',
     inputs: {
       LOG_LEVEL: 'debug',
-      apiKey: '$SERVICE_API_KEY',
-      companyId: '$ANALYTICS_COMPANY_ID'
+      apiKey: '$SERVICE_API_KEY'
     },
     annotations: {
       final: true,
@@ -71,35 +70,36 @@ function assertManifestContent (actionName) {
 }
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', `## please provide your Adobe I/O Analytics company id${EOL}#ANALYTICS_COMPANY_ID=`)
   assert.fileContent('.env', prevContent)
 }
 
-function assertActionCodeContent (actionName) {
+function assertEventCodeContent (actionName) {
   const theFile = `${constants.actionsDirname}/${actionName}/index.js`
-  // a few checks to make sure the action calls the analytics sdk
+  // a few checks to make sure the action calls the events sdk to publish cloud events
   assert.fileContent(
     theFile,
-    'const requiredParams = [\'apiKey\', \'companyId\']'
+    'const requiredParams = [\'apiKey\', \'providerId\', \'eventCode\', \'payload\']'
   )
   assert.fileContent(
     theFile,
-    'const requiredHeaders = [\'Authorization\']'
+    'const requiredHeaders = [\'Authorization\', \'x-gw-ims-org-id\']'
   )
   assert.fileContent(
     theFile,
-    'const analyticsClient = await Analytics.init(params.companyId, params.apiKey, token)'
+    'const eventsClient = await Events.init(orgId, params.apiKey, token)'
   )
   assert.fileContent(
     theFile,
-    'const collections = await analyticsClient.getCollections({ limit: 5, page: 0 })'
+    'const published = await eventsClient.publishEvent(cloudEvent)'
   )
 }
 
 function assertDependencies () {
   expect(JSON.parse(fs.readFileSync('package.json').toString())).toEqual({
     dependencies: {
-      '@adobe/aio-sdk': expect.any(String)
+      '@adobe/aio-sdk': expect.any(String),
+      'cloudevents-sdk': expect.any(String),
+      uuid: expect.any(String)
     },
     devDependencies: {
       '@adobe/wskdebug': expect.any(String)
@@ -109,7 +109,7 @@ function assertDependencies () {
 
 describe('run', () => {
   test('--skip-prompt', async () => {
-    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
+    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
       .inTmpDir(dir => {
@@ -117,17 +117,17 @@ describe('run', () => {
       })
 
     // default
-    const actionName = 'analytics'
+    const actionName = 'publish-events'
 
     assertGeneratedFiles(actionName)
-    assertActionCodeContent(actionName)
+    assertEventCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
     assertDependencies()
   })
 
   test('--skip-prompt, and action with default name already exists', async () => {
-    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
+    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
       .inTmpDir(dir => {
@@ -135,7 +135,7 @@ describe('run', () => {
           packages: {
             __APP_PACKAGE__: {
               actions: {
-                analytics: { function: 'fake.js' }
+                'publish-events': { function: 'fake.js' }
               }
             }
           }
@@ -144,17 +144,17 @@ describe('run', () => {
       })
 
     // default
-    const actionName = 'analytics-1'
+    const actionName = 'publish-events-1'
 
     assertGeneratedFiles(actionName)
-    assertActionCodeContent(actionName)
+    assertEventCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
     assertDependencies()
   })
 
   test('user input actionName=fakeAction', async () => {
-    const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
+    const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': false })
       .withPrompts({ actionName: 'fakeAction' })
@@ -165,7 +165,7 @@ describe('run', () => {
     const actionName = 'fakeAction'
 
     assertGeneratedFiles(actionName)
-    assertActionCodeContent(actionName)
+    assertEventCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
     assertDependencies()

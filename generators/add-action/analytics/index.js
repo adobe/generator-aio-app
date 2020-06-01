@@ -43,26 +43,25 @@ class AnalyticsGenerator extends ActionGenerator {
 
   writing () {
     // this.registerTransformStream(beautify({ indent_size: 2 }))
-    this.sourceRoot(path.join(__dirname, '../templates'))
+    this.sourceRoot(path.join(__dirname, '.'))
 
-    this.addAction(this.props.actionName, './stub-action.js', {
-      testFile: '../analytics/templates/getCollections.test.js',
-      sharedLibFile: './utils.js',
-      sharedLibTestFile: './utils.test.js',
-      e2eTestFile: './stub-action.e2e.js',
+    this.addAction(this.props.actionName, '../../common-templates/stub-action.js', {
+      testFile: './templates/getCollections.test.js',
+      sharedLibFile: '../../common-templates/utils.js',
+      sharedLibTestFile: '../../common-templates/utils.test.js',
+      e2eTestFile: '../../common-templates/stub-action.e2e.js',
       tplContext: this.props,
       dependencies: {
         '@adobe/aio-sdk': commonDependencyVersions['@adobe/aio-sdk']
       },
       dotenvStub: {
-        label: 'please provide your Adobe I/O Analytics integration company id and api key',
+        label: 'please provide your Adobe I/O Analytics company id',
         vars: [
-          'ANALYTICS_COMPANY_ID',
-          'ANALYTICS_API_KEY'
+          'ANALYTICS_COMPANY_ID'
         ]
       },
       actionManifestConfig: {
-        inputs: { LOG_LEVEL: 'debug', companyId: '$ANALYTICS_COMPANY_ID', apiKey: '$ANALYTICS_API_KEY' },
+        inputs: { LOG_LEVEL: 'debug', companyId: '$ANALYTICS_COMPANY_ID', apiKey: '$SERVICE_API_KEY' },
         annotations: { final: true }
       }
     })

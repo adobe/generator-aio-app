@@ -10,7 +10,7 @@ governing permissions and limitations under the License.
 */
 const path = require('path')
 const yaml = require('js-yaml')
-
+const { EOL } = require('os')
 const constants = require('../../lib/constants')
 
 jest.mock('yeoman-generator')
@@ -295,36 +295,38 @@ describe('implementation', () => {
       }))
     })
 
-    test('with dotenvStub option (dotenv must exists)', () => {
+    test('with dotenvStub option (dotenv exists)', () => {
       // mock fs
       actionGenerator.fs = {
         copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
+        exists: jest.fn().mockImplementation(f => f === n(`/fakeDestRoot/${constants.dotenvFilename}`)),
         write: jest.fn(),
-        read: jest.fn().mockReturnValue('PREV=123\n'), // previous dotenv content
+        append: jest.fn(),
+        read: jest.fn().mockReturnValue(`PREV=123${EOL}`), // previous dotenv content
         writeJSON: jest.fn(),
         readJSON: jest.fn().mockReturnValue({}) // package.json read
       }
       actionGenerator.addAction('myAction', './templateFile.js', { dotenvStub: { label: 'fake label', vars: ['FAKE', 'FAKE2'] } })
 
-      // test manifest update with action information
-      expect(actionGenerator.fs.write).toHaveBeenCalledWith(n(`/fakeDestRoot/${constants.dotenvFilename}`), 'PREV=123\n\n## fake label\n#FAKE=\n#FAKE2=\n')
+      expect(actionGenerator.fs.append).toHaveBeenCalledWith(n(`/fakeDestRoot/${constants.dotenvFilename}`), `## fake label${EOL}#FAKE=${EOL}#FAKE2=${EOL}`)
     })
 
     test('with dotenvStub option but dotenv label is already set in dotenv (should ignore)', () => {
       // mock fs
       actionGenerator.fs = {
         copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
+        exists: jest.fn().mockImplementation(f => f === n(`/fakeDestRoot/${constants.dotenvFilename}`)),
         write: jest.fn(),
+        append: jest.fn(),
         read: jest.fn().mockReturnValue('## fake label\nPREV=123\n'), // previous dotenv content
         writeJSON: jest.fn(),
         readJSON: jest.fn().mockReturnValue({}) // package.json read
       }
       actionGenerator.addAction('myAction', './templateFile.js', { dotenvStub: { label: 'fake label', vars: ['FAKE', 'FAKE2'] } })
 
-      // test manifest update with action information
-      expect(actionGenerator.fs.write).not.toHaveBeenCalledWith(n(`/fakeDestRoot/${constants.dotenvFilename}`), expect.any(String))
+      expect(actionGenerator.fs.write).toHaveBeenCalledTimes(1) // manifest.yml
+      expect(actionGenerator.fs.write).toBeCalledWith(n('/fakeDestRoot/manifest.yml'), expect.any(String))
+      expect(actionGenerator.fs.append).not.toHaveBeenCalled()
     })
 
     test('with testFile option', () => {
