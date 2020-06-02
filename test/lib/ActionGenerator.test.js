@@ -182,7 +182,7 @@ describe('implementation', () => {
       // 3. make sure wskdebug dependency was added to package.json
       expect(actionGenerator.fs.writeJSON).toHaveBeenCalledWith(n('/fakeDestRoot/package.json'), {
         devDependencies: {
-          '@adobe/wskdebug': '^1.1.0'
+          '@openwhisk/wskdebug': expect.any(String)
         }
       })
     })
@@ -241,7 +241,7 @@ describe('implementation', () => {
         devDependencies: {
           xyz: '3.2.1',
           vuw: '6.5.4',
-          '@adobe/wskdebug': '^1.1.0'
+          '@openwhisk/wskdebug': expect.any(String)
         }
       })
     })

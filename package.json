@@ -1,6 +1,6 @@
 {
   "name": "@adobe/generator-aio-app",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Adobe I/O application yeoman code generator",
   "main": "generators/app/index.js",
   "scripts": {
@@ -37,6 +37,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "jest": "^24.9.0",
+    "stdout-stderr": "^0.1.13",
     "yeoman-assert": "^3.1.1",
     "yeoman-test": "^2.6.0"
   },
