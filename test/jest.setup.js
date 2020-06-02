@@ -10,10 +10,15 @@ governing permissions and limitations under the License.
 */
 
 const path = require('path')
+const { stdout, stderr } = require('stdout-stderr')
 
 process.on('unhandledRejection', error => {
   throw error
 })
+
+// trap console log
+beforeEach(() => { stdout.start(); stderr.start(); stdout.print = true })
+afterEach(() => { stdout.stop(); stderr.stop() })
 
 // quick normalization to test windows/unix paths
 global.n = p => path.normalize(p)

@@ -91,7 +91,7 @@ describe('guessProjectName', () => {
     const spy = jest.spyOn(process, 'cwd')
     spy.mockReturnValue('FAKECWD')
     expect(utils.guessProjectName({
-      destinationPath: () => {},
+      destinationPath: () => { },
       fs: {
         exists: () => false
       }
@@ -103,7 +103,7 @@ describe('guessProjectName', () => {
     const spy = jest.spyOn(process, 'cwd')
     spy.mockReturnValue('FAKECWD')
     expect(utils.guessProjectName({
-      destinationPath: () => {},
+      destinationPath: () => { },
       fs: {
         exists: () => true,
         readJSON: () => ({})
@@ -114,11 +114,68 @@ describe('guessProjectName', () => {
 
   test('returns package.json[name] if package.json exists and has a name attribut', () => {
     expect(utils.guessProjectName({
-      destinationPath: () => {},
+      destinationPath: () => { },
       fs: {
         exists: () => true,
         readJSON: () => ({ name: 'FAKENAME' })
       }
     })).toEqual('FAKENAME')
+  })
+})
+
+describe('addPkgScript', () => {
+  test('adds scripts to package.json', () => {
+    const mockRead = jest.fn(() => {
+      return ({ name: 'bob', scripts: { scripta: 'a' } })
+    })
+    const mockWrite = jest.fn()
+    const generator = {
+      destinationPath: () => 'some-path',
+      fs: {
+        readJSON: mockRead,
+        writeJSON: mockWrite
+      }
+    }
+    utils.addPkgScript(generator, { scriptb: 'b' })
+
+    expect(mockRead).toHaveBeenCalledTimes(1)
+    expect(mockWrite).toHaveBeenCalledTimes(1)
+    expect(mockWrite).toHaveBeenCalledWith('some-path', expect.objectContaining({ name: 'bob', scripts: { scripta: 'a', scriptb: 'b' } }))
+  })
+
+  test('overwrites existing scripts package.json', () => {
+    const mockRead = jest.fn(() => {
+      return ({ name: 'bob', scripts: { scripta: 'a' } })
+    })
+    const mockWrite = jest.fn()
+    const generator = {
+      destinationPath: () => 'some-path',
+      fs: {
+        readJSON: mockRead,
+        writeJSON: mockWrite
+      }
+    }
+    utils.addPkgScript(generator, { scripta: 'b' })
+
+    expect(mockRead).toHaveBeenCalledTimes(1)
+    expect(mockWrite).toHaveBeenCalledTimes(1)
+    expect(mockWrite).toHaveBeenCalledWith('some-path', expect.objectContaining({ name: 'bob', scripts: { scripta: 'b' } }))
+  })
+
+  test('writes package.json if null', () => {
+    const mockRead = jest.fn()
+    const mockWrite = jest.fn()
+    const generator = {
+      destinationPath: () => 'some-path',
+      fs: {
+        readJSON: mockRead,
+        writeJSON: mockWrite
+      }
+    }
+    utils.addPkgScript(generator, { scripta: 'b' })
+
+    expect(mockRead).toHaveBeenCalledTimes(1)
+    expect(mockWrite).toHaveBeenCalledTimes(1)
+    expect(mockWrite).toHaveBeenCalledWith('some-path', expect.objectContaining({ scripts: { scripta: 'b' } }))
   })
 })

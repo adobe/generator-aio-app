@@ -85,7 +85,7 @@ function assertDependencies () {
       'node-fetch': expect.any(String)
     },
     devDependencies: {
-      '@adobe/wskdebug': expect.any(String)
+      '@openwhisk/wskdebug': expect.any(String)
     }
   })
 }
