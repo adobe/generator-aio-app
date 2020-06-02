@@ -8,7 +8,7 @@
       "jest": "^24.9.0"
   },
   "scripts": {
-      "test": "jest",
+      "test": "jest --passWithNoTests ./test",
       "e2e": "jest --collectCoverage=false --testRegex ./e2e"
   }
 }
