@@ -102,7 +102,7 @@ function assertDependencies () {
       uuid: expect.any(String)
     },
     devDependencies: {
-      '@adobe/wskdebug': expect.any(String)
+      '@openwhisk/wskdebug': expect.any(String)
     }
   })
 }
