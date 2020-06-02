@@ -11,6 +11,9 @@ dist
 config.json
 .env
 
+# Adobe I/O console config
+console.json
+
 # Test output
 junit.xml
 
@@ -28,3 +31,5 @@ coverage
 
 # yeoman
 .yo-repository
+
+
