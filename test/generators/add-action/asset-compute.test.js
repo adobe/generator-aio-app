@@ -41,14 +41,15 @@ describe('prototype', () => {
 })
 
 function assertGeneratedFiles (actionName) {
-  const targetPath = `actions/${actionName}`
+  const actionPath = `actions/${actionName}`
+  const testPath = `test/asset-compute/${actionName}`
 
-  assert.file(`${targetPath}/index.js`)
-  assert.file(`${targetPath}/tests/corrupt-input/file.jpg`)
-  assert.file(`${targetPath}/tests/corrupt-input/params.json`)
-  assert.file(`${targetPath}/tests/simple-test/file.jpg`)
-  assert.file(`${targetPath}/tests/simple-test/params.json`)
-  assert.file(`${targetPath}/tests/simple-test/rendition.jpg`)
+  assert.file(`${actionPath}/index.js`)
+  assert.file(`${testPath}/corrupt-input/file.jpg`)
+  assert.file(`${testPath}/corrupt-input/params.json`)
+  assert.file(`${testPath}/simple-test/file.jpg`)
+  assert.file(`${testPath}/simple-test/params.json`)
+  assert.file(`${testPath}/simple-test/rendition.jpg`)
 
   assert.file('manifest.yml')
   assert.file('.env')

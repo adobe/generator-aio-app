@@ -9,7 +9,6 @@ coverage
 .eslintignore
 build/
 coverage/
-nui/
 .releaserc.json
 .travis.yml
 

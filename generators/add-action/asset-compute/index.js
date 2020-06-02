@@ -15,7 +15,6 @@ governing permissions and limitations under the License.
 
 const path = require('path')
 const ActionGenerator = require('../../../lib/ActionGenerator')
-const { actionsDirname } = require('../../../lib/constants')
 
 class AssetComputeGenerator extends ActionGenerator {
   constructor (args, opts) {
@@ -84,14 +83,13 @@ class AssetComputeGenerator extends ActionGenerator {
       }
     }
     this.fs.writeJSON(packagejsonPath, packagejsonContent)
+    const testsFilePath = this.destinationPath('test', 'asset-compute', this.props.actionName)
+    this.fs.delete(this.destinationPath('test/jest.setup.js')) // remove jest test setup since Asset Compute workers do not use jest
 
-    const destinationFolder = this.destinationPath(actionsDirname, this.props.actionName)
-    this.fs.delete(path.join(destinationFolder, 'test')) // remove jest test setup since Asset Compute workers do not use jest
-
-    const workerTemplateFiles = `${this.templatePath()}/**/!(_)*/` // copy the rest of the worker template files
+    const workerTemplateTestFiles = `${this.templatePath()}/test/` // copy the rest of the worker template files
     this.fs.copyTpl(
-      workerTemplateFiles,
-      destinationFolder,
+      workerTemplateTestFiles,
+      testsFilePath,
       this.props
     )
   }
