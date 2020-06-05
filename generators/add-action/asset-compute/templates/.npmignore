@@ -2,7 +2,6 @@
 # it does not lookup .npmignore from parent folders
 
 .vscode
-coverage
 .nyc_output
 .circleci
 .eslintrc.js
