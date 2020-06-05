@@ -35,7 +35,7 @@ class AssetComputeGenerator extends ActionGenerator {
         '@adobe/asset-compute-sdk': '^1.0.2'
       },
       devDependencies: {
-        '@adobe/aio-cli-plugin-asset-compute': '^1.0.1'
+        '@adobe/aio-cli-plugin-asset-compute': '^1.3.0'
       },
       //   scripts: { // where to put the scripts?
       //     'asset-compute-debug': 'aio app run && aio asset-compute devtool',
