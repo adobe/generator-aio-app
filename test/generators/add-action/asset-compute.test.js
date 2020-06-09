@@ -100,8 +100,8 @@ function assertDependencies () {
 
 function assertScripts () {
   const jsonContent = JSON.parse(fs.readFileSync('package.json').toString())
-  assert.ok(jsonContent.scripts.test.includes('asset-compute test-worker'))
-  assert.ok(jsonContent.scripts.debug.includes('asset-compute devtool'))
+  assert.ok(jsonContent.scripts.test.includes('adobe-asset-compute test-worker'))
+  assert.ok(jsonContent.scripts.debug.includes('adobe-asset-compute devtool'))
 }
 
 describe('run', () => {

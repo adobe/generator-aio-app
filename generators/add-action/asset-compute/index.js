@@ -63,19 +63,19 @@ class AssetComputeGenerator extends ActionGenerator {
     // add asset compute worker-tests in packages.json scripts
     if (!packagejsonContent.scripts) {
       packagejsonContent.scripts = {}
-      packagejsonContent.scripts.test = 'asset-compute test-worker'
-      packagejsonContent.scripts.debug = 'app run && asset-compute devtool'
+      packagejsonContent.scripts.test = 'adobe-asset-compute test-worker'
+      packagejsonContent.scripts.debug = 'app run && adobe-asset-compute devtool'
     } else {
-      if (packagejsonContent.scripts.test && !packagejsonContent.scripts.test.includes('asset-compute test-worker')) {
-        packagejsonContent.scripts.test = packagejsonContent.scripts.test.concat(' && asset-compute test-worker')
+      if (packagejsonContent.scripts.test && !packagejsonContent.scripts.test.includes('adobe-asset-compute test-worker')) {
+        packagejsonContent.scripts.test = packagejsonContent.scripts.test.concat(' && adobe-asset-compute test-worker')
       } else {
-        packagejsonContent.scripts.test = 'asset-compute test-worker'
+        packagejsonContent.scripts.test = 'adobe-asset-compute test-worker'
       }
 
-      if (packagejsonContent.scripts.debug && !packagejsonContent.scripts.debug.includes('aio app run && asset-compute devtool')) {
-        packagejsonContent.scripts.debug = packagejsonContent.scripts.debug.concat(' && aio app run && asset-compute devtool')
+      if (packagejsonContent.scripts.debug && !packagejsonContent.scripts.debug.includes('aio app run && adobe-asset-compute devtool')) {
+        packagejsonContent.scripts.debug = packagejsonContent.scripts.debug.concat(' && aio app run && adobe-asset-compute devtool')
       } else {
-        packagejsonContent.scripts.debug = 'aio app run && asset-compute devtool'
+        packagejsonContent.scripts.debug = 'aio app run && adobe-asset-compute devtool'
       }
     }
     this.fs.writeJSON(packagejsonPath, packagejsonContent)
