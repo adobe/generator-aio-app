@@ -65,7 +65,7 @@ https://ns.adobeioruntime.net/api/v1/web/worker-1.0.0/worker
 
 ### Use
 
-To use the custom worker with the Asset Compute Service, include a new rendition in the [`/process` request](https://git.corp.adobe.com/nui/nui/blob/master/doc/api.md#process) with the `worker` field set to the worker URL:
+To use the custom worker with the Asset Compute Service, include a new rendition in the `/process` request with the `worker` field set to the worker URL:
 
 ```
 "renditions": [
