@@ -11,10 +11,7 @@ governing permissions and limitations under the License.
 
 const Generator = require('yeoman-generator')
 const path = require('path')
-const fs = require('fs-extra')
-const yaml = require('js-yaml')
-
-const { manifestPackagePlaceholder, actionsDirname } = require('../../lib/constants')
+const deleteActionGenerator = path.join(__dirname, '../delete-action/index.js')
 
 /*
       'initializing',
@@ -36,60 +33,9 @@ class DeleteEvents extends Generator {
     this.option('action-name', { type: String, default: '' })
   }
 
-  initializing () {
-    if (this.options['skip-prompt'] && !this.options['action-name']) {
-      throw new Error('--skip-prompt option provided but missing --action-name')
-    }
-
-    this.manifestContent = fs.existsSync(this.destinationPath('manifest.yml')) && yaml.safeLoad(fs.readFileSync(this.destinationPath('manifest.yml')).toString())
-    this.manifestActions = this.manifestContent && this.manifestContent.packages[manifestPackagePlaceholder].actions
-    if (!this.manifestContent || Object.keys(this.manifestActions).length === 0) throw new Error('you have no actions in your project')
-  }
-
   async prompting () {
-    this.actionName = this.options['action-name']
-    if (!this.actionName) {
-      const resAction = await this.prompt([
-        {
-          type: 'list',
-          name: 'actionName',
-          message: 'Which action do you whish to delete from the project?\nselect action to delete',
-          choices: Object.keys(this.manifestActions),
-          when: !this.options['skip-prompt'] && !this.options['action-name']
-        }
-      ])
-      this.actionName = resAction.actionName
-    }
-
-    if (!this.manifestActions[this.actionName]) {
-      throw new Error(`action name '${this.actionName}' does not exist`)
-    }
-  }
-
-  async end () {
-    const resConfirm = await this.prompt([
-      {
-        type: 'confirm',
-        name: 'deleteEventAction',
-        message: `Please confirm the deletion of the event action '${this.actionName}' and all its source code`,
-        when: !this.options['skip-prompt']
-      }
-    ])
-    if (this.options['skip-prompt'] || resConfirm.deleteEventAction) {
-      this.log(`> deleting action '${this.actionName}', please make sure to cleanup associated dependencies and configurations yourself`)
-
-      this.actionPath = this.destinationPath(this.manifestActions[this.actionName].function)
-
-      // todo how to do this using this.fs ?
-      if (fs.statSync(this.actionPath).isFile()) this.actionPath = path.dirname(this.actionPath)
-
-      fs.removeSync(this.actionPath) // will make user prompt for all files if not --force
-      delete this.manifestActions[this.actionName]
-      fs.writeFileSync(this.destinationPath('manifest.yml'), yaml.safeDump(this.manifestContent))
-
-      fs.removeSync(this.destinationPath('e2e', actionsDirname, this.actionName + '.e2e.js')) // remove e2e test
-      fs.removeSync(this.destinationPath('test', actionsDirname, this.actionName + '.test.js')) // remove unit test
-    }
+    const eventGenerator = deleteActionGenerator
+    this.composeWith(eventGenerator, this.options)
   }
 }
 
