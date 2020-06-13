@@ -112,7 +112,7 @@ describe('run', () => {
     assertEnvContent(prevDotEnv)
 
     // greats with projectName
-    assert.fileContent('web-src/src/App.js', 'Welcome to abc!</Heading>')
+    assert.fileContent('web-src/src/App.js', 'Welcome to abc!')
 
     // make sure html calls js files
     assert.fileContent('web-src/index.html', '<script src="./src/index.js"')
@@ -135,7 +135,7 @@ describe('run', () => {
     assertEnvContent(prevDotEnv)
 
     // greats with projectName
-    assert.fileContent('web-src/src/App.js', 'Welcome to abc!</Heading>')
+    assert.fileContent('web-src/src/App.js', 'Welcome to abc!')
 
     // make sure html calls js files
     assert.fileContent('web-src/index.html', '<script src="./src/index.js"')
