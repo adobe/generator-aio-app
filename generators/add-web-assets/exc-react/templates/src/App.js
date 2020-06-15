@@ -26,7 +26,7 @@ import { Picker, Item } from '@react-spectrum/picker'
 import { Form } from '@react-spectrum/form'
 import { Flex } from '@react-spectrum/layout'
 import { ProgressCircle } from '@react-spectrum/progress'
-import { Heading, Text } from '@react-spectrum/typography';
+import { Heading, Text } from '@react-spectrum/text';
 
 // local imports
 import './App.css'
@@ -142,7 +142,7 @@ export default class App extends React.Component {
       <ErrorBoundary onError={ this.onError } FallbackComponent={ this.fallbackComponent } >
       <Provider UNSAFE_className='provider' theme={ theme }>
         <Flex UNSAFE_className='main'>
-          <h1 className='main-title'>Welcome to <%= projectName %>!</h1>
+          <Heading UNSAFE_className='main-title'>Welcome to <%= projectName %>!</Heading>
 <% if (hasBackend) { %>
           <Flex UNSAFE_className='main-actions'>
             <h3 className='actions-title'>Run your application backend actions</h3>
@@ -154,7 +154,7 @@ export default class App extends React.Component {
                 items={ Object.keys(actions).map(k => ({ name: k })) }
                 itemKey='name'
                 onSelectionChange={ name => this.setState({ actionSelected: name, actionResponseError: null, actionResponse: null }) }>
-                { item => <Item key={'itm_' + item.name}>{ item.name }</Item> }
+                { item => <Item key={item.name}>{ item.name }</Item> }
               </Picker>
               <TextField
                 label='headers'
