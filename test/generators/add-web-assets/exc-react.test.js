@@ -58,6 +58,7 @@ function assertDependencies () {
       '@react-spectrum/picker': expect.any(String),
       '@react-spectrum/progress': expect.any(String),
       '@react-spectrum/provider': expect.any(String),
+      '@react-spectrum/text': expect.any(String),
       '@react-spectrum/textfield': expect.any(String),
       '@react-spectrum/theme-default': expect.any(String),
       '@react-spectrum/typography': expect.any(String)
