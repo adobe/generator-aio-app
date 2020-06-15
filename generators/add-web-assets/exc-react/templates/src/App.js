@@ -154,7 +154,7 @@ export default class App extends React.Component {
                 items={ Object.keys(actions).map(k => ({ name: k })) }
                 itemKey='name'
                 onSelectionChange={ name => this.setState({ actionSelected: name, actionResponseError: null, actionResponse: null }) }>
-                { item => <Item key={'itm_' + item.name}>{ item.name }</Item> }
+                { item => <Item key={item.name}>{ item.name }</Item> }
               </Picker>
               <TextField
                 label='headers'
