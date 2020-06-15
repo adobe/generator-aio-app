@@ -107,7 +107,7 @@ function assertScripts () {
 describe('run', () => {
   test('asset-compute: --skip-prompt', async () => {
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
-    const actionName = 'worker-example' // default value
+    const actionName = 'worker' // default value
 
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
@@ -124,7 +124,7 @@ describe('run', () => {
 
   test('asset-compute: --skip-prompt, and action with default name already exists', async () => {
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
-    const actionName = 'worker-example'
+    const actionName = 'worker'
 
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
@@ -150,7 +150,7 @@ describe('run', () => {
 
   test('asset-compute: --skip-prompt, and action already has package.json with scripts', async () => {
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
-    const actionName = 'worker-example'
+    const actionName = 'worker'
 
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true })
