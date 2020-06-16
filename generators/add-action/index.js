@@ -21,6 +21,7 @@ const sdkCodeToActionGenerator = {
   [sdkCodes.target]: path.join(__dirname, 'target/index.js'),
   [sdkCodes.analytics]: path.join(__dirname, 'analytics/index.js'),
   [sdkCodes.campaign]: path.join(__dirname, 'campaign-standard/index.js'),
+  [sdkCodes.assetCompute]: path.join(__dirname, 'asset-compute/index.js'),
   [sdkCodes.customerProfile]: path.join(__dirname, 'customer-profile/index.js'),
   [sdkCodes.audienceManagerCD]: path.join(__dirname, 'audience-manager-cd/index.js')
 }
@@ -29,9 +30,9 @@ const sdkCodeToTitle = {
   [sdkCodes.target]: 'Adobe Target',
   [sdkCodes.analytics]: 'Adobe Analytics',
   [sdkCodes.campaign]: 'Adobe Campaign Standard',
+  [sdkCodes.assetCompute]: 'Asset Compute Worker',
   [sdkCodes.customerProfile]: 'Adobe Experience Platform: Realtime Customer Profile',
   [sdkCodes.audienceManagerCD]: 'Adobe Audience Manager: Customer Data'
-
 }
 
 const genericActionGenerator = path.join(__dirname, 'generic/index.js')
