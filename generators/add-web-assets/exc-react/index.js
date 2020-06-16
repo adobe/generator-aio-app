@@ -59,8 +59,7 @@ class ExcReactGenerator extends Generator {
       '@react-spectrum/provider': '3.0.0-rc.2',
       '@react-spectrum/text': '3.0.0-rc.0',
       '@react-spectrum/textfield': '3.0.0-rc.2',
-      '@react-spectrum/theme-default': '3.0.0-rc.2',
-      '@react-spectrum/typography': '3.0.0-alpha.1'
+      '@react-spectrum/theme-default': '3.0.0-rc.2'
     })
     utils.addDependencies(this, {
       '@babel/core': '^7.8.7',
