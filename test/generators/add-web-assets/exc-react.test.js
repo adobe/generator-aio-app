@@ -60,8 +60,7 @@ function assertDependencies () {
       '@react-spectrum/provider': expect.any(String),
       '@react-spectrum/text': expect.any(String),
       '@react-spectrum/textfield': expect.any(String),
-      '@react-spectrum/theme-default': expect.any(String),
-      '@react-spectrum/typography': expect.any(String)
+      '@react-spectrum/theme-default': expect.any(String)
     },
     devDependencies: {
       '@babel/core': expect.any(String),
