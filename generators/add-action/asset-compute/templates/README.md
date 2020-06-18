@@ -30,7 +30,25 @@ The following are required to use the developer tool:
 - Access a [cloud storage container](https://github.com/adobe/asset-compute-devtool#1-s3-bucket-or-azure-blob-storage-credentials). (Currently we only support Azure Blob Storage and AWS S3).
 - [Adobe I/O Console Project with Asset Compute and dependent services enabled](https://github.com/adobe/asset-compute-devtool#2-adobe-io-console-technical-integration).
 
-Make sure to properly configured the required [developer tool credentials](https://github.com/adobe/asset-compute-devtool#environment-variables) in the `.env` file.
+
+#### Environment Variables
+Make sure to set the required environment variables in the `.env` file:
+- `AIO_runtime_namespace`: namespace name from the Firefly Project (should be filled in already if logged into console during `aio app init`)
+- `AIO_runtime_auth`: namespace auth from the Firefly Project (should be filled in already if logged into console `aio app init`)
+- `ASSET_COMPUTE_INTEGRATION_FILE_PATH`: path to credentials yaml for Adobe I/O Console project with Asset Compute and dependent services enabled
+- One of the following sets of cloud storage credentials:
+    ```
+    # S3 credentials
+    S3_BUCKET=
+    AWS_ACCESS_KEY_ID=
+    AWS_SECRET_ACCESS_KEY=
+    AWS_REGION=
+
+    # Azure Storage credentials
+    AZURE_STORAGE_ACCOUNT=
+    AZURE_STORAGE_KEY=
+    AZURE_STORAGE_CONTAINER_NAME=
+    ```
 
 #### Running the Application
 
