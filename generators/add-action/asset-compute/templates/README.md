@@ -5,9 +5,9 @@ This is a very simple example of a custom Asset Compute worker. It generates a r
 ## Code
 
 The key elements are
-- [worker.js](worker.js) - nodejs action with the worker logic
-- [manifest.yml](manifest.yml) - describes the Runtime action that gets deployed using `aio`
-- [tests/](tests) - worker test cases
+- `actions/<worker-name>/index.js` - nodejs action with the worker logic
+- `manifest.yml` - describes the Runtime action that gets deployed using `aio`
+- `test/asset-compute/<worker-name>/` - worker test cases
 
 In the [manifest.yml](manifest.yml) the single action is set to be a web action and that it requires standard Adobe ID authentication & authorization:
 
@@ -16,64 +16,60 @@ packages:
   __APP_PACKAGE__:
     actions:
       worker:
-        function: 'worker.js'
+        function: actions/worker/index.js
         runtime: 'nodejs:10'
         web: true
         annotations:
           require-adobe-auth: true
 ```
 
-## Install
+### Local Development
+**Pre-requisites**
 
-Requirements:
+The following are required to use the developer tool:
+- Access a [cloud storage container](https://github.com/adobe/asset-compute-devtool#1-s3-bucket-or-azure-blob-storage-credentials). (Currently we only support Azure Blob Storage and AWS S3).
+- [Adobe I/O Console Project with Asset Compute and dependent services enabled](https://github.com/adobe/asset-compute-devtool#2-adobe-io-console-technical-integration).
 
-* [aio cli](https://github.com/adobe/aio-cli)
-* [asset-compute plugin for aio](https://github.com/adobe/aio-cli-plugin-asset-compute) 
-* Adobe IO Runtime namespace where you want to install the worker into
-* `.env` file in the root directory with the credentials of the Runtime namespace, and these variables:
-  - `AIO_RUNTIME_NAMESPACE` for the namespace name (`NAMESPACE` from `.wskprops`)
-  - `AIO_RUNTIME_AUTH` for the namespace name (`AUTH` from `.wskprops`)
-  - Make sure to not commit the `.env` file to git!
+Make sure to properly configured the required [developer tool credentials](https://github.com/adobe/asset-compute-devtool#environment-variables) in the `.env` file.
 
-### Test
+#### Running the Application
 
-This runs the worker test cases in [tests](tests):
-
+To run the application, use the following command:
+```bash
+aio app run
 ```
-npm test
-```
+This will deploy the action to Adobe I/O Runtime and start the development tool on your local machine. This tool is used for testing worker requests during development. Here is an example rendition request:
 
-### Deploy
-
-```
-aio app deploy
-```
-
-The deployed version should look like this if you run `wsk action list`:
-
-```
-actions
-/ns/worker-1.0.0/worker                           private sequence
-/ns/worker-1.0.0/__secured_worker                 private nodejs:10
-```
-
-The `aio app deploy` output will show the URL of the worker:
-
-```
-https://ns.adobeioruntime.net/api/v1/web/worker-1.0.0/worker
-```
-
-### Use
-
-To use the custom worker with the Asset Compute Service, include a new rendition in the `/process` request with the `worker` field set to the worker URL:
-
-```
+```json
 "renditions": [
     {
-        "worker": "https://ns.adobeioruntime.net/api/v1/web/worker-1.0.0/worker",
+        "worker": "https://1234_my_namespace.adobeioruntime.net/api/v1/web/example-custom-worker-master/worker",
         "name": "image.jpg"
     }
 ]
 ```
 
 (The `name` field is only needed for use in Asset Compute Devtool to display image renditions in the browser).
+
+#### Debug
+
+To start the debugger, add necessary breakpoints and run the following command:
+```bash
+aio app run --local
+```
+
+#### Test
+
+To test the worker, run the following command:
+```bash
+aio app test
+```
+
+#### Deploy
+
+To deploy the worker, run the following command:
+```bash
+aio app deploy
+```
+
+To use the custom worker with the Asset Compute Service, include a new rendition in the `/process` request with the `worker` field set to the worker URL:
