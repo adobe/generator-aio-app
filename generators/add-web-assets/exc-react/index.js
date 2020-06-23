@@ -50,17 +50,16 @@ class ExcReactGenerator extends Generator {
       'react-error-boundary': '^1.2.5',
       'regenerator-runtime': '^0.13.5',
       '@adobe/exc-app': '^0.2.14',
-      '@react-spectrum/button': '3.0.0-rc.2',
-      '@react-spectrum/form': '3.0.0-rc.2',
-      '@react-spectrum/layout': '3.0.0-alpha.1',
-      '@react-spectrum/link': '3.0.0-alpha.1',
-      '@react-spectrum/picker': '3.0.0-alpha.1',
-      '@react-spectrum/progress': '3.0.0-rc.2',
-      '@react-spectrum/provider': '3.0.0-rc.2',
+      '@react-spectrum/button': '3.0.0-rc.3',
+      '@react-spectrum/form': '3.0.0-rc.3',
+      '@react-spectrum/layout': '3.0.0-rc.0',
+      '@react-spectrum/link': '3.0.0-rc.0',
+      '@react-spectrum/picker': '3.0.0-rc.0',
+      '@react-spectrum/progress': '3.0.0-rc.3',
+      '@react-spectrum/provider': '3.0.0-rc.3',
       '@react-spectrum/text': '3.0.0-rc.0',
-      '@react-spectrum/textfield': '3.0.0-rc.2',
-      '@react-spectrum/theme-default': '3.0.0-rc.2',
-      '@react-spectrum/typography': '3.0.0-alpha.1'
+      '@react-spectrum/textfield': '3.0.0-rc.3',
+      '@react-spectrum/theme-default': '3.0.0-rc.3'
     })
     utils.addDependencies(this, {
       '@babel/core': '^7.8.7',
