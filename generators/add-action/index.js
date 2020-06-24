@@ -30,7 +30,7 @@ const sdkCodeToTitle = {
   [sdkCodes.target]: 'Adobe Target',
   [sdkCodes.analytics]: 'Adobe Analytics',
   [sdkCodes.campaign]: 'Adobe Campaign Standard',
-  [sdkCodes.assetCompute]: 'Asset Compute Worker',
+  [sdkCodes.assetCompute]: 'Adobe Asset Compute Worker',
   [sdkCodes.customerProfile]: 'Adobe Experience Platform: Realtime Customer Profile',
   [sdkCodes.audienceManagerCD]: 'Adobe Audience Manager: Customer Data'
 }
