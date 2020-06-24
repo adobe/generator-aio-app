@@ -206,7 +206,7 @@ export default class App extends React.Component {
             </Link>
             <Link UNSAFE_className='doc-item'>
               <a href='https://github.com/adobe/aio-sdk#adobeaio-sdk' target='_blank'>
-                Firefly SDKs
+                Adobe I/O SDK
               </a>
             </Link>
 <% if (hasBackend) { %>            <Link UNSAFE_className='doc-item'>
