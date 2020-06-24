@@ -215,7 +215,7 @@ export default class App extends React.Component {
               </a>
             </Link><% } %>
             <Link UNSAFE_className='doc-item'>
-              <a href='https://react-spectrum.adobe.com/docs/react-spectrum/ActionButton.html' target='_blank'>
+              <a href='https://react-spectrum.adobe.com/react-spectrum/index.html' target='_blank'>
                 React Spectrum
               </a>
             </Link>
