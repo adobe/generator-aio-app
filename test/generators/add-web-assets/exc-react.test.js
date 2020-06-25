@@ -93,7 +93,7 @@ function assertWithNoActions () {
 function assertWithDoc () {
   assert.fileContent('web-src/src/App.js', 'Useful documentation for your app')
   assert.fileContent('web-src/src/App.js', 'Firefly Apps')
-  assert.fileContent('web-src/src/App.js', 'Firefly SDKs')
+  assert.fileContent('web-src/src/App.js', 'Adobe I/O SDK')
   assert.fileContent('web-src/src/App.js', 'React Spectrum')
 }
 
