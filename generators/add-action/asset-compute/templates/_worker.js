@@ -1,7 +1,7 @@
 'use strict';
 
 const { worker } = require('@adobe/asset-compute-sdk');
-const { SourceCorrupt } = require('@adobe/asset-compute-sdk/errors');
+const { SourceCorruptError } = require('@adobe/asset-compute-sdk/errors');
 const fs = require('fs').promises;
 
 exports.main = worker(async (source, rendition) => {
@@ -9,7 +9,7 @@ exports.main = worker(async (source, rendition) => {
     // if e.g. the file is empty or broken.
     const stats = await fs.stat(source.path);
     if (stats.size === 0) {
-        throw new SourceCorrupt('source file is empty');
+        throw new SourceCorruptError('source file is empty');
     }
 
     // Working with sources and renditions happens through local files,

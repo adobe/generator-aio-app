@@ -1,5 +1,5 @@
 {
   "fmt": "jpg",
   "qlt": 10,
-  "errorReason": "SourceUnsupported"
+  "errorReason": "SourceCorrupt"
 }
