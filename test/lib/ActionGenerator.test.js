@@ -261,6 +261,21 @@ describe('implementation', () => {
       expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/templateFile.js'), n(`/fakeDestRoot/${constants.actionsDirname}/myAction/index.js`), { fake: 'context', with: { fake: 'values' } }, {}, {})
     })
 
+    test('with tplContext option and actionDestPath already set', () => {
+      // mock fs
+      actionGenerator.fs = {
+        copyTpl: jest.fn(),
+        exists: jest.fn().mockReturnValue(false), // called on manifest
+        write: jest.fn(),
+        writeJSON: jest.fn(),
+        readJSON: jest.fn().mockReturnValue({}) // package.json read
+      }
+      actionGenerator.addAction('myAction', './templateFile.js', { tplContext: { actionDestPath: `${path.sep}fakeDestRoot${path.sep}${constants.actionsDirname}${path.sep}myAction${path.sep}index.js`, fake: 'context', with: { fake: 'values' } } })
+
+      // 1. test copy action template to predefined destination
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/templateFile.js'), n(`${path.sep}fakeDestRoot${path.sep}${constants.actionsDirname}${path.sep}myAction${path.sep}index.js`), { actionDestPath: `${path.sep}fakeDestRoot${path.sep}${constants.actionsDirname}${path.sep}myAction${path.sep}index.js`, fake: 'context', with: { fake: 'values' } }, {}, {})
+    })
+
     test('with actionManifestConfig option that also overwrite runtime action config', () => {
       // mock fs
       actionGenerator.fs = {

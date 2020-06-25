@@ -1,0 +1,23 @@
+# note that .npmignore must be copied into each project
+# it does not lookup .npmignore from parent folders
+
+.vscode
+.nyc_output
+.circleci
+.eslintrc.js
+.eslintignore
+build/
+coverage/
+.releaserc.json
+.travis.yml
+
+*.aio
+*.env
+
+# npm pack leftovers
+*.tgz
+
+.webpack
+
+# npm pack leftovers
+*.tgz
