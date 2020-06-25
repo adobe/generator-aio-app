@@ -2,8 +2,8 @@
 node_modules
 
 # Config
-*.env
-*.aio
+.env
+.aio
 
 # IDE & Temp
 .cache
