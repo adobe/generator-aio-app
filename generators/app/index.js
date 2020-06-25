@@ -49,7 +49,7 @@ class CodeGenerator extends Generator {
         {
           type: 'checkbox',
           name: 'components',
-          message: 'Which Adobe I/O App features do you want to enable for this project?\nselect components to include',
+          message: 'Which Adobe I/O App features do you want to enable for this project?\nSelect components to include',
           choices: [
             {
               name: 'Actions: Deploy Runtime actions',

@@ -1,16 +1,21 @@
-'use strict'; 
+'use strict';
 
 const { worker } = require('@adobe/asset-compute-sdk');
-const { SourceUnsupportedError } = require('@adobe/asset-compute-sdk/errors');
+const { SourceCorrupt } = require('@adobe/asset-compute-sdk/errors');
 const fs = require('fs').promises;
 
 exports.main = worker(async (source, rendition) => {
-    // Check for unsupported file
+    // Example of how to throw a standard asset compute error
+    // if e.g. the file is empty or broken.
     const stats = await fs.stat(source.path);
     if (stats.size === 0) {
-        throw new SourceUnsupportedError('source file is unsupported');
+        throw new SourceCorrupt('source file is empty');
     }
-    // process infile and write to outfile
-    // parameters are in rendition.instructions
+
+    // Working with sources and renditions happens through local files,
+    // downloading and uploading is handled by the asset-compute-sdk.
+    // In this example, simply copy source 1:1 to rendition:
     await fs.copyFile(source.path, rendition.path);
+
+    // Tip: custom worker parameters are available in rendition.instructions
 });

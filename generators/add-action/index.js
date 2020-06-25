@@ -69,7 +69,7 @@ class AddActions extends Generator {
         {
           type: 'checkbox',
           name: 'actionGenerators',
-          message: 'Which type of sample actions do you want to create?\nselect type of actions to generate',
+          message: 'Which type of sample actions do you want to create?\nSelect type of actions to generate',
           choices: this.options['adobe-services'].split(',').map(x => x.trim())
             .map(s => ({ name: sdkCodeToTitle[s], value: sdkCodeToActionGenerator[s] }))
             .filter(entry => !!entry.value)

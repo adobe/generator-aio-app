@@ -62,9 +62,6 @@ function assertManifestContent (actionName) {
     function: `actions${path.sep}${actionName}${path.sep}index.js`,
     web: 'yes',
     runtime: 'nodejs:10',
-    inputs: {
-      LOG_LEVEL: 'debug'
-    },
     annotations: {
       'require-adobe-auth': true
     }
