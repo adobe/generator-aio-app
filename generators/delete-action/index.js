@@ -76,11 +76,9 @@ class DeleteAction extends Generator {
       }
     ])
     if (this.options['skip-prompt'] || resConfirm.deleteAction) {
-      this.log(`> deleting action '${this.actionName}', please make sure to cleanup associated dependencies and configurations yourself`)
-
       this.actionPath = this.destinationPath(this.manifestActions[this.actionName].function)
 
-      // todo how to do this using this.fs ?
+      // deleting directly from fs (instead of in memory this.fs) as we are in the end phase
       if (fs.statSync(this.actionPath).isFile()) this.actionPath = path.dirname(this.actionPath)
 
       fs.removeSync(this.actionPath) // will make user prompt for all files if not --force
@@ -89,6 +87,7 @@ class DeleteAction extends Generator {
 
       fs.removeSync(this.destinationPath('e2e', actionsDirname, this.actionName + '.e2e.js')) // remove e2e test
       fs.removeSync(this.destinationPath('test', actionsDirname, this.actionName + '.test.js')) // remove unit test
+      this.log(`✔ The action '${this.actionName}' was deleted locally, please make sure to cleanup associated dependencies and to undeploy the deleted action for your app`)
     }
   }
 }
