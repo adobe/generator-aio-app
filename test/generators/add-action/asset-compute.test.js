@@ -79,7 +79,7 @@ function assertActionCodeContent (actionName) {
   // a few checks to make sure the action uses the asset compute sdk
   assert.fileContent(
     theFile,
-    'const { worker } = require(\'@adobe/asset-compute-sdk\');'
+    'const { worker, SourceCorruptError } = require(\'@adobe/asset-compute-sdk\');'
   )
   assert.fileContent(
     theFile,
@@ -207,7 +207,7 @@ describe('run', () => {
       name: 'dummy-app',
       version: '0.0.1',
       dependencies: {
-        '@adobe/asset-compute-sdk': '^1.0.2'
+        '@adobe/asset-compute-sdk': '^2.0.0'
       },
       devDependencies: {
         jest: '^24.9.0'
