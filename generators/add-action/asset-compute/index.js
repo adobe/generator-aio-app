@@ -51,7 +51,12 @@ class AssetComputeGenerator extends ActionGenerator {
         ]
       },
       actionManifestConfig: {
-        annotations: { 'require-adobe-auth': true }
+        limits: {
+          concurrency: 10
+        },
+        annotations: {
+          'require-adobe-auth': true
+        }
       }
     })
 
