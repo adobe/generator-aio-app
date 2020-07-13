@@ -62,6 +62,9 @@ function assertManifestContent (actionName) {
     function: `actions${path.sep}${actionName}${path.sep}index.js`,
     web: 'yes',
     runtime: 'nodejs:10',
+    limits: {
+      concurrency: 10
+    },
     annotations: {
       'require-adobe-auth': true
     }
