@@ -1,7 +1,6 @@
 'use strict';
 
-const { worker } = require('@adobe/asset-compute-sdk');
-const { SourceCorruptError } = require('@adobe/asset-compute-sdk/errors');
+const { worker, SourceCorruptError } = require('@adobe/asset-compute-sdk');
 const fs = require('fs').promises;
 
 exports.main = worker(async (source, rendition) => {
