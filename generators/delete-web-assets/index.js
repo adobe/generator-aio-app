@@ -49,9 +49,9 @@ class DeleteWebAssets extends Generator {
       }
     ])
     if (this.options['skip-prompt'] || resConfirm.deleteWebAssets) {
-      this.log('> deleting web assets, please make sure to cleanup associated dependencies and configurations yourself')
-
       fs.removeSync(this.webAssetsPath)
+      // no unit tests for now
+      this.log('✔ Web assets deleted locally, please make sure to cleanup associated dependencies and to undeploy web assets for your app')
     }
   }
 }
