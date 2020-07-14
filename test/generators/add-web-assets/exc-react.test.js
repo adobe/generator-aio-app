@@ -51,16 +51,7 @@ function assertDependencies () {
       'core-js': expect.any(String),
       'regenerator-runtime': expect.any(String),
       '@adobe/exc-app': expect.any(String),
-      '@react-spectrum/button': expect.any(String),
-      '@react-spectrum/form': expect.any(String),
-      '@react-spectrum/layout': expect.any(String),
-      '@react-spectrum/link': expect.any(String),
-      '@react-spectrum/picker': expect.any(String),
-      '@react-spectrum/progress': expect.any(String),
-      '@react-spectrum/provider': expect.any(String),
-      '@react-spectrum/text': expect.any(String),
-      '@react-spectrum/textfield': expect.any(String),
-      '@react-spectrum/theme-default': expect.any(String)
+      '@adobe/react-spectrum': expect.any(String)
     },
     devDependencies: {
       '@babel/core': expect.any(String),
