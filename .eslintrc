@@ -3,6 +3,8 @@
   "extends": ["standard", "plugin:jest/recommended"],
   "globals": {
     "n": "readonly",
-    "r": "readonly"
+    "r": "readonly",
+    "assertDependencies": "readonly",
+    "assertNodeEngines": "readonly"
   }
 }

@@ -57,7 +57,7 @@ function assertManifestContent (actionName) {
   expect(json.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
     function: path.normalize(`${constants.actionsDirname}/${actionName}/index.js`),
     web: 'yes',
-    runtime: 'nodejs:10',
+    runtime: 'nodejs:12',
     inputs: {
       LOG_LEVEL: 'debug',
       apiKey: '$SERVICE_API_KEY',
@@ -96,17 +96,6 @@ function assertActionCodeContent (actionName) {
   )
 }
 
-function assertDependencies () {
-  expect(JSON.parse(fs.readFileSync('package.json').toString())).toEqual({
-    dependencies: {
-      '@adobe/aio-sdk': expect.any(String)
-    },
-    devDependencies: {
-      '@openwhisk/wskdebug': expect.any(String)
-    }
-  })
-}
-
 describe('run', () => {
   test('--skip-prompt', async () => {
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
@@ -123,7 +112,8 @@ describe('run', () => {
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies()
+    assertDependencies(fs, { '@adobe/aio-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
+    assertNodeEngines(fs, '10 || 12')
   })
 
   test('--skip-prompt, and action with default name already exists', async () => {
@@ -150,7 +140,8 @@ describe('run', () => {
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies()
+    assertDependencies(fs, { '@adobe/aio-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
+    assertNodeEngines(fs, '10 || 12')
   })
 
   test('user input actionName=fakeAction', async () => {
@@ -168,6 +159,7 @@ describe('run', () => {
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies()
+    assertDependencies(fs, { '@adobe/aio-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
+    assertNodeEngines(fs, '10 || 12')
   })
 })
