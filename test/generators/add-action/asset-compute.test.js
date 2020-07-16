@@ -112,7 +112,7 @@ describe('run', () => {
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, { '@adobe/asset-compute-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String), '@adobe/aio-cli-plugin-asset-compute': expect.any(String) })
-    assertNodeEngines(fs, '10 || 12')
+    assertNodeEngines(fs, '^10 || ^12')
   })
 
   test('asset-compute: --skip-prompt, and action with default name already exists', async () => {
@@ -139,7 +139,7 @@ describe('run', () => {
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, { '@adobe/asset-compute-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String), '@adobe/aio-cli-plugin-asset-compute': expect.any(String) })
-    assertNodeEngines(fs, '10 || 12')
+    assertNodeEngines(fs, '^10 || ^12')
   })
 
   test('asset-compute: --skip-prompt, and action already has package.json with scripts', async () => {
@@ -160,7 +160,7 @@ describe('run', () => {
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, { '@adobe/asset-compute-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String), '@adobe/aio-cli-plugin-asset-compute': expect.any(String) })
-    assertNodeEngines(fs, '10 || 12')
+    assertNodeEngines(fs, '^10 || ^12')
   })
 
   test('asset-compute: user input actionName=new-action', async () => {
@@ -179,7 +179,7 @@ describe('run', () => {
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, { '@adobe/asset-compute-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String), '@adobe/aio-cli-plugin-asset-compute': expect.any(String) })
-    assertNodeEngines(fs, '10 || 12')
+    assertNodeEngines(fs, '^10 || ^12')
   })
 
   test('asset-compute: adding an action 2 times', async () => {
