@@ -17,16 +17,8 @@ import PropTypes from 'prop-types'
 import ErrorBoundary from 'react-error-boundary'
 
 // react spectrum components
-import { Provider } from '@react-spectrum/provider'
-import { theme } from '@react-spectrum/theme-default'
-import { Button } from '@react-spectrum/button'
-import { TextField } from '@react-spectrum/textfield'
-import { Link } from '@react-spectrum/link'
-import { Picker, Item } from '@react-spectrum/picker'
-import { Form } from '@react-spectrum/form'
-import { Flex } from '@react-spectrum/layout'
-import { ProgressCircle } from '@react-spectrum/progress'
-import { Heading, Text } from '@react-spectrum/text';
+import { Provider, defaultTheme, Button, TextField, Link,
+  Picker, Item, Form, Flex, ProgressCircle, Heading, Text } from '@adobe/react-spectrum'
 
 // local imports
 import './App.css'
@@ -140,7 +132,7 @@ export default class App extends React.Component {
     return (
       // ErrorBoundary wraps child components to handle eventual rendering errors
       <ErrorBoundary onError={ this.onError } FallbackComponent={ this.fallbackComponent } >
-      <Provider UNSAFE_className='provider' theme={ theme }>
+      <Provider UNSAFE_className='provider' theme={ defaultTheme }>
         <Flex UNSAFE_className='main'>
           <Heading UNSAFE_className='main-title'>Welcome to <%= projectName %>!</Heading>
 <% if (hasBackend) { %>
