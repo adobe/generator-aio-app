@@ -4,6 +4,7 @@ node_modules
 jspm_packages
 
 # build
+build
 dist
 .manifest-dist.yml
 
