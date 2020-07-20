@@ -42,25 +42,6 @@ function assertEnvContent (prevContent) {
   assert.fileContent('.env', prevContent)
 }
 
-function assertDependencies () {
-  expect(JSON.parse(fs.readFileSync('package.json').toString())).toEqual({
-    dependencies: {
-      react: expect.any(String),
-      'react-dom': expect.any(String),
-      'react-error-boundary': expect.any(String),
-      'core-js': expect.any(String),
-      'regenerator-runtime': expect.any(String),
-      '@adobe/exc-app': expect.any(String),
-      '@adobe/react-spectrum': expect.any(String)
-    },
-    devDependencies: {
-      '@babel/core': expect.any(String),
-      '@babel/polyfill': expect.any(String),
-      '@babel/preset-env': expect.any(String)
-    }
-  })
-}
-
 function assertFiles () {
   assert.file('web-src/index.html')
   assert.file('web-src/404.html')
@@ -99,7 +80,19 @@ describe('run', () => {
       })
 
     assertFiles()
-    assertDependencies()
+    assertDependencies(fs, {
+      react: expect.any(String),
+      'react-dom': expect.any(String),
+      'react-error-boundary': expect.any(String),
+      'core-js': expect.any(String),
+      'regenerator-runtime': expect.any(String),
+      '@adobe/exc-app': expect.any(String),
+      '@adobe/react-spectrum': expect.any(String)
+    }, {
+      '@babel/core': expect.any(String),
+      '@babel/polyfill': expect.any(String),
+      '@babel/preset-env': expect.any(String)
+    })
     assertEnvContent(prevDotEnv)
 
     // greats with projectName
@@ -122,7 +115,19 @@ describe('run', () => {
       })
 
     assertFiles()
-    assertDependencies()
+    assertDependencies(fs, {
+      react: expect.any(String),
+      'react-dom': expect.any(String),
+      'react-error-boundary': expect.any(String),
+      'core-js': expect.any(String),
+      'regenerator-runtime': expect.any(String),
+      '@adobe/exc-app': expect.any(String),
+      '@adobe/react-spectrum': expect.any(String)
+    }, {
+      '@babel/core': expect.any(String),
+      '@babel/polyfill': expect.any(String),
+      '@babel/preset-env': expect.any(String)
+    })
     assertEnvContent(prevDotEnv)
 
     // greats with projectName
