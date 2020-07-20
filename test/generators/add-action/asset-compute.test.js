@@ -61,7 +61,7 @@ function assertManifestContent (actionName) {
   expect(json.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
     function: `actions${path.sep}${actionName}${path.sep}index.js`,
     web: 'yes',
-    runtime: 'nodejs:10',
+    runtime: 'nodejs:12',
     limits: {
       concurrency: 10
     },
@@ -90,14 +90,6 @@ function assertActionCodeContent (actionName) {
   )
 }
 
-function assertDependencies () {
-  const jsonContent = JSON.parse(fs.readFileSync('package.json').toString())
-  assert.ok(jsonContent.dependencies['@adobe/asset-compute-sdk'] !== null)
-  assert.ok(jsonContent.dependencies['@adobe/asset-compute-sdk'] !== undefined)
-  assert.ok(jsonContent.devDependencies['@adobe/aio-cli-plugin-asset-compute'] !== null)
-  assert.ok(jsonContent.devDependencies['@adobe/aio-cli-plugin-asset-compute'] !== undefined)
-}
-
 function assertScripts () {
   const jsonContent = JSON.parse(fs.readFileSync('package.json').toString())
   assert.ok(jsonContent.scripts.test.includes('adobe-asset-compute test-worker'))
@@ -119,7 +111,8 @@ describe('run', () => {
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies()
+    assertDependencies(fs, { '@adobe/asset-compute-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String), '@adobe/aio-cli-plugin-asset-compute': expect.any(String) })
+    assertNodeEngines(fs, '^10 || ^12')
   })
 
   test('asset-compute: --skip-prompt, and action with default name already exists', async () => {
@@ -145,7 +138,8 @@ describe('run', () => {
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies()
+    assertDependencies(fs, { '@adobe/asset-compute-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String), '@adobe/aio-cli-plugin-asset-compute': expect.any(String) })
+    assertNodeEngines(fs, '^10 || ^12')
   })
 
   test('asset-compute: --skip-prompt, and action already has package.json with scripts', async () => {
@@ -165,7 +159,8 @@ describe('run', () => {
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies()
+    assertDependencies(fs, { '@adobe/asset-compute-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String), '@adobe/aio-cli-plugin-asset-compute': expect.any(String) })
+    assertNodeEngines(fs, '^10 || ^12')
   })
 
   test('asset-compute: user input actionName=new-action', async () => {
@@ -183,7 +178,8 @@ describe('run', () => {
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies()
+    assertDependencies(fs, { '@adobe/asset-compute-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String), '@adobe/aio-cli-plugin-asset-compute': expect.any(String) })
+    assertNodeEngines(fs, '^10 || ^12')
   })
 
   test('asset-compute: adding an action 2 times', async () => {

@@ -179,3 +179,151 @@ describe('addPkgScript', () => {
     expect(mockWrite).toHaveBeenCalledWith('some-path', expect.objectContaining({ scripts: { scripta: 'b' } }))
   })
 })
+
+describe('readPackageJson', () => {
+  test('if package.json is empty', () => {
+    const mockRead = jest.fn(() => {
+      return ''
+    })
+    const generator = {
+      destinationPath: jest.fn(() => 'some-path'),
+      fs: {
+        readJSON: mockRead
+      }
+    }
+    expect(utils.readPackageJson(generator)).toEqual({})
+    expect(mockRead).toHaveBeenCalledWith('some-path')
+    expect(generator.destinationPath).toHaveBeenCalledWith('package.json')
+  })
+
+  test('if package.json is { a: key, scripts: { b: c } }', () => {
+    const mockRead = jest.fn(() => {
+      return { a: 'key', scripts: { b: 'c' } }
+    })
+    const generator = {
+      destinationPath: jest.fn(() => 'some-path'),
+      fs: {
+        readJSON: mockRead
+      }
+    }
+    expect(utils.readPackageJson(generator)).toEqual({ a: 'key', scripts: { b: 'c' } })
+    expect(mockRead).toHaveBeenCalledWith('some-path')
+    expect(generator.destinationPath).toHaveBeenCalledWith('package.json')
+  })
+})
+
+describe('writePackageJson', () => {
+  test('if content is empty', () => {
+    const mockWrite = jest.fn(() => {
+      return ''
+    })
+    const generator = {
+      destinationPath: jest.fn(() => 'some-path'),
+      fs: {
+        writeJSON: mockWrite
+      }
+    }
+    utils.writePackageJson(generator, '')
+    expect(mockWrite).toHaveBeenCalledWith('some-path', {})
+    expect(generator.destinationPath).toHaveBeenCalledWith('package.json')
+  })
+
+  test('if content is { a: key, scripts: { b: c } }', () => {
+    const mockWrite = jest.fn(() => {
+      return ''
+    })
+    const generator = {
+      destinationPath: jest.fn(() => 'some-path'),
+      fs: {
+        writeJSON: mockWrite
+      }
+    }
+    utils.writePackageJson(generator, { a: 'key', scripts: { b: 'c' } })
+    expect(mockWrite).toHaveBeenCalledWith('some-path', { a: 'key', scripts: { b: 'c' } })
+    expect(generator.destinationPath).toHaveBeenCalledWith('package.json')
+  })
+})
+
+describe('addDependencies', () => {
+  test('adds dependencies to package.json with no existing dependencies', () => {
+    const mockRead = jest.fn(() => {
+      return undefined
+    })
+    const mockWrite = jest.fn()
+    const generator = {
+      destinationPath: jest.fn(() => 'some-path'),
+      fs: {
+        readJSON: mockRead,
+        writeJSON: mockWrite
+      }
+    }
+    utils.addDependencies(generator, { a: 'b', c: 'd' })
+
+    expect(mockRead).toHaveBeenCalledWith('some-path')
+    expect(mockRead).toHaveBeenCalledTimes(1)
+    expect(generator.destinationPath).toHaveBeenCalledWith('package.json')
+    expect(mockWrite).toHaveBeenCalledTimes(1)
+    expect(mockWrite).toHaveBeenCalledWith('some-path', { dependencies: { a: 'b', c: 'd' } })
+  })
+  test('adds devDependencies to package.json with no existing devDependencies', () => {
+    const mockRead = jest.fn(() => {
+      return undefined
+    })
+    const mockWrite = jest.fn()
+    const generator = {
+      destinationPath: jest.fn(() => 'some-path'),
+      fs: {
+        readJSON: mockRead,
+        writeJSON: mockWrite
+      }
+    }
+    utils.addDependencies(generator, { a: 'b', c: 'd' }, true)
+
+    expect(mockRead).toHaveBeenCalledWith('some-path')
+    expect(mockRead).toHaveBeenCalledTimes(1)
+    expect(generator.destinationPath).toHaveBeenCalledWith('package.json')
+    expect(mockWrite).toHaveBeenCalledTimes(1)
+    expect(mockWrite).toHaveBeenCalledWith('some-path', { devDependencies: { a: 'b', c: 'd' } })
+  })
+  test('adds and overwrites dependencies in package.json', () => {
+    const mockRead = jest.fn(() => {
+      return { dependencies: { a: 'fake', e: 'f' }, devDependencies: { g: 'h' } }
+    })
+    const mockWrite = jest.fn()
+    const generator = {
+      destinationPath: jest.fn(() => 'some-path'),
+      fs: {
+        readJSON: mockRead,
+        writeJSON: mockWrite
+      }
+    }
+    utils.addDependencies(generator, { a: 'b', c: 'd' })
+
+    expect(mockRead).toHaveBeenCalledWith('some-path')
+    expect(mockRead).toHaveBeenCalledTimes(1)
+    expect(generator.destinationPath).toHaveBeenCalledWith('package.json')
+    expect(mockWrite).toHaveBeenCalledTimes(1)
+    expect(mockWrite).toHaveBeenCalledWith('some-path', { dependencies: { a: 'b', c: 'd', e: 'f' }, devDependencies: { g: 'h' } })
+  })
+
+  test('adds and overwrites devDependencies in package.json', () => {
+    const mockRead = jest.fn(() => {
+      return { devDependencies: { a: 'fake', e: 'f' }, dependencies: { g: 'h' } }
+    })
+    const mockWrite = jest.fn()
+    const generator = {
+      destinationPath: jest.fn(() => 'some-path'),
+      fs: {
+        readJSON: mockRead,
+        writeJSON: mockWrite
+      }
+    }
+    utils.addDependencies(generator, { a: 'b', c: 'd' }, true)
+
+    expect(mockRead).toHaveBeenCalledWith('some-path')
+    expect(mockRead).toHaveBeenCalledTimes(1)
+    expect(generator.destinationPath).toHaveBeenCalledWith('package.json')
+    expect(mockWrite).toHaveBeenCalledTimes(1)
+    expect(mockWrite).toHaveBeenCalledWith('some-path', { devDependencies: { a: 'b', c: 'd', e: 'f' }, dependencies: { g: 'h' } })
+  })
+})

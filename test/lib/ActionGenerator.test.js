@@ -112,7 +112,7 @@ describe('implementation', () => {
       spy.mockResolvedValue({
         actionName: 'fake'
       })
-      const spyManifest = jest.spyOn(actionGenerator, '_loadManifest')
+      const spyManifest = jest.spyOn(actionGenerator, 'loadManifest')
       spyManifest.mockReturnValue({
         packages: {
           [constants.manifestPackagePlaceholder]: {
@@ -121,7 +121,7 @@ describe('implementation', () => {
               fakedefault: {
                 function: '/myAction/index.js',
                 web: 'yes',
-                runtime: 'nodejs:10'
+                runtime: 'nodejs:12'
               }
             }
           }
@@ -170,7 +170,7 @@ describe('implementation', () => {
               myAction: {
                 function: n(`${constants.actionsDirname}/myAction/index.js`), // relative path is important here
                 web: 'yes',
-                runtime: 'nodejs:10',
+                runtime: 'nodejs:12',
                 annotations: {
                   'require-adobe-auth': true
                 }
@@ -212,7 +212,7 @@ describe('implementation', () => {
               myAction: {
                 function: n(`${constants.actionsDirname}/myAction/index.js`), // relative path is important here
                 web: 'yes',
-                runtime: 'nodejs:10',
+                runtime: 'nodejs:12',
                 annotations: {
                   'require-adobe-auth': true
                 }
@@ -428,6 +428,55 @@ describe('implementation', () => {
 
       expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/utils.js'), n(`/fakeDestRoot/${constants.actionsDirname}/utils.js`), {})
       expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/utils.test.js'), n(`/fakeDestRoot/test/${constants.actionsDirname}/utils.test.js`), {})
+    })
+    test('with existing package.json node engines', () => {
+      // mock fs
+      actionGenerator.fs = {
+        copyTpl: jest.fn(),
+        exists: jest.fn().mockReturnValue(false), // called on manifest
+        write: jest.fn(),
+        writeJSON: jest.fn(),
+        readJSON: jest.fn().mockReturnValue({ engines: { node: '1 || 2' } }) // package.json read
+      }
+      actionGenerator.addAction('myAction', './templateFile.js')
+
+      expect(actionGenerator.fs.writeJSON).not.toHaveBeenCalledWith(expect.any(String), expect.objectContaining({
+        engines: { node: '^10 || ^12' }
+      }))
+      // as part of addDependency call
+      expect(actionGenerator.fs.writeJSON).toHaveBeenCalledWith(n('/fakeDestRoot/package.json'), expect.objectContaining({
+        engines: { node: '1 || 2' }
+      }))
+    })
+    test('with existing package.json non-node engines', () => {
+      // mock fs
+      actionGenerator.fs = {
+        copyTpl: jest.fn(),
+        exists: jest.fn().mockReturnValue(false), // called on manifest
+        write: jest.fn(),
+        writeJSON: jest.fn(),
+        readJSON: jest.fn().mockReturnValue({ engines: { notnode: '1 || 2' } }) // package.json read
+      }
+      actionGenerator.addAction('myAction', './templateFile.js')
+
+      expect(actionGenerator.fs.writeJSON).toHaveBeenCalledWith(n('/fakeDestRoot/package.json'), expect.objectContaining({
+        engines: { notnode: '1 || 2', node: '^10 || ^12' }
+      }))
+    })
+    test('with non existing package.json engines', () => {
+      // mock fs
+      actionGenerator.fs = {
+        copyTpl: jest.fn(),
+        exists: jest.fn().mockReturnValue(false), // called on manifest
+        write: jest.fn(),
+        writeJSON: jest.fn(),
+        readJSON: jest.fn().mockReturnValue({}) // package.json read
+      }
+      actionGenerator.addAction('myAction', './templateFile.js')
+
+      expect(actionGenerator.fs.writeJSON).toHaveBeenCalledWith(n('/fakeDestRoot/package.json'), expect.objectContaining({
+        engines: { node: '^10 || ^12' }
+      }))
     })
   })
 })
