@@ -35,7 +35,7 @@ class AssetComputeGenerator extends ActionGenerator {
         '@adobe/asset-compute-sdk': '^2.0.0'
       },
       devDependencies: {
-        '@adobe/aio-cli-plugin-asset-compute': '^1.3.2'
+        '@adobe/aio-cli-plugin-asset-compute': '^1.3.3'
       },
       dotenvStub: {
         label: 'please provide the following environment variables for the Asset Compute devtool. You can use AWS or Azure, not both:',
