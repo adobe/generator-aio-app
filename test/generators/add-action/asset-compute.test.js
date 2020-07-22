@@ -206,7 +206,7 @@ describe('run', () => {
       name: 'dummy-app',
       version: '0.0.1',
       dependencies: {
-        '@adobe/asset-compute-sdk': '^2.0.0'
+        '@adobe/asset-compute-sdk': '^2.2.1'
       },
       devDependencies: {
         jest: '^24.9.0'
