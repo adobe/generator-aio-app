@@ -40,7 +40,7 @@ class AssetComputeGenerator extends ActionGenerator {
       dotenvStub: {
         label: 'please provide the following environment variables for the Asset Compute devtool. You can use AWS or Azure, not both:',
         vars: [
-          'ASSET_COMPUTE_INTEGRATION_FILE_PATH',
+          'ASSET_COMPUTE_PRIVATE_KEY_FILE_PATH',
           'S3_BUCKET',
           'AWS_ACCESS_KEY_ID',
           'AWS_SECRET_ACCESS_KEY',
