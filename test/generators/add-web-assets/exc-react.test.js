@@ -53,15 +53,19 @@ function assertEnvContent (prevContent) {
 function assertFiles () {
   assert.file('web-src/index.html')
   assert.file('web-src/src/exc-runtime.js')
+  assert.file('web-src/src/index.css')
   assert.file('web-src/src/index.js')
-  assert.file('web-src/src/App.js')
-  assert.file('web-src/src/App.css')
   assert.file('web-src/src/utils.js')
+  assert.file('web-src/src/components/About.js')
+  assert.file('web-src/src/components/ActionsForm.js')
+  assert.file('web-src/src/components/App.js')
+  assert.file('web-src/src/components/Home.js')
+  assert.file('web-src/src/components/SideBar.js')
 }
 
 function assertWithActions () {
   assert.fileContent(
-    'web-src/src/App.js',
+    'web-src/src/components/ActionsForm.js',
     'Run your application backend actions'
   )
   assert.fileContent('web-src/src/App.js', 'Adobe I/O Runtime')
@@ -69,7 +73,7 @@ function assertWithActions () {
 
 function assertWithNoActions () {
   assert.noFileContent(
-    'web-src/src/App.js',
+    'web-src/src/components/ActionsForm.js',
     'Run your application backend actions'
   )
   assert.noFileContent('web-src/src/App.js', 'Adobe I/O Runtime')
@@ -103,7 +107,8 @@ describe('run', () => {
         'core-js': expect.any(String),
         'regenerator-runtime': expect.any(String),
         '@adobe/exc-app': expect.any(String),
-        '@adobe/react-spectrum': expect.any(String)
+        '@adobe/react-spectrum': expect.any(String),
+        'react-router-dom': expect.any(String)
       },
       {
         '@babel/core': expect.any(String),
@@ -114,7 +119,7 @@ describe('run', () => {
     assertEnvContent(prevDotEnv)
 
     // greats with projectName
-    assert.fileContent('web-src/src/App.js', 'Welcome to abc!')
+    assert.fileContent('web-src/src/components/Home.js', 'Welcome to abc!')
 
     // make sure html calls js files
     assert.fileContent('web-src/index.html', '<script src="./src/index.js"')
@@ -147,7 +152,8 @@ describe('run', () => {
         'core-js': expect.any(String),
         'regenerator-runtime': expect.any(String),
         '@adobe/exc-app': expect.any(String),
-        '@adobe/react-spectrum': expect.any(String)
+        '@adobe/react-spectrum': expect.any(String),
+        'react-router-dom': expect.any(String)
       },
       {
         '@babel/core': expect.any(String),
@@ -158,7 +164,7 @@ describe('run', () => {
     assertEnvContent(prevDotEnv)
 
     // greats with projectName
-    assert.fileContent('web-src/src/App.js', 'Welcome to abc!')
+    assert.fileContent('web-src/src/components/Home.js', 'Welcome to abc!')
 
     // make sure html calls js files
     assert.fileContent('web-src/index.html', '<script src="./src/index.js"')
