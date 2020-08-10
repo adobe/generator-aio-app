@@ -41,10 +41,7 @@ class ExcReactGenerator extends Generator {
 
   writing () {
     this.sourceRoot(path.join(__dirname, './templates/'))
-    const files = ['./**/*']
-    if (!this.props.hasBackend) {
-      files.push('!./src/components/ActionsForm.js')
-    }
+
     this.fs.copyTpl(
       this.templatePath('./**/*'),
       this.destinationPath(webAssetsDirname),

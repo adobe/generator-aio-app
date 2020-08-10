@@ -68,22 +68,22 @@ function assertWithActions () {
     'web-src/src/components/ActionsForm.js',
     'Run your application backend actions'
   )
-  assert.fileContent('web-src/src/App.js', 'Adobe I/O Runtime')
+  assert.fileContent('web-src/src/components/SideBar.js', 'Actions')
 }
 
 function assertWithNoActions () {
-  assert.noFileContent(
-    'web-src/src/components/ActionsForm.js',
-    'Run your application backend actions'
-  )
-  assert.noFileContent('web-src/src/App.js', 'Adobe I/O Runtime')
+  assert.noFile('web-src/src/components/ActionsForm.js')
+  assert.noFileContent('web-src/src/SideBar.js', 'Actions')
 }
 
 function assertWithDoc () {
-  assert.fileContent('web-src/src/App.js', 'Useful documentation for your app')
-  assert.fileContent('web-src/src/App.js', 'Firefly Apps')
-  assert.fileContent('web-src/src/App.js', 'Adobe I/O SDK')
-  assert.fileContent('web-src/src/App.js', 'React Spectrum')
+  assert.fileContent(
+    'web-src/src/components/About.js',
+    'Useful documentation for your app'
+  )
+  assert.fileContent('web-src/src/components/About.js', 'Firefly Apps')
+  assert.fileContent('web-src/src/components/About.js', 'Adobe I/O SDK')
+  assert.fileContent('web-src/src/components/About.js', 'React Spectrum')
 }
 
 const prevDotEnv = 'FAKECONTENT'
