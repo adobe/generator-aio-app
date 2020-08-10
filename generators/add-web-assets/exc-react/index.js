@@ -28,7 +28,9 @@ class ExcReactGenerator extends Generator {
 
     // props are used by templates
     this.props = {}
-    this.props.adobeServices = this.options['adobe-services'].split(',').map(x => x.trim())
+    this.props.adobeServices = this.options['adobe-services']
+      .split(',')
+      .map((x) => x.trim())
     this.props.projectName = this.options['project-name']
     this.props.sdkCodes = sdkCodes
     this.props.hasBackend = this.options['has-backend']
@@ -39,34 +41,49 @@ class ExcReactGenerator extends Generator {
 
   writing () {
     this.sourceRoot(path.join(__dirname, './templates/'))
-    this.fs.copyTpl(this.templatePath('./**/*'), this.destinationPath(webAssetsDirname), this.props)
+    this.fs.copyTpl(
+      this.templatePath('./**/*'),
+      this.destinationPath(webAssetsDirname),
+      this.props
+    )
     // add .babelrc
-    this.fs.writeJSON(this.destinationPath('.babelrc'), { presets: [['@babel/preset-env', { targets: { node: 'current' } }]] })
+    this.fs.writeJSON(this.destinationPath('.babelrc'), {
+      presets: [['@babel/preset-env', { targets: { node: 'current' } }]]
+    })
     // add dependencies
     utils.addDependencies(this, {
       'core-js': '^3.6.4',
       react: '^16.13.1',
       'react-dom': '^16.13.1',
+      'react-router-dom': '^5.2.0',
       'react-error-boundary': '^1.2.5',
       'regenerator-runtime': '^0.13.5',
       '@adobe/exc-app': '^0.2.17',
       '@adobe/react-spectrum': '^3.0.1'
     })
-    utils.addDependencies(this, {
-      '@babel/core': '^7.8.7',
-      '@babel/polyfill': '^7.8.7',
-      '@babel/preset-env': '^7.8.7'
-    }, true)
+    utils.addDependencies(
+      this,
+      {
+        '@babel/core': '^7.8.7',
+        '@babel/polyfill': '^7.8.7',
+        '@babel/preset-env': '^7.8.7'
+      },
+      true
+    )
     // add env variable to load ui in exc shell
-    utils.appendOrWrite(this, this.destinationPath(dotenvFilename),
+    utils.appendOrWrite(
+      this,
+      this.destinationPath(dotenvFilename),
       `## URL prefix used to run your application in the Adobe Experience Cloud Shell
 AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/custom-apps/?localDevUrl="
-`, 'AIO_LAUNCH_URL_PREFIX')
+`,
+      'AIO_LAUNCH_URL_PREFIX'
+    )
   }
 
   async install () {
     // this condition makes sure it doesn't print any unwanted 'skip install message'
-    if (!this.options['skip-install']) return this.installDependencies({ bower: false, skipMessage: true })
+    if (!this.options['skip-install']) { return this.installDependencies({ bower: false, skipMessage: true }) }
   }
 }
 

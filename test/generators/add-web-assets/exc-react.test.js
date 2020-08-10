@@ -16,10 +16,15 @@ const assert = require('yeoman-assert')
 const fs = require('fs')
 const path = require('path')
 
-const theGeneratorPath = require.resolve('../../../generators/add-web-assets/exc-react')
+const theGeneratorPath = require.resolve(
+  '../../../generators/add-web-assets/exc-react'
+)
 const Generator = require('yeoman-generator')
 
-const installDependencies = jest.spyOn(Generator.prototype, 'installDependencies')
+const installDependencies = jest.spyOn(
+  Generator.prototype,
+  'installDependencies'
+)
 beforeAll(() => {
   // mock implementations
   installDependencies.mockReturnValue(undefined)
@@ -38,13 +43,15 @@ describe('prototype', () => {
 })
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', 'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/custom-apps/?localDevUrl="')
+  assert.fileContent(
+    '.env',
+    'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/custom-apps/?localDevUrl="'
+  )
   assert.fileContent('.env', prevContent)
 }
 
 function assertFiles () {
   assert.file('web-src/index.html')
-  assert.file('web-src/404.html')
   assert.file('web-src/src/exc-runtime.js')
   assert.file('web-src/src/index.js')
   assert.file('web-src/src/App.js')
@@ -53,12 +60,18 @@ function assertFiles () {
 }
 
 function assertWithActions () {
-  assert.fileContent('web-src/src/App.js', 'Run your application backend actions')
+  assert.fileContent(
+    'web-src/src/App.js',
+    'Run your application backend actions'
+  )
   assert.fileContent('web-src/src/App.js', 'Adobe I/O Runtime')
 }
 
 function assertWithNoActions () {
-  assert.noFileContent('web-src/src/App.js', 'Run your application backend actions')
+  assert.noFileContent(
+    'web-src/src/App.js',
+    'Run your application backend actions'
+  )
   assert.noFileContent('web-src/src/App.js', 'Adobe I/O Runtime')
 }
 
@@ -73,26 +86,31 @@ const prevDotEnv = 'FAKECONTENT'
 
 describe('run', () => {
   test('--project-name abc', async () => {
-    await helpers.run(theGeneratorPath)
+    await helpers
+      .run(theGeneratorPath)
       .withOptions({ 'project-name': 'abc', 'skip-install': false })
-      .inTmpDir(dir => {
+      .inTmpDir((dir) => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnv)
       })
 
     assertFiles()
-    assertDependencies(fs, {
-      react: expect.any(String),
-      'react-dom': expect.any(String),
-      'react-error-boundary': expect.any(String),
-      'core-js': expect.any(String),
-      'regenerator-runtime': expect.any(String),
-      '@adobe/exc-app': expect.any(String),
-      '@adobe/react-spectrum': expect.any(String)
-    }, {
-      '@babel/core': expect.any(String),
-      '@babel/polyfill': expect.any(String),
-      '@babel/preset-env': expect.any(String)
-    })
+    assertDependencies(
+      fs,
+      {
+        react: expect.any(String),
+        'react-dom': expect.any(String),
+        'react-error-boundary': expect.any(String),
+        'core-js': expect.any(String),
+        'regenerator-runtime': expect.any(String),
+        '@adobe/exc-app': expect.any(String),
+        '@adobe/react-spectrum': expect.any(String)
+      },
+      {
+        '@babel/core': expect.any(String),
+        '@babel/polyfill': expect.any(String),
+        '@babel/preset-env': expect.any(String)
+      }
+    )
     assertEnvContent(prevDotEnv)
 
     // greats with projectName
@@ -108,26 +126,35 @@ describe('run', () => {
   })
 
   test('--project-name abc --has-backend false', async () => {
-    await helpers.run(theGeneratorPath)
-      .withOptions({ 'project-name': 'abc', 'skip-install': false, 'has-backend': false })
-      .inTmpDir(dir => {
+    await helpers
+      .run(theGeneratorPath)
+      .withOptions({
+        'project-name': 'abc',
+        'skip-install': false,
+        'has-backend': false
+      })
+      .inTmpDir((dir) => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnv)
       })
 
     assertFiles()
-    assertDependencies(fs, {
-      react: expect.any(String),
-      'react-dom': expect.any(String),
-      'react-error-boundary': expect.any(String),
-      'core-js': expect.any(String),
-      'regenerator-runtime': expect.any(String),
-      '@adobe/exc-app': expect.any(String),
-      '@adobe/react-spectrum': expect.any(String)
-    }, {
-      '@babel/core': expect.any(String),
-      '@babel/polyfill': expect.any(String),
-      '@babel/preset-env': expect.any(String)
-    })
+    assertDependencies(
+      fs,
+      {
+        react: expect.any(String),
+        'react-dom': expect.any(String),
+        'react-error-boundary': expect.any(String),
+        'core-js': expect.any(String),
+        'regenerator-runtime': expect.any(String),
+        '@adobe/exc-app': expect.any(String),
+        '@adobe/react-spectrum': expect.any(String)
+      },
+      {
+        '@babel/core': expect.any(String),
+        '@babel/polyfill': expect.any(String),
+        '@babel/preset-env': expect.any(String)
+      }
+    )
     assertEnvContent(prevDotEnv)
 
     // greats with projectName
@@ -143,7 +170,8 @@ describe('run', () => {
   })
 
   test('--project-name abc --skip-install', async () => {
-    await helpers.run(theGeneratorPath)
+    await helpers
+      .run(theGeneratorPath)
       .withOptions({ 'project-name': 'abc', 'skip-install': true })
     expect(installDependencies).toHaveBeenCalledTimes(0)
   })
