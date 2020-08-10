@@ -14,7 +14,9 @@ governing permissions and limitations under the License.
 import React from "react";
 import { Provider, defaultTheme, Grid, View } from "@adobe/react-spectrum";
 import SideBar from "./SideBar";
-import ActionForm from "./Form";
+<% if (hasBackend) { %>
+import ActionsForm from "./ActionsForm";
+<% } %>
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import { Home } from "./Home";
 import { About } from "./About";
@@ -41,9 +43,11 @@ function App(props) {
               <Route exact path="/">
                 <Home></Home>
               </Route>
+              <% if (hasBackend) { %>
               <Route path="/actions">
-                <ActionForm runtime={props.runtime} ims={props.ims} />
+                <ActionsForm runtime={props.runtime} ims={props.ims} />
               </Route>
+              <% } %>
               <Route path="/about">
                 <About></About>
               </Route>

@@ -41,6 +41,10 @@ class ExcReactGenerator extends Generator {
 
   writing () {
     this.sourceRoot(path.join(__dirname, './templates/'))
+    const files = ['./**/*']
+    if (!this.props.hasBackend) {
+      files.push('!./src/components/ActionsForm.js')
+    }
     this.fs.copyTpl(
       this.templatePath('./**/*'),
       this.destinationPath(webAssetsDirname),
@@ -83,7 +87,9 @@ AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/custom-apps/?
 
   async install () {
     // this condition makes sure it doesn't print any unwanted 'skip install message'
-    if (!this.options['skip-install']) { return this.installDependencies({ bower: false, skipMessage: true }) }
+    if (!this.options['skip-install']) {
+      return this.installDependencies({ bower: false, skipMessage: true })
+    }
   }
 }
 

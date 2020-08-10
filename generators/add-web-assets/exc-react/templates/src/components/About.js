@@ -12,27 +12,43 @@ governing permissions and limitations under the License.
 */
 
 import React from "react";
-import { Heading, Content, View } from "@adobe/react-spectrum";
-import { Link } from "@adobe/react-spectrum";
+import { Heading, Content, View, Link } from "@adobe/react-spectrum";
 export const About = () => (
   <View width="size-6000">
-    <Heading level={1}>Firefly Apps!</Heading>
+    <Heading level={1}>Useful documentation for your app</Heading>
     <Content>
-      Project Firefly is a complete framework that enables enterprise developers
-      to build and deploy custom web applications that extend Adobe Experience
-      Cloud solutions and run on Adobe infrastructure. It leverages modern
-      technologies (JAM stack, serverless computing, Node, and React) and
-      ensures best practices when building applications (event-driven
-      architecture, microservices, continuous integration, and delivery).
-      <br />
-      <Link>
-        <a
-          href="https://www.adobe.io/apis/experienceplatform/project-firefly/docs.html"
-          target="_blank"
-        >
-          Read more
-        </a>
-      </Link>
+      <ul style={{ listStyle: 'none'}}>        
+        <li>  
+          <Link>
+            <a href='https://github.com/AdobeDocs/project-firefly/blob/master/README.md#project-firefly-developer-guide' target='_blank'>
+              Firefly Apps
+            </a>
+          </Link>
+        </li>
+        <li>
+          <Link>
+            <a href='https://github.com/adobe/aio-sdk#adobeaio-sdk' target='_blank'>
+              Adobe I/O SDK
+            </a>
+          </Link>
+        </li>
+        <% if (hasBackend) { %>
+        <li>        
+          <Link>
+            <a href='https://adobedocs.github.io/adobeio-runtime/' target='_blank'>
+              Adobe I/O Runtime
+            </a>
+          </Link>
+        </li>
+        <% } %>
+        <li>
+          <Link>
+            <a href='https://react-spectrum.adobe.com/react-spectrum/index.html' target='_blank'>        
+              React Spectrum
+            </a>
+          </Link>
+        </li>
+      </ul>
     </Content>
   </View>
 );

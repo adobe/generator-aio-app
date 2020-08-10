@@ -20,10 +20,12 @@ const navItems = [
     path: "/",
     name: "Home",
   },
+  <% if (hasBackend) { %>
   {
     path: "/actions",
     name: "Actions",
   },
+  <% } %>
   {
     path: "/about",
     name: "About",

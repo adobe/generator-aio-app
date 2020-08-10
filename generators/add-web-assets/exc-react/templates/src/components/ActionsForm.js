@@ -29,7 +29,7 @@ import {
 import actions from "../config.json";
 import { actionWebInvoke } from "../utils";
 
-const ActionForm = (props) => {
+const ActionsForm = (props) => {
   const [state, setState] = useState({
     actionSelected: null,
     actionResponse: null,
@@ -202,9 +202,9 @@ const ActionForm = (props) => {
   }
 };
 
-ActionForm.propTypes = {
+ActionsForm.propTypes = {
   runtime: PropTypes.any,
   ims: PropTypes.any,
 };
 
-export default ActionForm;
+export default ActionsForm;
