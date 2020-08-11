@@ -1,4 +1,4 @@
-/*<% if (false) { %>
+/* <% if (false) { %>
 Copyright 2019 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
@@ -11,9 +11,9 @@ governing permissions and limitations under the License.
 * <license header>
 */
 
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import ErrorBoundary from "react-error-boundary";
+import React, { useState } from 'react'
+import PropTypes from 'prop-types'
+import ErrorBoundary from 'react-error-boundary'
 import {
   Flex,
   Heading,
@@ -24,10 +24,11 @@ import {
   ProgressCircle,
   Item,
   Text,
-} from "@adobe/react-spectrum";
+  View
+} from '@adobe/react-spectrum'
 
-import actions from "../config.json";
-import { actionWebInvoke } from "../utils";
+import actions from '../config.json'
+import { actionWebInvoke } from '../utils'
 
 const ActionsForm = (props) => {
   const [state, setState] = useState({
@@ -38,27 +39,27 @@ const ActionsForm = (props) => {
     actionHeadersValid: null,
     actionParams: null,
     actionParamsValid: null,
-    actionInvokeInProgress: false,
-  });
+    actionInvokeInProgress: false
+  })
 
-  console.log(`runtime object: ${props.runtime}`);
-  console.log(`ims object: ${props.ims}`);
+  console.log(`runtime object: ${props.runtime}`)
+  console.log(`ims object: ${props.ims}`)
 
   // use exc runtime event handlers
   // respond to configuration change events (e.g. user switches org)
-  props.runtime.on("configuration", ({ imsOrg, imsToken, locale }) => {
-    console.log("configuration change", { imsOrg, imsToken, locale });
-  });
+  props.runtime.on('configuration', ({ imsOrg, imsToken, locale }) => {
+    console.log('configuration change', { imsOrg, imsToken, locale })
+  })
   // respond to history change events
-  props.runtime.on("history", ({ type, path }) => {
-    console.log("history change", { type, path });
-  });
+  props.runtime.on('history', ({ type, path }) => {
+    console.log('history change', { type, path })
+  })
 
   return (
-    <ErrorBoundary onError={onError} FallbackComponent={fallbackComponent}>
+    <View width="size-6000">
       <Heading level={1}>Run your application backend actions</Heading>
       {Object.keys(actions).length > 0 && (
-        <Form necessityIndicator="label" maxWidth="size-6000">
+        <Form necessityIndicator="label">
           <Picker
             label="Actions"
             isRequired={true}
@@ -70,7 +71,7 @@ const ActionsForm = (props) => {
               setState({
                 actionSelected: name,
                 actionResponseError: null,
-                actionResponse: null,
+                actionResponse: null
               })
             }
           >
@@ -82,7 +83,7 @@ const ActionsForm = (props) => {
             placeholder='{ "key": "value" }'
             validationState={state.actionHeadersValid}
             onChange={(input) =>
-              setJSONInput(input, "actionHeaders", "actionHeadersValid")
+              setJSONInput(input, 'actionHeaders', 'actionHeadersValid')
             }
           />
 
@@ -91,7 +92,7 @@ const ActionsForm = (props) => {
             placeholder='{ "key": "value" }'
             validationState={state.actionParamsValid}
             onChange={(input) =>
-              setJSONInput(input, "actionParams", "actionParamsValid")
+              setJSONInput(input, 'actionParams', 'actionParamsValid')
             }
           />
           <Flex>
@@ -121,90 +122,75 @@ const ActionsForm = (props) => {
       )}
 
       {Object.keys(actions).length === 0 && <Text>You have no actions !</Text>}
-    </ErrorBoundary>
-  );
+    </View>
+  )
 
   // Methods
 
-  // error handler on UI rendering failure
-  function onError(e, componentStack) {}
-
   // parses a JSON input and adds it to the state
-  async function setJSONInput(input, stateJSON, stateValid) {
-    let content;
-    let validStr = null;
+  async function setJSONInput (input, stateJSON, stateValid) {
+    let content
+    let validStr = null
     if (input) {
       try {
-        content = JSON.parse(input);
-        validStr = "valid";
+        content = JSON.parse(input)
+        validStr = 'valid'
       } catch (e) {
-        content = null;
-        validStr = "invalid";
+        content = null
+        validStr = 'invalid'
       }
     }
-    setState({ [stateJSON]: content, [stateValid]: validStr });
+    setState({ [stateJSON]: content, [stateValid]: validStr })
   }
 
   // invokes a the selected backend actions with input headers and params
-  async function invokeAction() {
-    setState({ actionInvokeInProgress: true });
-    const action = state.actionSelected;
-    const headers = state.actionHeaders || {};
-    const params = state.actionParams || {};
+  async function invokeAction () {
+    setState({ actionInvokeInProgress: true })
+    const action = state.actionSelected
+    const headers = state.actionHeaders || {}
+    const params = state.actionParams || {}
 
     // all headers to lowercase
     Object.keys(headers).forEach((h) => {
-      const lowercase = h.toLowerCase();
+      const lowercase = h.toLowerCase()
       if (lowercase !== h) {
-        headers[lowercase] = headers[h];
-        headers[h] = undefined;
-        delete headers[h];
+        headers[lowercase] = headers[h]
+        headers[h] = undefined
+        delete headers[h]
       }
-    });
+    })
     // set the authorization header and org from the ims props object
     if (props.ims.token && !headers.authorization) {
-      headers.authorization = `Bearer ${props.ims.token}`;
+      headers.authorization = `Bearer ${props.ims.token}`
     }
-    if (props.ims.org && !headers["x-gw-ims-org-id"]) {
-      headers["x-gw-ims-org-id"] = props.ims.org;
+    if (props.ims.org && !headers['x-gw-ims-org-id']) {
+      headers['x-gw-ims-org-id'] = props.ims.org
     }
     try {
       // invoke backend action
-      const actionResponse = await actionWebInvoke(action, headers, params);
+      const actionResponse = await actionWebInvoke(action, headers, params)
       // store the response
       setState({
         actionResponse,
         actionResponseError: null,
-        actionInvokeInProgress: false,
-      });
-      console.log(`Response from ${action}:`, actionResponse);
+        actionInvokeInProgress: false
+      })
+      console.log(`Response from ${action}:`, actionResponse)
     } catch (e) {
       // log and store any error message
-      console.error(e);
+      console.error(e)
       setState({
         actionResponse: null,
         actionResponseError: e.message,
-        actionInvokeInProgress: false,
-      });
+        actionInvokeInProgress: false
+      })
     }
   }
-
-  // component to show if UI fails rendering
-  function fallbackComponent({ componentStack, error }) {
-    return (
-      <React.Fragment>
-        <h1 style={{ textAlign: "center", marginTop: "20px" }}>
-          Something went wrong :(
-        </h1>
-        <pre>{componentStack + "\n" + error.message}</pre>
-      </React.Fragment>
-    );
-  }
-};
+}
 
 ActionsForm.propTypes = {
   runtime: PropTypes.any,
-  ims: PropTypes.any,
-};
+  ims: PropTypes.any
+}
 
-export default ActionsForm;
+export default ActionsForm

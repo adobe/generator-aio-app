@@ -1,4 +1,4 @@
-/*<% if (false) { %>
+/* <% if (false) { %>
 Copyright 2019 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
@@ -11,29 +11,27 @@ governing permissions and limitations under the License.
 * <license header>
 */
 
-import React from "react";
-import { ListBox, Item } from "@adobe/react-spectrum";
-import { useLocation } from "react-router-dom";
+import React from 'react'
+import { ListBox, Item } from '@adobe/react-spectrum'
+import { useLocation } from 'react-router-dom'
 
 const navItems = [
   {
-    path: "/",
-    name: "Home",
+    path: '/',
+    name: 'Home'
   },
-  <% if (hasBackend) { %>
   {
-    path: "/actions",
-    name: "Actions",
+    path: '/actions',
+    name: 'Actions'
   },
-  <% } %>
   {
-    path: "/about",
-    name: "About",
-  },
-];
+    path: '/about',
+    name: 'About'
+  }
+]
 
-function SideBar(props) {
-  const location = useLocation();
+function SideBar () {
+  const location = useLocation()
   return (
     <ListBox
       aria-label="SideNav"
@@ -45,14 +43,14 @@ function SideBar(props) {
     >
       {(item) => <Item key={item.path}>{item.name}</Item>}
     </ListBox>
-  );
+  )
 
-  function navigateTo(items) {
-    const route = items.values().next();
+  function navigateTo (items) {
+    const route = items.values().next()
     if (route.value) {
-      window.location.hash = route.value;
+      window.location.hash = route.value
     }
   }
 }
 
-export default SideBar;
+export default SideBar

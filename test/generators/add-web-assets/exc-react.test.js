@@ -72,8 +72,7 @@ function assertWithActions () {
 }
 
 function assertWithNoActions () {
-  assert.noFile('web-src/src/components/ActionsForm.js')
-  assert.noFileContent('web-src/src/SideBar.js', 'Actions')
+  assert.fileContent('web-src/src/components/ActionsForm.js', 'You have no actions !')
 }
 
 function assertWithDoc () {
