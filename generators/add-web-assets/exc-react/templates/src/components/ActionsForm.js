@@ -115,10 +115,14 @@ const ActionsForm = (props) => {
       )}
 
       {state.actionResponseError && (
-        <Text>Failure! See the error in your browser console.</Text>
+        <View backgroundColor={`negative`} padding={`size-100`} marginTop={`size-100`} marginBottom={`size-100`} borderRadius={`small `}>
+          <Text>Failure! See the error in your browser console.</Text>
+        </View>
       )}
       {!state.actionError && state.actionResponse && (
-        <Text>Success! See the response content in your browser console.</Text>
+        <View backgroundColor={`positive`} padding={`size-100`} marginTop={`size-100`} marginBottom={`size-100`} borderRadius={`small `}>
+          <Text>Success! See the response content in your browser console.</Text>
+        </View>
       )}
 
       {Object.keys(actions).length === 0 && <Text>You have no actions !</Text>}
