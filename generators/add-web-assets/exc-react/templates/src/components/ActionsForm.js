@@ -42,19 +42,6 @@ const ActionsForm = (props) => {
     actionInvokeInProgress: false
   })
 
-  console.log(`runtime object: ${props.runtime}`)
-  console.log(`ims object: ${props.ims}`)
-
-  // use exc runtime event handlers
-  // respond to configuration change events (e.g. user switches org)
-  props.runtime.on('configuration', ({ imsOrg, imsToken, locale }) => {
-    console.log('configuration change', { imsOrg, imsToken, locale })
-  })
-  // respond to history change events
-  props.runtime.on('history', ({ type, path }) => {
-    console.log('history change', { type, path })
-  })
-
   return (
     <View width="size-6000">
       <Heading level={1}>Run your application backend actions</Heading>
