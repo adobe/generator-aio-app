@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 */
 
 import React from 'react'
-import { Heading } from '@adobe/react-spectrum'
+import { Heading, View, Content, Link } from '@adobe/react-spectrum'
 export const About = () => (
   <View width="size-6000">
     <Heading level={1}>Useful documentation for your app</Heading>
