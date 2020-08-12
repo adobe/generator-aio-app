@@ -22,11 +22,11 @@ const navItems = [
   },
   {
     path: '/actions',
-    name: 'Actions'
+    name: 'Your Actions'
   },
   {
     path: '/about',
-    name: 'About'
+    name: 'About Firefly Apps'
   }
 ]
 
