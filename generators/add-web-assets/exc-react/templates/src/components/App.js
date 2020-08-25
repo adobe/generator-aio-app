@@ -37,7 +37,7 @@ function App (props) {
   return (
     <ErrorBoundary onError={onError} FallbackComponent={fallbackComponent}>
       <Router>
-        <Provider theme={defaultTheme}>
+        <Provider theme={defaultTheme} colorScheme={`light`}>
           <Grid
             areas={['sidebar content']}
             columns={['256px', '3fr']}
