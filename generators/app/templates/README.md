@@ -69,3 +69,15 @@ code.
 While running your local server (`aio app run`), both UI and actions can be debugged, to do so open the vscode debugger
 and select the debugging configuration called `WebAndActions`.
 Alternatively, there are also debug configs for only UI and each separate action.
+
+## Typescript support for UI
+
+To use typescript use `.tsx` extension for react components and add a `tsconfig.json` 
+and make sure you have the below config added
+```
+ {
+  "compilerOptions": {
+      "jsx": "react"
+    }
+  } 
+```

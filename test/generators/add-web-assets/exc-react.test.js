@@ -16,10 +16,15 @@ const assert = require('yeoman-assert')
 const fs = require('fs')
 const path = require('path')
 
-const theGeneratorPath = require.resolve('../../../generators/add-web-assets/exc-react')
+const theGeneratorPath = require.resolve(
+  '../../../generators/add-web-assets/exc-react'
+)
 const Generator = require('yeoman-generator')
 
-const installDependencies = jest.spyOn(Generator.prototype, 'installDependencies')
+const installDependencies = jest.spyOn(
+  Generator.prototype,
+  'installDependencies'
+)
 beforeAll(() => {
   // mock implementations
   installDependencies.mockReturnValue(undefined)
@@ -38,65 +43,82 @@ describe('prototype', () => {
 })
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', 'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/custom-apps/?localDevUrl="')
+  assert.fileContent(
+    '.env',
+    'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/custom-apps/?localDevUrl="'
+  )
   assert.fileContent('.env', prevContent)
 }
 
 function assertFiles () {
   assert.file('web-src/index.html')
-  assert.file('web-src/404.html')
   assert.file('web-src/src/exc-runtime.js')
+  assert.file('web-src/src/index.css')
   assert.file('web-src/src/index.js')
-  assert.file('web-src/src/App.js')
-  assert.file('web-src/src/App.css')
   assert.file('web-src/src/utils.js')
+  assert.file('web-src/src/components/About.js')
+  assert.file('web-src/src/components/ActionsForm.js')
+  assert.file('web-src/src/components/App.js')
+  assert.file('web-src/src/components/Home.js')
+  assert.file('web-src/src/components/SideBar.js')
 }
 
 function assertWithActions () {
-  assert.fileContent('web-src/src/App.js', 'Run your application backend actions')
-  assert.fileContent('web-src/src/App.js', 'Adobe I/O Runtime')
+  assert.fileContent(
+    'web-src/src/components/ActionsForm.js',
+    'Run your application backend actions'
+  )
+  assert.fileContent('web-src/src/components/SideBar.js', 'Actions')
 }
 
 function assertWithNoActions () {
-  assert.noFileContent('web-src/src/App.js', 'Run your application backend actions')
-  assert.noFileContent('web-src/src/App.js', 'Adobe I/O Runtime')
+  assert.fileContent('web-src/src/components/ActionsForm.js', 'You have no actions !')
 }
 
 function assertWithDoc () {
-  assert.fileContent('web-src/src/App.js', 'Useful documentation for your app')
-  assert.fileContent('web-src/src/App.js', 'Firefly Apps')
-  assert.fileContent('web-src/src/App.js', 'Adobe I/O SDK')
-  assert.fileContent('web-src/src/App.js', 'React Spectrum')
+  assert.fileContent(
+    'web-src/src/components/About.js',
+    'Useful documentation for your app'
+  )
+  assert.fileContent('web-src/src/components/About.js', 'Firefly Apps')
+  assert.fileContent('web-src/src/components/About.js', 'Adobe I/O SDK')
+  assert.fileContent('web-src/src/components/About.js', 'React Spectrum')
 }
 
 const prevDotEnv = 'FAKECONTENT'
 
 describe('run', () => {
   test('--project-name abc', async () => {
-    await helpers.run(theGeneratorPath)
+    await helpers
+      .run(theGeneratorPath)
       .withOptions({ 'project-name': 'abc', 'skip-install': false })
-      .inTmpDir(dir => {
+      .inTmpDir((dir) => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnv)
       })
 
     assertFiles()
-    assertDependencies(fs, {
-      react: expect.any(String),
-      'react-dom': expect.any(String),
-      'react-error-boundary': expect.any(String),
-      'core-js': expect.any(String),
-      'regenerator-runtime': expect.any(String),
-      '@adobe/exc-app': expect.any(String),
-      '@adobe/react-spectrum': expect.any(String)
-    }, {
-      '@babel/core': expect.any(String),
-      '@babel/polyfill': expect.any(String),
-      '@babel/preset-env': expect.any(String)
-    })
+    assertDependencies(
+      fs,
+      {
+        react: expect.any(String),
+        'react-dom': expect.any(String),
+        'react-error-boundary': expect.any(String),
+        'core-js': expect.any(String),
+        'regenerator-runtime': expect.any(String),
+        '@adobe/exc-app': expect.any(String),
+        '@adobe/react-spectrum': expect.any(String),
+        'react-router-dom': expect.any(String)
+      },
+      {
+        '@babel/core': expect.any(String),
+        '@babel/polyfill': expect.any(String),
+        '@babel/preset-env': expect.any(String)
+      }
+    )
     assertEnvContent(prevDotEnv)
 
     // greats with projectName
-    assert.fileContent('web-src/src/App.js', 'Welcome to abc!')
+    assert.fileContent('web-src/src/components/Home.js', 'Welcome to abc!')
 
     // make sure html calls js files
     assert.fileContent('web-src/index.html', '<script src="./src/index.js"')
@@ -108,30 +130,40 @@ describe('run', () => {
   })
 
   test('--project-name abc --has-backend false', async () => {
-    await helpers.run(theGeneratorPath)
-      .withOptions({ 'project-name': 'abc', 'skip-install': false, 'has-backend': false })
-      .inTmpDir(dir => {
+    await helpers
+      .run(theGeneratorPath)
+      .withOptions({
+        'project-name': 'abc',
+        'skip-install': false,
+        'has-backend': false
+      })
+      .inTmpDir((dir) => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnv)
       })
 
     assertFiles()
-    assertDependencies(fs, {
-      react: expect.any(String),
-      'react-dom': expect.any(String),
-      'react-error-boundary': expect.any(String),
-      'core-js': expect.any(String),
-      'regenerator-runtime': expect.any(String),
-      '@adobe/exc-app': expect.any(String),
-      '@adobe/react-spectrum': expect.any(String)
-    }, {
-      '@babel/core': expect.any(String),
-      '@babel/polyfill': expect.any(String),
-      '@babel/preset-env': expect.any(String)
-    })
+    assertDependencies(
+      fs,
+      {
+        react: expect.any(String),
+        'react-dom': expect.any(String),
+        'react-error-boundary': expect.any(String),
+        'core-js': expect.any(String),
+        'regenerator-runtime': expect.any(String),
+        '@adobe/exc-app': expect.any(String),
+        '@adobe/react-spectrum': expect.any(String),
+        'react-router-dom': expect.any(String)
+      },
+      {
+        '@babel/core': expect.any(String),
+        '@babel/polyfill': expect.any(String),
+        '@babel/preset-env': expect.any(String)
+      }
+    )
     assertEnvContent(prevDotEnv)
 
     // greats with projectName
-    assert.fileContent('web-src/src/App.js', 'Welcome to abc!')
+    assert.fileContent('web-src/src/components/Home.js', 'Welcome to abc!')
 
     // make sure html calls js files
     assert.fileContent('web-src/index.html', '<script src="./src/index.js"')
@@ -143,7 +175,8 @@ describe('run', () => {
   })
 
   test('--project-name abc --skip-install', async () => {
-    await helpers.run(theGeneratorPath)
+    await helpers
+      .run(theGeneratorPath)
       .withOptions({ 'project-name': 'abc', 'skip-install': true })
     expect(installDependencies).toHaveBeenCalledTimes(0)
   })
