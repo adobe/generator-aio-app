@@ -12,45 +12,22 @@ governing permissions and limitations under the License.
 */
 
 import React from 'react'
-import { ListBox, Item } from '@adobe/react-spectrum'
-import { useLocation } from 'react-router-dom'
-
-const navItems = [
-  {
-    path: '/',
-    name: 'Home'
-  },
-  {
-    path: '/actions',
-    name: 'Your App Actions'
-  },
-  {
-    path: '/about',
-    name: 'About Project Firefly Apps'
-  }
-]
+import { NavLink } from 'react-router-dom'
 
 function SideBar () {
-  const location = useLocation()
   return (
-    <ListBox
-      aria-label="SideNav"
-      selectionMode="single"
-      defaultSelectedKeys={[location.pathname]}
-      onSelectionChange={navigateTo}
-      items={navItems}
-      disallowEmptySelection={true}
-    >
-      {(item) => <Item key={item.path}>{item.name}</Item>}
-    </ListBox>
+    <ul className="SideNav">
+      <li className="SideNav-item">
+        <NavLink className="SideNav-itemLink" activeClassName="is-selected" exact to="/">Home</NavLink>
+      </li>
+      <li className="SideNav-item">
+        <NavLink className="SideNav-itemLink" activeClassName="is-selected" to="/actions">Your App Actions</NavLink>
+      </li>
+      <li className="SideNav-item">
+        <NavLink className="SideNav-itemLink" activeClassName="is-selected" to="/about">About Project Firefly Apps</NavLink>
+      </li>
+    </ul>
   )
-
-  function navigateTo (items) {
-    const route = items.values().next()
-    if (route.value) {
-      window.location.hash = route.value
-    }
-  }
 }
 
 export default SideBar
