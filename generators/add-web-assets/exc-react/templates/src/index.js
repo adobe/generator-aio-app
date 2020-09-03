@@ -1,4 +1,4 @@
-/*<% if (false) { %>
+/* <% if (false) { %>
 Copyright 2019 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
@@ -11,16 +11,16 @@ governing permissions and limitations under the License.
 * <license header>
 */
 
-import "core-js/stable"
-import "regenerator-runtime/runtime"
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
 
 import React from 'react'
 import ReactDOM from 'react-dom'
 
 import Runtime, { init } from '@adobe/exc-app'
 
-import App from './App'
-
+import App from './components/App'
+import './index.css'
 /* Here you can bootstrap your application and configure the integration with the Adobe Experience Cloud Shell */
 try {
   // attempt to load the Experience Cloud Runtime
@@ -39,7 +39,10 @@ function bootstrapRaw () {
   const mockIms = {}
 
   // render the actual react application and pass along the runtime object to make it available to the App
-  ReactDOM.render(<App runtime={ mockRuntime } ims={ mockIms }/>, document.getElementById('root'))
+  ReactDOM.render(
+    <App runtime={mockRuntime} ims={mockIms} />,
+    document.getElementById('root')
+  )
 }
 
 function bootstrapInExcShell () {
@@ -66,7 +69,10 @@ function bootstrapInExcShell () {
       token: imsToken
     }
     // render the actual react application and pass along the runtime and ims objects to make it available to the App
-    ReactDOM.render(<App runtime={ runtime } ims={ ims }/>, document.getElementById('root'))
+    ReactDOM.render(
+      <App runtime={runtime} ims={ims} />,
+      document.getElementById('root')
+    )
   })
 
   // set solution info, shortTitle is used when window is too small to display full title
