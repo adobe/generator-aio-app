@@ -18,13 +18,13 @@ function SideBar () {
   return (
     <ul className="SideNav">
       <li className="SideNav-item">
-        <NavLink className="SideNav-itemLink" activeClassName="is-selected" exact to="/">Home</NavLink>
+        <NavLink className="SideNav-itemLink" activeClassName="is-selected" aria-current="page" exact to="/">Home</NavLink>
       </li>
       <li className="SideNav-item">
-        <NavLink className="SideNav-itemLink" activeClassName="is-selected" to="/actions">Your App Actions</NavLink>
+        <NavLink className="SideNav-itemLink" activeClassName="is-selected" aria-current="page" to="/actions">Your App Actions</NavLink>
       </li>
       <li className="SideNav-item">
-        <NavLink className="SideNav-itemLink" activeClassName="is-selected" to="/about">About Project Firefly Apps</NavLink>
+        <NavLink className="SideNav-itemLink" activeClassName="is-selected" aria-current="page" to="/about">About Project Firefly Apps</NavLink>
       </li>
     </ul>
   )
