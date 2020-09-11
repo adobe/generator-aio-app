@@ -60,7 +60,7 @@ class ExcReactGenerator extends Generator {
       'react-error-boundary': '^1.2.5',
       'regenerator-runtime': '^0.13.5',
       '@adobe/exc-app': '^0.2.17',
-      '@adobe/react-spectrum': '^3.0.1'
+      '@adobe/react-spectrum': '^3.3.0'
     })
     utils.addDependencies(
       this,
