@@ -80,6 +80,10 @@ function assertActionCodeContent (actionName) {
   // a few checks to make sure the action calls the sdk
   assert.fileContent(
     theFile,
+    'const { Core, Target } = require(\'@adobe/aio-sdk\')'
+  )
+  assert.fileContent(
+    theFile,
     'const requiredParams = [\'apiKey\', \'tenant\']'
   )
   assert.fileContent(

@@ -22,7 +22,7 @@ class CloudEventsGenerator extends ActionGenerator {
       requiredParams: `['apiKey', 'providerId', 'eventCode', 'payload']`,
       // eslint-disable-next-line quotes
       requiredHeaders: `['Authorization', 'x-gw-ims-org-id']`,
-      importCode: `const { Events } = require('@adobe/aio-sdk')
+      importCode: `const { Core, Events } = require('@adobe/aio-sdk')
 const uuid = require('uuid')
 const cloudEventV1 = require('cloudevents-sdk/v1')`,
       inlineUtilityFunctions: `

@@ -72,6 +72,10 @@ function assertActionCodeContent (actionName) {
   // a few checks to make sure the action calls the audienceManagerCD sdk
   assert.fileContent(
     theFile,
+    'const { Core, AudienceManagerCD } = require(\'@adobe/aio-sdk\')'
+  )
+  assert.fileContent(
+    theFile,
     'const requiredParams = [\'apiKey\', \'id\', \'dataSourceId\']'
   )
   assert.fileContent(

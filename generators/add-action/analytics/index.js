@@ -23,7 +23,7 @@ class AnalyticsGenerator extends ActionGenerator {
       // eslint-disable-next-line quotes
       requiredHeaders: `['Authorization']`,
       // eslint-disable-next-line quotes
-      importCode: `const { Analytics } = require('@adobe/aio-sdk')`,
+      importCode: `const { Core, Analytics } = require('@adobe/aio-sdk')`,
       responseCode: `// initialize the sdk
     const analyticsClient = await Analytics.init(params.companyId, params.apiKey, token)
 

@@ -23,7 +23,7 @@ class CustomerProfileGenerator extends ActionGenerator {
       // eslint-disable-next-line quotes
       requiredHeaders: `['Authorization', 'x-gw-ims-org-id']`,
       // eslint-disable-next-line quotes
-      importCode: `const { CustomerProfile } = require('@adobe/aio-sdk')`,
+      importCode: `const { Core, CustomerProfile } = require('@adobe/aio-sdk')`,
       responseCode: `// initialize sdk
     const orgId = params.__ow_headers['x-gw-ims-org-id']
     const client = await CustomerProfile.init(params.tenant, orgId, params.apiKey, token)

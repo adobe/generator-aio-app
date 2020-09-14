@@ -70,6 +70,10 @@ function assertActionCodeContent (actionName) {
   const theFile = `${constants.actionsDirname}/${actionName}/index.js`
   assert.fileContent(
     theFile,
+    'const { Core } = require(\'@adobe/aio-sdk\')'
+  )
+  assert.fileContent(
+    theFile,
     'const res = await fetch(apiEndpoint)'
   )
   assert.fileContent(

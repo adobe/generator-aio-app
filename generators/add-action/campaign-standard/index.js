@@ -23,7 +23,7 @@ class CampaignStandardGenerator extends ActionGenerator {
       // eslint-disable-next-line quotes
       requiredHeaders: `['Authorization']`,
       // eslint-disable-next-line quotes
-      importCode: `const { CampaignStandard } = require('@adobe/aio-sdk')`,
+      importCode: `const { Core, CampaignStandard } = require('@adobe/aio-sdk')`,
       responseCode: `// initialize the sdk
     const campaignClient = await CampaignStandard.init(params.tenant, params.apiKey, token)
 
