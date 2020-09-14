@@ -78,6 +78,10 @@ function assertEventCodeContent (actionName) {
   // a few checks to make sure the action calls the events sdk to publish cloud events
   assert.fileContent(
     theFile,
+    'const { Core, Events } = require(\'@adobe/aio-sdk\')'
+  )
+  assert.fileContent(
+    theFile,
     'const requiredParams = [\'apiKey\', \'providerId\', \'eventCode\', \'payload\']'
   )
   assert.fileContent(

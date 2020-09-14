@@ -80,6 +80,10 @@ function assertActionCodeContent (actionName) {
   // a few checks to make sure the action calls the analytics sdk
   assert.fileContent(
     theFile,
+    'const { Core, Analytics } = require(\'@adobe/aio-sdk\')'
+  )
+  assert.fileContent(
+    theFile,
     'const requiredParams = [\'apiKey\', \'companyId\']'
   )
   assert.fileContent(
