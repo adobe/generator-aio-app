@@ -55,7 +55,6 @@ class AddWebAssets extends Generator {
     if (!this.options['skip-prompt']) {
       const promptProps = await this.prompt([
         {
-          // for now we just have one webAsset generator
           type: 'list',
           name: 'webAssetsGenerator',
           message: 'Which type of UI do you want to add to your project?\nselect template to generate',
@@ -74,6 +73,7 @@ class AddWebAssets extends Generator {
       ])
       this.composeWith(promptProps.webAssetsGenerator, this.options)
     } else {
+      // default template
       this.composeWith(excReactWebAssetsGenerator, this.options)
     }
   }
