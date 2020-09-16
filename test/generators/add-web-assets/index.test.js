@@ -137,7 +137,6 @@ describe('run', () => {
     expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 
-  // eslint-disable-next-line jest/no-commented-out-tests
   test('--project-name fake and selected prompt is fake generator "a"', async () => {
     await helpers.run(theGeneratorPath)
       .withOptions({ 'skip-install': false, 'project-name': 'fake' })
