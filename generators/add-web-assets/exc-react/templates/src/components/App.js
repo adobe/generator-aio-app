@@ -19,10 +19,10 @@ import SideBar from './SideBar'
 import ActionsForm from './ActionsForm'
 import { Home } from './Home'
 import { About } from './About'
-function App (props) {
 
-  console.log(`runtime object: ${props.runtime}`)
-  console.log(`ims object: ${props.ims}`)
+function App (props) {
+  console.log('runtime object:', props.runtime)
+  console.log('ims object:', props.ims)
 
   // use exc runtime event handlers
   // respond to configuration change events (e.g. user switches org)
