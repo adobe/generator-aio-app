@@ -56,6 +56,7 @@ const ActionsForm = (props) => {
             itemKey="name"
             onSelectionChange={(name) =>
               setState({
+                ...state,
                 actionSelected: name,
                 actionResponseError: null,
                 actionResponse: null
@@ -106,7 +107,7 @@ const ActionsForm = (props) => {
           <Text>Failure! See the error in your browser console.</Text>
         </View>
       )}
-      {!state.actionError && state.actionResponse && (
+      {!state.actionResponseError && state.actionResponse && (
         <View backgroundColor={`positive`} padding={`size-100`} marginTop={`size-100`} marginBottom={`size-100`} borderRadius={`small `}>
           <Text>Success! See the response content in your browser console.</Text>
         </View>
@@ -131,12 +132,12 @@ const ActionsForm = (props) => {
         validStr = 'invalid'
       }
     }
-    setState({ [stateJSON]: content, [stateValid]: validStr })
+    setState({ ...state, [stateJSON]: content, [stateValid]: validStr })
   }
 
   // invokes a the selected backend actions with input headers and params
   async function invokeAction () {
-    setState({ actionInvokeInProgress: true })
+    setState({ ...state, actionInvokeInProgress: true })
     const action = state.actionSelected
     const headers = state.actionHeaders || {}
     const params = state.actionParams || {}
@@ -162,6 +163,7 @@ const ActionsForm = (props) => {
       const actionResponse = await actionWebInvoke(action, headers, params)
       // store the response
       setState({
+        ...state,
         actionResponse,
         actionResponseError: null,
         actionInvokeInProgress: false
@@ -171,6 +173,7 @@ const ActionsForm = (props) => {
       // log and store any error message
       console.error(e)
       setState({
+        ...state,
         actionResponse: null,
         actionResponseError: e.message,
         actionInvokeInProgress: false
