@@ -10,37 +10,43 @@ governing permissions and limitations under the License.
 <% } %> <license header> -->
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="spectrum spectrum--medium spectrum--light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://unpkg.com/@spectrum-css/vars/dist/spectrum-global.css">
+  <link rel="stylesheet" href="https://unpkg.com/@spectrum-css/vars/dist/spectrum-medium.css">
+  <link rel="stylesheet" href="https://unpkg.com/@spectrum-css/vars/dist/spectrum-light.css">
+  <link rel="stylesheet" href="https://unpkg.com/@spectrum-css/page/dist/index-vars.css">
+  <link rel="stylesheet" href="https://unpkg.com/@spectrum-css/button/dist/index-vars.css">
+  <link rel="stylesheet" href="https://unpkg.com/@spectrum-css/typography/font.css">
+  <link rel="stylesheet" href="https://unpkg.com/@spectrum-css/typography/index.css">
+  <link rel="stylesheet" href="https://unpkg.com/@spectrum-css/label/index.css">
   <title><%= projectName %></title>
+  <script src="./src/index.js"></script>
 </head>
 <body>
-    <script src="./src/index.js"></script>
-    <div style="text-align: center">
-      <h1>Welcome to <%= projectName %>!</h1>
+  <div class="spectrum--large spectrum-Typography spectrum-Site">
+    <h1 class="spectrum-Heading spectrum-Heading--XXL"><%= projectName %>!</h1>
         <div>
-          <h3>backend actions</h3>
-          <div id="action-list"></div>
+          <h2 class="spectrum-Heading spectrum-Heading--XL">backend actions</h2>
+          <span id="action-list"></span>
         </div>
       <div>
-        <h3>next steps</h3>
+        <h2 class="spectrum-Heading spectrum-Heading--XL">next steps</h2>
         <div id="doc-list">
-          <ul>
-              <li>check <code>README.md</code> for more docs</li>
-              <li><a href="https://adobedocs.github.io/adobeio-runtime/">Adobe I/O Runtime Documentation</a></li>
-              <% if (adobeServices.includes(sdkCodes.target)) { %>
-                <li><a href="http://developers.adobetarget.com/api/">Adobe Target API</a></li>
-              <% } %>
-              <% if (adobeServices.includes(sdkCodes.analytics)) { %>
-                <li><a href="https://www.adobe.io/apis/experiencecloud/analytics/docs.html">Adobe Analytics API</a></li>
-              <% } %>
-              <% if (adobeServices.includes(sdkCodes.campaign)) { %>
-                <li><a href="https://final-docs.campaign.adobe.com/doc/standard/en/api/ACS_API.html">Adobe Campaign Standard API</a></li>
-              <% } %>
-            </ul>
+          <div>check <code>README.md</code> for more docs</div>
+          <div><a href="https://adobedocs.github.io/adobeio-runtime/" class="spectrum-Link spectrum-Link--quiet">Adobe I/O Runtime Documentation</a></div>
+          <% if (adobeServices.includes(sdkCodes.target)) { %>
+            <div><a href="http://developers.adobetarget.com/api/" class="spectrum-Link spectrum-Link--quiet">Adobe Target API</a></div>
+          <% } %>
+          <% if (adobeServices.includes(sdkCodes.analytics)) { %>
+            <div><a href="https://www.adobe.io/apis/experiencecloud/analytics/docs.html" class="spectrum-Link spectrum-Link--quiet">Adobe Analytics API</a></div>
+          <% } %>
+          <% if (adobeServices.includes(sdkCodes.campaign)) { %>
+            <div><a href="https://final-docs.campaign.adobe.com/doc/standard/en/api/ACS_API.html" class="spectrum-Link spectrum-Link--quiet">Adobe Campaign Standard API</a></div>
+          <% } %>
         </div>
       </div>
     </div>

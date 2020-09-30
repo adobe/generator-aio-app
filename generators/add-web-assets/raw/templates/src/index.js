@@ -37,9 +37,6 @@ function initRuntime () {
   // get the Experience Cloud Runtime object
   const runtime = Runtime()
 
-  // set the app name to the Shell header
-  runtime.customEnvLabel = '<%= projectName %>'
-
   // use this to set a favicon
   // runtime.favicon = 'url-to-favicon'
 
@@ -50,7 +47,7 @@ function initRuntime () {
   runtime.on('ready', ({ imsOrg, imsToken, imsProfile, locale }) => {
     // tell the exc-runtime object we are done
     runtime.done()
-    console.log('Ready! received imsProfile:', imsProfile)    
+    console.log('Ready! received imsProfile:', imsProfile)
   })
 
   // set solution info, shortTitle is used when window is too small to display full title
@@ -62,15 +59,14 @@ function initRuntime () {
   runtime.title = '<%= projectName %>'
 }
 
-
 /**
  * Generate list of actions
  */
 function showActionsList () {
   const container = document.getElementById('action-list')
   if (Object.keys(actions).length === 0) {
-    container.innerHTML = '<ul><li>you have no actions, run <code>aio app add actions</code> to add one</li></ul>'
+    container.innerHTML = '<span>you have no actions, run <code>aio app add actions</code> to add one</span>'
   } else {
-    container.innerHTML = '<ul>' + Object.entries(actions).map(([_, url]) => `<li><a href=${url}>${url}</a></li>`).join('') + '</ul>'
+    container.innerHTML = '<div>' + Object.entries(actions).map(([actionName, url]) => `<div><a href=${url} class="spectrum-Link spectrum-Link--quiet">${actionName}: ${url}</a></div>`).join('') + '</div>'
   }
 }
