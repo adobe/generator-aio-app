@@ -30,12 +30,16 @@ async function actionWebInvoke (actionName, headers = {}, params = {}) {
   if (!actionName || !actions[actionName]) {
     throw new Error(`Cannot fetch action '${actionName}' as it doesn't exist.`)
   }
+  const actionHeaders = {
+    'Content-Type': 'application/json',
+    ...headers
+  }
+  if (window.location.hostname === 'localhost') {
+    actionHeaders['x-ow-extra-logging'] = 'on'
+  }
   const response = await fetch(actions[actionName], {
     method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      ...headers
-    },
+    headers: actionHeaders,
     body: JSON.stringify(params)
   })
   let content = await response.text()

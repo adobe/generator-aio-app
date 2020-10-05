@@ -25,12 +25,16 @@ governing permissions and limitations under the License.
  *
  */
 function actionWebInvoke (actionUrl, headers = {}, params = {}) {
+  const actionHeaders = {
+    'Content-Type': 'application/json',
+    ...headers
+  }
+  if(window.location.hostname === 'localhost') {
+    actionHeaders['x-ow-extra-logging'] = 'on'
+  }
   return fetch(actionUrl, {
     method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      ...headers
-    },
+    headers: actionHeaders,
     body: JSON.stringify(params)
   }).then(response => {
     return response.text()
