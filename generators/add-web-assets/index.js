@@ -60,11 +60,11 @@ class AddWebAssets extends Generator {
           message: 'Which type of UI do you want to add to your project?\nselect template to generate',
           choices: [
             {
-              name: 'React Spectrum 3 UI',
+              name: 'React Spectrum 3',
               value: excReactWebAssetsGenerator
             },
             {
-              name: 'Raw HTML/JS UI',
+              name: 'Pure HTML/JS',
               value: rawWebAssetsGenerator
             }
           ],
