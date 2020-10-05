@@ -40,8 +40,8 @@ const expectedPromptChoices = [expect.objectContaining({
   type: 'list',
   name: 'webAssetsGenerator',
   choices: [
-    { name: 'React Spectrum 3 UI', value: expect.stringContaining(n('exc-react/index.js')) },
-    { name: 'Raw HTML/JS UI', value: expect.stringContaining(n('raw/index.js')) }
+    { name: 'React Spectrum 3', value: expect.stringContaining(n('exc-react/index.js')) },
+    { name: 'Pure HTML/JS', value: expect.stringContaining(n('raw/index.js')) }
   ],
   validate: utils.atLeastOne
 })]
