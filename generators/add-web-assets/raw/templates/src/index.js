@@ -64,8 +64,6 @@ function showActionsList() {
   const container = document.getElementById('action-list')
   if (Object.keys(actions).length === 0) {
     container.innerHTML = '<span>you have no actions, run <code>aio app add actions</code> to add one</span>'
-  } else if (Object.keys(actions).length === 1) {
-    container.innerHTML = `<span>${actions[0].actionName}</span>`
   } else {
     container.innerHTML = '<select id="selAction">' + Object.entries(actions).map(([actionName]) => `<option>${actionName}</option>`).join('') + '</select>'
   }
