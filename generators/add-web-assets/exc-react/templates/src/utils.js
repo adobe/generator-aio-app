@@ -11,8 +11,6 @@ governing permissions and limitations under the License.
 * <license header>
 */
 
-import actions from './config.json'
-
 /* global fetch */
 
 /**
@@ -26,11 +24,8 @@ import actions from './config.json'
  * @returns {Promise<string|object>} the response
  *
  */
-async function actionWebInvoke (actionName, headers = {}, params = {}) {
-  if (!actionName || !actions[actionName]) {
-    throw new Error(`Cannot fetch action '${actionName}' as it doesn't exist.`)
-  }
-  const response = await fetch(actions[actionName], {
+async function actionWebInvoke (actionUrl, headers = {}, params = {}) {
+  const response = await fetch(actionUrl, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -40,7 +35,7 @@ async function actionWebInvoke (actionName, headers = {}, params = {}) {
   })
   let content = await response.text()
   if (!response.ok) {
-    throw new Error(`failed request to '${actions[actionName]}' with status: ${response.status} and message: ${content}`)
+    throw new Error(`failed request to '${actionUrl}' with status: ${response.status} and message: ${content}`)
   }
   try {
     content = JSON.parse(content)
