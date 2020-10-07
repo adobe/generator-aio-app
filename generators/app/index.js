@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const { dotenvFilename } = require('../../lib/constants')
+const { promptMaxChoices, promptLoop, dotenvFilename } = require('../../lib/constants')
 const { atLeastOne } = require('../../lib/utils')
 /*
       'initializing',
@@ -31,9 +31,12 @@ class CodeGenerator extends Generator {
 
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
-    this.option('adobe-services', { type: String, default: '' })
     this.option('project-name', { type: String, default: path.basename(process.cwd()) })
     this.option('skip-install', { type: String, default: false })
+    /// Adobe services added to the Console Workspace
+    this.option('adobe-services', { type: String, default: '' })
+    /// Adobe services that are supported by the Org
+    this.option('supported-adobe-services', { type: String, default: '' })
 
     // props are passed to templates
     this.props = {}
@@ -50,6 +53,8 @@ class CodeGenerator extends Generator {
           type: 'checkbox',
           name: 'components',
           message: 'Which Adobe I/O App features do you want to enable for this project?\nSelect components to include',
+          loop: promptLoop,
+          pageSize: promptMaxChoices,
           choices: [
             {
               name: 'Actions: Deploy Runtime actions',
@@ -87,7 +92,8 @@ class CodeGenerator extends Generator {
       this.composeWith(path.join(__dirname, '../add-action/index.js'), {
         'skip-install': true,
         'skip-prompt': this.options['skip-prompt'],
-        'adobe-services': this.options['adobe-services']
+        'adobe-services': this.options['adobe-services'],
+        'supported-adobe-services': this.options['supported-adobe-services']
       })
     }
     if (addEvents) {
