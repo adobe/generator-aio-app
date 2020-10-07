@@ -33,3 +33,7 @@ textarea {
   /* will prevent resizing horizontally */
   resize:vertical;
 }
+
+footer > a {
+  display: table-row;
+}
