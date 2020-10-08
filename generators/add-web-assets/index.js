@@ -48,7 +48,9 @@ class AddWebAssets extends Generator {
   }
 
   initializing () {
-    if (fs.existsSync(this.webAssetsPath)) throw new Error('you already have web assets in your project, please delete first')
+    if (fs.existsSync(this.webAssetsPath)) {
+      throw new Error('you already have web assets in your project, please delete first')
+    }
   }
 
   async prompting () {
@@ -80,7 +82,9 @@ class AddWebAssets extends Generator {
 
   async install () {
     // this condition makes sure it doesn't print any unwanted 'skip install message' into parent generator
-    if (!this.options['skip-install']) return this.installDependencies({ bower: false })
+    if (!this.options['skip-install']) {
+      return this.installDependencies({ bower: false })
+    }
   }
 }
 
