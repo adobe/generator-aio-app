@@ -126,7 +126,7 @@ async function invokeAction(action, _headers, _params) {
   if (state.imsOrg && !headers['x-gw-ims-org-id']) {
     headers['x-gw-ims-org-id'] = state.imsOrg
   }
-
-  const result = await actionWebInvoke(action[0], headers, params)
+  // action is [name, url]
+  const result = await actionWebInvoke(action[1], headers, params)
   return result
 }

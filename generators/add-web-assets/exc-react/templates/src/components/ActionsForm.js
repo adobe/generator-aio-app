@@ -28,7 +28,7 @@ import {
 } from '@adobe/react-spectrum'
 
 import actions from '../config.json'
-import { actionWebInvoke } from '../utils'
+import actionWebInvoke from '../utils'
 
 const ActionsForm = (props) => {
   const [state, setState] = useState({
@@ -138,7 +138,7 @@ const ActionsForm = (props) => {
   // invokes a the selected backend actions with input headers and params
   async function invokeAction () {
     setState({ ...state, actionInvokeInProgress: true })
-    const action = state.actionSelected
+    const actionName = state.actionSelected
     const headers = state.actionHeaders || {}
     const params = state.actionParams || {}
 
@@ -160,7 +160,7 @@ const ActionsForm = (props) => {
     }
     try {
       // invoke backend action
-      const actionResponse = await actionWebInvoke(action, headers, params)
+      const actionResponse = await actionWebInvoke(actions[actionName], headers, params)
       // store the response
       setState({
         ...state,
@@ -168,7 +168,7 @@ const ActionsForm = (props) => {
         actionResponseError: null,
         actionInvokeInProgress: false
       })
-      console.log(`Response from ${action}:`, actionResponse)
+      console.log(`Response from ${actionName}:`, actionResponse)
     } catch (e) {
       // log and store any error message
       console.error(e)
