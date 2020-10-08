@@ -11,36 +11,47 @@ governing permissions and limitations under the License.
 * <license header>
 */
 
+import actions from './config.json'
+
 /* global fetch */
 
 /**
  *
  * Invokes a web action
  *
- * @param  {string} actionUrl
+ * @param  {string} actionName
  * @param {object} headers
  * @param  {object} params
  *
  * @returns {Promise<string|object>} the response
  *
  */
-function actionWebInvoke (actionUrl, headers = {}, params = {}) {
+async function actionWebInvoke (actionName, headers = {}, params = {}) {
+  if (!actionName || !actions[actionName]) {
+    throw new Error(`Cannot fetch action '${actionName}' as it doesn't exist.`)
+  }
   const actionHeaders = {
     'Content-Type': 'application/json',
     ...headers
   }
-  if(window.location.hostname === 'localhost') {
+  if (window.location.hostname === 'localhost') {
     actionHeaders['x-ow-extra-logging'] = 'on'
   }
-  return fetch(actionUrl, {
+  const response = await fetch(actions[actionName], {
     method: 'post',
     headers: actionHeaders,
     body: JSON.stringify(params)
-  }).then(response => {
-    return response.text()
-  }).then( responseText => {
-    return JSON.parse(responseText)
   })
+  let content = await response.text()
+  if (!response.ok) {
+    throw new Error(`failed request to '${actions[actionName]}' with status: ${response.status} and message: ${content}`)
+  }
+  try {
+    content = JSON.parse(content)
+  } catch (e) {
+    // response is not json
+  }
+  return content
 }
 
 export default actionWebInvoke

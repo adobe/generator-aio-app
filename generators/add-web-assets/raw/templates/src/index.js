@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 * <license header>
 */
 
+import regeneratorRuntime from 'regenerator-runtime'
 import Runtime, { init } from '@adobe/exc-app'
 import actions from './config.json'
 import actionWebInvoke from './utils.js'
@@ -80,27 +81,33 @@ function safeParse(val) {
   return result
 }
 
+/**
+ * Submit the form, and get a result back from the action
+ */
 function doSubmit() {
   const actionIndex = document.getElementById('selAction').selectedIndex || 0;
-  document.getElementById('taOutput').innerHTML = ""
+  const taOutput = document.getElementById('taOutput')
+  taOutput.innerHTML = "calling action ..."
   if (actions) {
     const selAction = Object.entries(actions)[actionIndex]
     const headers = safeParse(document.getElementById('actionHeaders').value)
     const params = safeParse(document.getElementById('actionParams').value)
     // track the time to a result
     const preCallTime = Date.now()
+    let outputHTML = ''
     invokeAction(selAction, headers, params)
-      .then(actionResponse => {
-        const taOutput = document.getElementById('taOutput')
-        console.log('ActionResponse:', actionResponse)
-        taOutput.innerHTML = `${JSON.stringify(actionResponse, 0, 2)}\n\n  time:${(Date.now() - preCallTime)}ms`
-      }).catch(err => {
-        console.error('Error:', err)
-      })
+    .then(actionResponse => {
+      outputHTML = JSON.stringify(actionResponse, 0, 2)
+    }).catch(err => {
+      console.error('Error:', err)
+      outputHTML = err.message
+    }).finally(( ) => {
+      taOutput.innerHTML = `time:${(Date.now() - preCallTime)}ms\n\n ${outputHTML}`
+    })
   }
 }
 
-function invokeAction(action, _headers, _params) {
+async function invokeAction(action, _headers, _params) {
   const headers = _headers || {}
   const params = _params || {}
   // all headers to lowercase
@@ -119,5 +126,7 @@ function invokeAction(action, _headers, _params) {
   if (state.imsOrg && !headers['x-gw-ims-org-id']) {
     headers['x-gw-ims-org-id'] = state.imsOrg
   }
-  return actionWebInvoke(action[1], headers, params)
+
+  const result = await actionWebInvoke(action[0], headers, params)
+  return result
 }
