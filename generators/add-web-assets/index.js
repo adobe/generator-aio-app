@@ -17,7 +17,7 @@ const utils = require('../../lib/utils')
 
 const { webAssetsDirname } = require('../../lib/constants')
 
-// const rawWebAssetsGenerator = path.join(__dirname, 'raw/index.js')
+const rawWebAssetsGenerator = path.join(__dirname, 'raw/index.js')
 const excReactWebAssetsGenerator = path.join(__dirname, 'exc-react/index.js')
 
 /*
@@ -52,25 +52,30 @@ class AddWebAssets extends Generator {
   }
 
   async prompting () {
-    const webAssetsGenerator = excReactWebAssetsGenerator
-
-    // code for later -> as of now support only exc-react
-    // if (!this.options['skip-prompt']) {
-    //   const promptProps = await this.prompt([
-    //     {
-    //       // for now we just have one webAsset generator
-    //       type: 'list',
-    //       name: 'webAssetsGenerator',
-    //       message: 'Which type of UI do you want to add to your project?\nselect template to generate',
-    //       choices: [{ name: 'Adobe Experience Cloud Shell - React', value: excReactWebAssetsGenerator }, { name: 'Raw HTML/JS', value: rawWebAssetsGenerator }],
-    //       validate: utils.atLeastOne
-    //     }
-    //   ])
-    //   webAssetsGenerator = promptProps.webAssetsGenerator
-    // }
-
-    // run ui generator
-    this.composeWith(webAssetsGenerator, this.options)
+    if (!this.options['skip-prompt']) {
+      const promptProps = await this.prompt([
+        {
+          type: 'list',
+          name: 'webAssetsGenerator',
+          message: 'Which type of UI do you want to add to your project?\nselect template to generate',
+          choices: [
+            {
+              name: 'React Spectrum 3',
+              value: excReactWebAssetsGenerator
+            },
+            {
+              name: 'Pure HTML/JS',
+              value: rawWebAssetsGenerator
+            }
+          ],
+          validate: utils.atLeastOne
+        }
+      ])
+      this.composeWith(promptProps.webAssetsGenerator, this.options)
+    } else {
+      // default template
+      this.composeWith(excReactWebAssetsGenerator, this.options)
+    }
   }
 
   async install () {

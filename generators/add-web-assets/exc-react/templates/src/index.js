@@ -49,9 +49,6 @@ function bootstrapInExcShell () {
   // get the Experience Cloud Runtime object
   const runtime = Runtime()
 
-  // set the app name to the Shell header
-  runtime.customEnvLabel = '<%= projectName %>'
-
   // use this to set a favicon
   // runtime.favicon = 'url-to-favicon'
 
