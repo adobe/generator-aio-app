@@ -54,6 +54,4 @@ async function actionWebInvoke (actionName, headers = {}, params = {}) {
   return content
 }
 
-export {
-  actionWebInvoke
-}
+export default actionWebInvoke
