@@ -14,7 +14,7 @@ const Generator = require('yeoman-generator')
 
 const { atLeastOne } = require('../../lib/utils')
 
-const { sdkCodes, promptLoop, promptMaxChoices } = require('../../lib/constants')
+const { sdkCodes, promptLoop } = require('../../lib/constants')
 
 const inquirer = require('inquirer')
 
@@ -79,7 +79,7 @@ class AddActions extends Generator {
           message: 'Which type of sample actions do you want to create?\nSelect type of actions to generate',
           choices,
           loop: promptLoop,
-          pageSize: promptMaxChoices,
+          pageSize: choices.length,
           validate: atLeastOne
         }
       ])
@@ -109,15 +109,19 @@ class AddActions extends Generator {
 function getPromptChoices (adobeServicesOption, supportedAdobeServicesOption) {
   // helpers
 
+  // converts and cleans input list string
   const cleanInputServices = (option) => option
     .split(',')
     .map(x => x.trim())
     .filter(s => sdkCodeToTitle[s]) // filter out sdkCodes for which we don't have a template for (or invalid ones)
 
-  const toChoices = (sdkCodeSet, checked = false) => [...sdkCodeSet]
-    .map(s => ({ name: sdkCodeToTitle[s], value: sdkCodeToActionGenerator[s], checked }))
+  // converts a set of sdkCodes to a inquirer choice list
+  const toChoices = (sdkCodeSet, checked = false) =>
+    [...sdkCodeSet]
+      .map(s => ({ name: sdkCodeToTitle[s], value: sdkCodeToActionGenerator[s], checked }))
 
   // start
+
   // 1. define set of choices
   const supportedSet = new Set(cleanInputServices(supportedAdobeServicesOption))
   const addedSet = new Set(cleanInputServices(adobeServicesOption))
