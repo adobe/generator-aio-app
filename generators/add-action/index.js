@@ -112,11 +112,10 @@ function getPromptChoices (adobeServicesOption, supportedAdobeServicesOption) {
   const cleanInputServices = (option) => option
     .split(',')
     .map(x => x.trim())
-    .filter(s => s)
+    .filter(s => sdkCodeToTitle[s]) // filter out sdkCodes for which we don't have a template for (or invalid ones)
 
   const toChoices = (sdkCodeSet, checked = false) => [...sdkCodeSet]
     .map(s => ({ name: sdkCodeToTitle[s], value: sdkCodeToActionGenerator[s], checked }))
-    .filter(e => !!e.value)
 
   // start
   // 1. define set of choices
@@ -129,38 +128,47 @@ function getPromptChoices (adobeServicesOption, supportedAdobeServicesOption) {
   /// case a. supported-services are defined
   ///         e.g. `aio app init` with login
   if (supportedSet.size > 0) {
+    const addedServicesChoices = toChoices(addedSet, true)
     const choices = [
       new inquirer.Separator('-- supported templates for services added to this Adobe Developer Console Workspace --'),
-      { name: 'Generic', value: genericActionGenerator, checked: false },
-      ...toChoices(addedSet, true),
-      new inquirer.Separator('-- templates supported by the Organization, corresponding services should be added to this Workspace in https://console.adobe.io/ --'),
-      ...toChoices(supportedNotAddedSet)
+      { name: 'Generic', value: genericActionGenerator, checked: addedServicesChoices.length <= 0 },
+      ...addedServicesChoices
     ]
+    if (supportedNotAddedSet.size > 0) {
+      choices.push(
+        new inquirer.Separator('-- templates supported by this Organization, corresponding services should be added to this Workspace in https://console.adobe.io/ --'),
+        ...toChoices(supportedNotAddedSet)
+      )
+    }
+    // else: means all supported services are already added to this Workspace
     if (remainingSet.size > 0) {
       choices.push(
         new inquirer.Separator('-- more templates for services not available to this Organization --'),
         ...toChoices(remainingSet)
       )
     }
+    // else: means all services for which there is a template are already supported by this Organization
     return choices
   }
-  /// case b. supported-services is not defined but added-services is defined
+  /// case b. supported-adobe-services are not defined but adobe-services are defined
   ///         e.g. `aio app init --import console.json` with some services in workspace
   if (supportedSet.size <= 0 && addedSet.size > 0) {
+    const addedServicesChoices = toChoices(addedSet, true)
     const choices = [
       new inquirer.Separator('-- supported templates for services added to this Adobe Developer Console Workspace --'),
-      { name: 'Generic', value: genericActionGenerator, checked: false },
-      ...toChoices(addedSet, true)
+      { name: 'Generic', value: genericActionGenerator, checked: addedServicesChoices.length <= 0 },
+      ...addedServicesChoices
     ]
     if (remainingSet.size > 0) {
       choices.push(
-        new inquirer.Separator('-- more templates, corresponding services, if available to the Organization, should be added to this Workspace in https://console.adobe.io/ --'),
+        new inquirer.Separator('-- more templates, corresponding services, if available to this Organization, should be added to this Workspace in https://console.adobe.io/ --'),
         ...toChoices(remainingSet)
       )
     }
+    // else: means all services for which there is a template are already added to this Workspace
     return choices
   }
-  /// case c. no supported-services nor added-services
+  /// case c. no supported-adobe-services nor adobe-services
   ///         e.g. `aio app init --import` with no services in workspace or `aio app init --no-login`
   return [
     { name: 'Generic', value: genericActionGenerator, checked: true },
