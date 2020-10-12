@@ -130,7 +130,7 @@ function getPromptChoices (adobeServicesOption, supportedAdobeServicesOption) {
   ///         e.g. `aio app init` with login
   if (supportedSet.size > 0) {
     const choices = [
-      new inquirer.Separator('-- supported templates for services added to the current Adobe I/O Console Workspace --'),
+      new inquirer.Separator('-- supported templates for services added to this Adobe Developer Console Workspace --'),
       { name: 'Generic', value: genericActionGenerator, checked: false },
       ...toChoices(addedSet, true),
       new inquirer.Separator('-- templates supported by the Organization, corresponding services should be added to this Workspace in https://console.adobe.io/ --'),
@@ -148,7 +148,7 @@ function getPromptChoices (adobeServicesOption, supportedAdobeServicesOption) {
   ///         e.g. `aio app init --import console.json` with some services in workspace
   if (supportedSet.size <= 0 && addedSet.size > 0) {
     const choices = [
-      new inquirer.Separator('-- supported templates for services added to the current Adobe I/O Console Workspace --'),
+      new inquirer.Separator('-- supported templates for services added to this Adobe Developer Console Workspace --'),
       { name: 'Generic', value: genericActionGenerator, checked: false },
       ...toChoices(addedSet, true)
     ]
@@ -164,7 +164,7 @@ function getPromptChoices (adobeServicesOption, supportedAdobeServicesOption) {
   ///         e.g. `aio app init --import` with no services in workspace or `aio app init --no-login`
   return [
     { name: 'Generic', value: genericActionGenerator, checked: true },
-    new inquirer.Separator('-- Adobe service specific templates, corresponding services may have to be added to the Console Workspace in https://console.adobe.io/ --'),
+    new inquirer.Separator('-- Adobe service specific templates, corresponding services may have to be added to this Workspace in https://console.adobe.io/ --'),
     ...toChoices(remainingSet)
   ]
 }
