@@ -12,6 +12,7 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
+const utils = require('../../../lib/utils')
 const { webAssetsDirname } = require('../../../lib/constants')
 
 const { sdkCodes } = require('../../../lib/constants')
@@ -37,6 +38,11 @@ class RawGenerator extends Generator {
   writing () {
     this.sourceRoot(path.join(__dirname, './templates/'))
     this.fs.copyTpl(this.templatePath('./**/*'), this.destinationPath(webAssetsDirname), this.props)
+
+    utils.addDependencies(this, {
+      'regenerator-runtime': '^0.13.5',
+      '@adobe/exc-app': '^0.2.17'
+    })
   }
 }
 

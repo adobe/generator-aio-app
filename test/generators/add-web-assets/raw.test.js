@@ -34,18 +34,13 @@ describe('run', () => {
     assert.file('web-src/index.html')
     assert.file('web-src/404.html')
     assert.file('web-src/src/index.js')
+    assert.file('web-src/src/exc-runtime.js')
 
     // greats with projectName
     assert.fileContent('web-src/index.html', '<h1>Welcome to abc!</h1>')
 
-    // make sure service specific doc is here
-    assert.fileContent('web-src/index.html', '<li><a href="http://developers.adobetarget.com/api/">Adobe Target API</a></li>')
-    assert.fileContent('web-src/index.html', '<li><a href="https://www.adobe.io/apis/experiencecloud/analytics/docs.html">Adobe Analytics API</a></li>')
-    assert.fileContent('web-src/index.html', '<li><a href="https://final-docs.campaign.adobe.com/doc/standard/en/api/ACS_API.html">Adobe Campaign Standard API</a></li>')
-
     // make sure calls index.js to get the list of actions
     assert.fileContent('web-src/index.html', '<script src="./src/index.js"></script>')
-    assert.fileContent('web-src/index.html', '<script>window.showActionsList()</script>')
   })
 
   test('--project-name abc --adobe-services analytics', async () => {
@@ -56,18 +51,13 @@ describe('run', () => {
     assert.file('web-src/index.html')
     assert.file('web-src/404.html')
     assert.file('web-src/src/index.js')
+    assert.file('web-src/src/exc-runtime.js')
 
     // greats with projectName
     assert.fileContent('web-src/index.html', '<h1>Welcome to abc!</h1>')
 
-    // make sure service specific doc is here
-    assert.noFileContent('web-src/index.html', '<li><a href="http://developers.adobetarget.com/api/">Adobe Target API</a></li>')
-    assert.fileContent('web-src/index.html', '<li><a href="https://www.adobe.io/apis/experiencecloud/analytics/docs.html">Adobe Analytics API</a></li>')
-    assert.noFileContent('web-src/index.html', '<li><a href="https://final-docs.campaign.adobe.com/doc/standard/en/api/ACS_API.html">Adobe Campaign Standard API</a></li>')
-
     // make sure calls index.js to get the list of actions
     assert.fileContent('web-src/index.html', '<script src="./src/index.js"></script>')
-    assert.fileContent('web-src/index.html', '<script>window.showActionsList()</script>')
   })
 })
 

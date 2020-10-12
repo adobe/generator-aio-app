@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 const helpers = require('yeoman-test')
 const path = require('path')
 const fs = require('fs-extra')
-// const utils = require('../../../lib/utils')
+const utils = require('../../../lib/utils')
 
 const theGeneratorPath = require.resolve('../../../generators/add-web-assets')
 const Generator = require('yeoman-generator')
@@ -36,15 +36,15 @@ afterAll(() => {
 })
 
 const expectedDefaultGenerator = expect.stringContaining(n('exc-react/index.js'))
-// const expectedPromptChoices = [expect.objectContaining({
-//   type: 'list',
-//   name: 'webAssetsGenerator',
-//   choices: [
-//     { name: 'Exc Shell React', value: expect.stringContaining(n('exc-react/index.js')) },
-//     { name: 'Raw HTML/JS', value: expect.stringContaining(n('raw/index.js')) }
-//   ],
-//   validate: utils.atLeastOne
-// })]
+const expectedPromptChoices = [expect.objectContaining({
+  type: 'list',
+  name: 'webAssetsGenerator',
+  choices: [
+    { name: 'React Spectrum 3', value: expect.stringContaining(n('exc-react/index.js')) },
+    { name: 'Pure HTML/JS', value: expect.stringContaining(n('raw/index.js')) }
+  ],
+  validate: utils.atLeastOne
+})]
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
@@ -137,23 +137,22 @@ describe('run', () => {
     expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 
-  // eslint-disable-next-line jest/no-commented-out-tests
-  // test('--project-name fake and selected prompt is fake generator "a"', async () => {
-  //   await helpers.run(theGeneratorPath)
-  //     .withOptions({ 'skip-install': false, 'project-name': 'fake' })
-  //     .withPrompts({ webAssetsGenerator: 'a' })
+  test('--project-name fake and selected prompt is fake generator "a"', async () => {
+    await helpers.run(theGeneratorPath)
+      .withOptions({ 'skip-install': false, 'project-name': 'fake' })
+      .withPrompts({ webAssetsGenerator: 'a' })
 
-  //   // check choices
-  //   expect(prompt).toHaveBeenCalledWith(expectedPromptChoices)
+    // check choices
+    expect(prompt).toHaveBeenCalledWith(expectedPromptChoices)
 
-  //   expect(composeWith).toHaveBeenCalledTimes(1)
-  //   expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({
-  //     'skip-prompt': false,
-  //     'adobe-services': '',
-  //     'project-name': 'fake'
-  //   }))
-  //   expect(installDependencies).toHaveBeenCalledTimes(1)
-  // })
+    expect(composeWith).toHaveBeenCalledTimes(1)
+    expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({
+      'skip-prompt': false,
+      'adobe-services': '',
+      'project-name': 'fake'
+    }))
+    expect(installDependencies).toHaveBeenCalledTimes(1)
+  })
 })
 
 // todo check with existing files in project
