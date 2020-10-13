@@ -14,7 +14,9 @@ const Generator = require('yeoman-generator')
 
 const { atLeastOne } = require('../../lib/utils')
 
-const { sdkCodes } = require('../../lib/constants')
+const { sdkCodes, promptLoop } = require('../../lib/constants')
+
+const inquirer = require('inquirer')
 
 // we have one actions generator per service, an action generator could generate different types of actions
 const sdkCodeToActionGenerator = {
@@ -54,9 +56,11 @@ class AddActions extends Generator {
 
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
-    this.option('adobe-services', { type: String, default: '' })
     this.option('skip-install', { type: String, default: false })
-
+    /// Adobe services added to the Console Workspace
+    this.option('adobe-services', { type: String, default: '' })
+    /// Adobe services that are supported by the Org
+    this.option('supported-adobe-services', { type: String, default: '' })
     // todo throw meaningful error if add actions in a non existing project, but what defines a project?
   }
 
@@ -65,24 +69,25 @@ class AddActions extends Generator {
     let actionGenerators = [genericActionGenerator]
 
     if (!this.options['skip-prompt']) {
+      // get list of choices
+      const choices = getPromptChoices(this.options['adobe-services'], this.options['supported-adobe-services'])
+      // prompt for selection
       const promptProps = await this.prompt([
         {
           type: 'checkbox',
           name: 'actionGenerators',
           message: 'Which type of sample actions do you want to create?\nSelect type of actions to generate',
-          choices: this.options['adobe-services'].split(',').map(x => x.trim())
-            .map(s => ({ name: sdkCodeToTitle[s], value: sdkCodeToActionGenerator[s] }))
-            .filter(entry => !!entry.value)
-            .concat([
-              { name: 'Generic', value: genericActionGenerator, checked: true }
-            ]),
+          choices,
+          loop: promptLoop,
+          pageSize: choices.length,
           validate: atLeastOne
         }
       ])
+      // retrieve selection
       actionGenerators = promptProps.actionGenerators
     }
 
-    // run action generators
+    // run selected generators
     actionGenerators.forEach(gen => this.composeWith(gen, {
       'skip-prompt': this.options['skip-prompt']
     }))
@@ -90,8 +95,90 @@ class AddActions extends Generator {
 
   async install () {
     // this condition makes sure it doesn't print any unwanted 'skip install message' into parent generator
-    if (!this.options['skip-install']) return this.installDependencies({ bower: false })
+    if (!this.options['skip-install']) {
+      return this.installDependencies({ bower: false })
+    }
   }
+}
+
+/**
+ * helper
+ *
+ * @private
+ **/
+function getPromptChoices (adobeServicesOption, supportedAdobeServicesOption) {
+  // helpers
+
+  // converts and cleans input list string
+  const cleanInputServices = (option) => option
+    .split(',')
+    .map(x => x.trim())
+    .filter(s => sdkCodeToTitle[s]) // filter out sdkCodes for which we don't have a template for (or invalid ones)
+
+  // converts a set of sdkCodes to a inquirer choice list
+  const toChoices = (sdkCodeSet, checked = false) =>
+    [...sdkCodeSet]
+      .map(s => ({ name: sdkCodeToTitle[s], value: sdkCodeToActionGenerator[s], checked }))
+
+  // start
+
+  // 1. define set of choices
+  const supportedSet = new Set(cleanInputServices(supportedAdobeServicesOption))
+  const addedSet = new Set(cleanInputServices(adobeServicesOption))
+  const supportedNotAddedSet = new Set([...supportedSet].filter(s => !addedSet.has(s)))
+  const remainingSet = new Set(Object.values(sdkCodes).filter(s => !supportedNotAddedSet.has(s) && !addedSet.has(s)))
+
+  // 2. build the selection list
+  /// case a. supported-services are defined
+  ///         e.g. `aio app init` with login
+  if (supportedSet.size > 0) {
+    const addedServicesChoices = toChoices(addedSet, true)
+    const choices = [
+      new inquirer.Separator('-- supported templates for services added to this Adobe Developer Console Workspace --'),
+      { name: 'Generic', value: genericActionGenerator, checked: addedServicesChoices.length <= 0 },
+      ...addedServicesChoices
+    ]
+    if (supportedNotAddedSet.size > 0) {
+      choices.push(
+        new inquirer.Separator('-- templates supported by this Organization, corresponding services should be added to this Workspace in https://console.adobe.io/ --'),
+        ...toChoices(supportedNotAddedSet)
+      )
+    }
+    // else: means all supported services are already added to this Workspace
+    if (remainingSet.size > 0) {
+      choices.push(
+        new inquirer.Separator('-- more templates for services not available to this Organization --'),
+        ...toChoices(remainingSet)
+      )
+    }
+    // else: means all services for which there is a template are already supported by this Organization
+    return choices
+  }
+  /// case b. supported-adobe-services are not defined but adobe-services are defined
+  ///         e.g. `aio app init --import console.json` with some services in workspace
+  if (supportedSet.size <= 0 && addedSet.size > 0) {
+    const addedServicesChoices = toChoices(addedSet, true)
+    const choices = [
+      new inquirer.Separator('-- supported templates for services added to this Adobe Developer Console Workspace --'),
+      { name: 'Generic', value: genericActionGenerator, checked: addedServicesChoices.length <= 0 },
+      ...addedServicesChoices
+    ]
+    if (remainingSet.size > 0) {
+      choices.push(
+        new inquirer.Separator('-- more templates, corresponding services, if available to this Organization, should be added to this Workspace in https://console.adobe.io/ --'),
+        ...toChoices(remainingSet)
+      )
+    }
+    // else: means all services for which there is a template are already added to this Workspace
+    return choices
+  }
+  /// case c. no supported-adobe-services nor adobe-services
+  ///         e.g. `aio app init --import` with no services in workspace or `aio app init --no-login`
+  return [
+    { name: 'Generic', value: genericActionGenerator, checked: true },
+    new inquirer.Separator('-- Adobe service specific templates, corresponding services may have to be added to this Workspace in https://console.adobe.io/ --'),
+    ...toChoices(remainingSet)
+  ]
 }
 
 module.exports = AddActions
