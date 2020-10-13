@@ -21,14 +21,17 @@ import {
   Picker,
   TextArea,
   Button,
+  ActionButton,
+  StatusLight,
   ProgressCircle,
   Item,
   Text,
   View
 } from '@adobe/react-spectrum'
+import Function from '@spectrum-icons/workflow/Function'
 
 import actions from '../config.json'
-import { actionWebInvoke } from '../utils'
+import actionWebInvoke from '../utils'
 
 const ActionsForm = (props) => {
   const [state, setState] = useState({
@@ -39,7 +42,8 @@ const ActionsForm = (props) => {
     actionHeadersValid: null,
     actionParams: null,
     actionParamsValid: null,
-    actionInvokeInProgress: false
+    actionInvokeInProgress: false,
+    actionResult: ''
   })
 
   return (
@@ -84,13 +88,12 @@ const ActionsForm = (props) => {
             }
           />
           <Flex>
-            <Button
+            <ActionButton
               variant="primary"
+              type="button"
               onPress={invokeAction.bind(this)}
               isDisabled={!state.actionSelected}
-            >
-              Invoke
-            </Button>
+            ><Function aria-label="Invoke" /><Text>Invoke</Text></ActionButton>
 
             <ProgressCircle
               aria-label="loading"
@@ -103,17 +106,26 @@ const ActionsForm = (props) => {
       )}
 
       {state.actionResponseError && (
-        <View backgroundColor={`negative`} padding={`size-100`} marginTop={`size-100`} marginBottom={`size-100`} borderRadius={`small `}>
-          <Text>Failure! See the error in your browser console.</Text>
+        <View padding={`size-100`} marginTop={`size-100`} marginBottom={`size-100`} borderRadius={`small `}>
+          <StatusLight variant="negative">Failure! See the complete error in your browser console.</StatusLight>
         </View>
       )}
       {!state.actionResponseError && state.actionResponse && (
-        <View backgroundColor={`positive`} padding={`size-100`} marginTop={`size-100`} marginBottom={`size-100`} borderRadius={`small `}>
-          <Text>Success! See the response content in your browser console.</Text>
+        <View padding={`size-100`} marginTop={`size-100`} marginBottom={`size-100`} borderRadius={`small `}>
+          <StatusLight variant="positive">Success! See the complete response in your browser console.</StatusLight>
         </View>
       )}
 
       {Object.keys(actions).length === 0 && <Text>You have no actions !</Text>}
+        <TextArea
+            label="results"
+            isReadOnly={true}
+            width="size-6000"
+            height="size-6000"
+            maxWidth="100%"
+            value={state.actionResult}
+            validationState={( !state.actionResponseError ) ? 'valid' : 'invalid'}
+          />
     </View>
   )
 
@@ -137,11 +149,11 @@ const ActionsForm = (props) => {
 
   // invokes a the selected backend actions with input headers and params
   async function invokeAction () {
-    setState({ ...state, actionInvokeInProgress: true })
-    const action = state.actionSelected
+    setState({ ...state, actionInvokeInProgress: true, actionResult: 'calling action ... ' })
+    const actionName = state.actionSelected
     const headers = state.actionHeaders || {}
     const params = state.actionParams || {}
-
+    const startTime = Date.now()
     // all headers to lowercase
     Object.keys(headers).forEach((h) => {
       const lowercase = h.toLowerCase()
@@ -158,23 +170,28 @@ const ActionsForm = (props) => {
     if (props.ims.org && !headers['x-gw-ims-org-id']) {
       headers['x-gw-ims-org-id'] = props.ims.org
     }
+    let formattedResult = ""
     try {
       // invoke backend action
-      const actionResponse = await actionWebInvoke(action, headers, params)
+      const actionResponse = await actionWebInvoke(actions[actionName], headers, params)
+      formattedResult = `time: ${Date.now() - startTime} ms\n` + JSON.stringify(actionResponse,0,2)
       // store the response
       setState({
         ...state,
         actionResponse,
+        actionResult:formattedResult,
         actionResponseError: null,
         actionInvokeInProgress: false
       })
-      console.log(`Response from ${action}:`, actionResponse)
+      console.log(`Response from ${actionName}:`, actionResponse)
     } catch (e) {
       // log and store any error message
+      formattedResult = `time: ${Date.now() - startTime} ms\n` + e.message
       console.error(e)
       setState({
         ...state,
         actionResponse: null,
+        actionResult:formattedResult,
         actionResponseError: e.message,
         actionInvokeInProgress: false
       })
