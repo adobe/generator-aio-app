@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const { promptLoop, dotenvFilename } = require('../../lib/constants')
+const { isLoopingPrompts, dotenvFilename } = require('../../lib/constants')
 const { atLeastOne } = require('../../lib/utils')
 /*
       'initializing',
@@ -53,7 +53,7 @@ class CodeGenerator extends Generator {
           type: 'checkbox',
           name: 'components',
           message: 'Which Adobe I/O App features do you want to enable for this project?\nSelect components to include',
-          loop: promptLoop,
+          loop: isLoopingPrompts,
           choices: [
             {
               name: 'Actions: Deploy Runtime actions',

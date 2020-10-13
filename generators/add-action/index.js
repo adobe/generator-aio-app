@@ -14,7 +14,7 @@ const Generator = require('yeoman-generator')
 
 const { atLeastOne } = require('../../lib/utils')
 
-const { sdkCodes, promptLoop } = require('../../lib/constants')
+const { sdkCodes, isLoopingPrompts } = require('../../lib/constants')
 
 const inquirer = require('inquirer')
 
@@ -78,7 +78,7 @@ class AddActions extends Generator {
           name: 'actionGenerators',
           message: 'Which type of sample actions do you want to create?\nSelect type of actions to generate',
           choices,
-          loop: promptLoop,
+          loop: isLoopingPrompts,
           pageSize: choices.length,
           validate: atLeastOne
         }
