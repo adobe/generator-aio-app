@@ -33,4 +33,6 @@ coverage
 # yeoman
 .yo-repository
 
+# logs folder for aio-run-detached
+logs
 
