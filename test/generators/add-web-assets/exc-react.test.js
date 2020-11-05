@@ -107,6 +107,7 @@ describe('run', () => {
         'regenerator-runtime': expect.any(String),
         '@adobe/exc-app': expect.any(String),
         '@adobe/react-spectrum': expect.any(String),
+        '@spectrum-icons/workflow': expect.any(String),
         'react-router-dom': expect.any(String)
       },
       {
@@ -152,6 +153,7 @@ describe('run', () => {
         'regenerator-runtime': expect.any(String),
         '@adobe/exc-app': expect.any(String),
         '@adobe/react-spectrum': expect.any(String),
+        '@spectrum-icons/workflow': expect.any(String),
         'react-router-dom': expect.any(String)
       },
       {
