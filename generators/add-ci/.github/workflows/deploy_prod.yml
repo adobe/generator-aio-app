@@ -22,19 +22,21 @@ jobs:
       - name: npm install
         run: npm i
       - name: Setup CLI
-        uses: adobe/aio-cli-setup-action@1.0.0
+        uses: adobe/aio-cli-setup-action@1.0.1
         with:
           os: ${{ matrix.os }}
       - name: Build
-        uses: adobe/aio-apps-action@1.0.0
+        env:
+          AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE_PROD }}
+        uses: adobe/aio-apps-action@1.1.0
         with:
           os: ${{ matrix.os }}
           command: build
-          AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE_PROD }}
       - name: Deploy
-        uses: adobe/aio-apps-action@1.0.0
+        env:
+          AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE_PROD }}
+          AIO_RUNTIME_AUTH: ${{ secrets.AIO_RUNTIME_AUTH_PROD }}
+        uses: adobe/aio-apps-action@1.1.0
         with:
           os: ${{ matrix.os }}
           command: deploy
-          AIO_RUNTIME_AUTH: ${{ secrets.AIO_RUNTIME_AUTH_PROD }}
-          AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE_PROD }}
