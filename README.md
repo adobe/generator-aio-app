@@ -4,7 +4,7 @@ A Yeoman generator for Adobe I/O Applications.
 
 [![Version](https://img.shields.io/npm/v/@adobe/generator-aio-app.svg)](https://npmjs.org/package/@adobe/generator-aio-app)
 [![Downloads/week](https://img.shields.io/npm/dw/@adobe/generator-aio-app.svg)](https://npmjs.org/package/@adobe/generator-aio-app)
-[![Build Status](https://travis-ci.com/adobe/generator-aio-app.svg)](https://travis-ci.com/adobe/generator-aio-app)
+![Node.js CI](https://github.com/adobe/generator-aio-app/workflows/Node.js%20CI/badge.svg)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Codecov Coverage](https://img.shields.io/codecov/c/github/adobe/generator-aio-app/master.svg?style=flat-square)](https://codecov.io/gh/adobe/generator-aio-app/)
 
