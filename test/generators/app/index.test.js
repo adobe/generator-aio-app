@@ -46,6 +46,7 @@ describe('run', () => {
     // expected files
     assert.file('.aio')
     assert.file('.env')
+    assert.file('.env.schema')
     assert.file('.gitignore')
     assert.file('README.md')
     assert.file('package.json')
@@ -56,6 +57,8 @@ describe('run', () => {
     assert.fileContent('.env', 'AIO_runtime_auth=')
     assert.fileContent('.env', 'AIO_runtime_namespace=')
     assert.fileContent('.env', 'SERVICE_API_KEY=')
+    assert.fileContent('.env.schema', 'AIO_runtime_auth=')
+    assert.fileContent('.env.schema', 'AIO_runtime_namespace=')
   }
 
   test('--skip-prompt --project-name fake', async () => {
