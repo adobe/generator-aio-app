@@ -12,7 +12,9 @@ const path = require('path')
 const yaml = require('js-yaml')
 const { EOL } = require('os')
 const constants = require('../../lib/constants')
+const fs = require('fs-extra')
 
+jest.mock('fs-extra')
 jest.mock('yeoman-generator')
 
 const ActionGenerator = require('../../lib/ActionGenerator')
@@ -141,11 +143,13 @@ describe('implementation', () => {
     // mock path resolvers
     ActionGenerator.prototype.templatePath = p => path.join('/fakeTplDir', p)
     ActionGenerator.prototype.destinationPath = (...args) => path.join('/fakeDestRoot', ...args)
+    const spyFsWrite = jest.spyOn(fs, 'writeFileSync')
 
     let actionGenerator
     beforeEach(() => {
       actionGenerator = new ActionGenerator()
       actionGenerator.options = { 'skip-prompt': false }
+      jest.clearAllMocks()
     })
 
     test('with no options and manifest does not exist', () => {
@@ -162,7 +166,7 @@ describe('implementation', () => {
       // 1. test copy action template to right destination
       expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/templateFile.js'), n(`/fakeDestRoot/${constants.actionsDirname}/myAction/index.js`), {}, {}, {})
       // 2. test manifest creation with action information
-      expect(actionGenerator.fs.write).toHaveBeenCalledWith(n('/fakeDestRoot/manifest.yml'), yaml.safeDump({
+      expect(spyFsWrite).toHaveBeenCalledWith(n('/fakeDestRoot/manifest.yml'), yaml.safeDump({
         packages: {
           [constants.manifestPackagePlaceholder]: {
             license: 'Apache-2.0',
@@ -205,7 +209,7 @@ describe('implementation', () => {
       }
       actionGenerator.addAction('myAction', './templateFile.js')
       // test manifest update with action information
-      expect(actionGenerator.fs.write).toHaveBeenCalledWith(n('/fakeDestRoot/manifest.yml'), yaml.safeDump({
+      expect(spyFsWrite).toHaveBeenCalledWith(n('/fakeDestRoot/manifest.yml'), yaml.safeDump({
         packages: {
           [constants.manifestPackagePlaceholder]: {
             actions: {
@@ -288,7 +292,8 @@ describe('implementation', () => {
       actionGenerator.addAction('myAction', './templateFile.js', { actionManifestConfig: { runtime: 'fake:42', inputs: { fake: 'value' } } })
 
       // test manifest update with action information
-      expect(actionGenerator.fs.write).toHaveBeenCalledWith(n('/fakeDestRoot/manifest.yml'), yaml.safeDump({
+      expect(spyFsWrite).toHaveBeenCalledTimes(1)
+      expect(spyFsWrite).toHaveBeenCalledWith(n('/fakeDestRoot/manifest.yml'), yaml.safeDump({
         packages: {
           [constants.manifestPackagePlaceholder]: {
             license: 'Apache-2.0',
@@ -339,8 +344,8 @@ describe('implementation', () => {
       }
       actionGenerator.addAction('myAction', './templateFile.js', { dotenvStub: { label: 'fake label', vars: ['FAKE', 'FAKE2'] } })
 
-      expect(actionGenerator.fs.write).toHaveBeenCalledTimes(1) // manifest.yml
-      expect(actionGenerator.fs.write).toBeCalledWith(n('/fakeDestRoot/manifest.yml'), expect.any(String))
+      expect(spyFsWrite).toHaveBeenCalledTimes(1) // manifest.yml
+      expect(spyFsWrite).toBeCalledWith(n('/fakeDestRoot/manifest.yml'), expect.any(String))
       expect(actionGenerator.fs.append).not.toHaveBeenCalled()
     })
 
