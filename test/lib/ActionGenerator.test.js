@@ -207,11 +207,13 @@ describe('implementation', () => {
         writeJSON: jest.fn(),
         readJSON: jest.fn().mockReturnValue({}) // package.json read
       }
+
       actionGenerator.addAction('myAction', './templateFile.js')
       // test manifest update with action information
       expect(spyFsWrite).toHaveBeenCalledWith(n('/fakeDestRoot/manifest.yml'), yaml.safeDump({
         packages: {
           [constants.manifestPackagePlaceholder]: {
+            license: 'Apache-2.0',
             actions: {
               myAction: {
                 function: n(`${constants.actionsDirname}/myAction/index.js`), // relative path is important here
@@ -221,8 +223,7 @@ describe('implementation', () => {
                   'require-adobe-auth': true
                 }
               }
-            },
-            fake: 'value'
+            }
           }
         }
       }))
