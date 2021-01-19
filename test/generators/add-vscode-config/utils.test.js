@@ -13,6 +13,7 @@ const {
   absApp,
   objGetValue
 } = require('../../../generators/add-vscode-config/utils')
+const path = require('path')
 
 test('exports', () => {
   expect(typeof absApp).toEqual('function')
@@ -20,12 +21,13 @@ test('exports', () => {
 })
 
 test('absApp', () => {
+  const root = '/foo'
   expect(() => absApp(undefined, undefined)).toThrowError()
   expect(() => absApp(undefined, 'bar')).toThrowError()
-  expect(() => absApp('/foo', undefined)).toThrowError()
+  expect(() => absApp(root, undefined)).toThrowError()
 
-  expect(absApp('/foo', 'bar')).toEqual('/foo/bar')
-  expect(absApp('/foo', '/foo/bar')).toEqual('/foo/bar')
+  expect(absApp(root, 'bar')).toEqual(path.join(root, 'bar'))
+  expect(absApp(root, path.join(root, 'bar'))).toEqual(path.join(root, 'bar'))
 })
 
 test('objGetValue', () => {

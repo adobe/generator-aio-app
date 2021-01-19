@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 const helpers = require('yeoman-test')
 const assert = require('yeoman-assert')
 const fs = require('fs-extra')
+const path = require('path')
 
 jest.mock('fs-extra')
 
@@ -181,7 +182,7 @@ test('output check', async () => {
         webRoot: 'html',
         breakOnLoad: true,
         sourceMapPathOverrides: {
-          '*': 'dist-dev/*'
+          '*': path.join('dist-dev', '*')
         }
       }
     ],
