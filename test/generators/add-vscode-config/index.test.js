@@ -45,10 +45,10 @@ const createOptions = () => {
         src: 'html',
         distDev: 'dist-dev'
       },
-      root: 'root',
-      envFile: 'env-file'
+      root: 'root'
     },
-    'frontend-url': 'https://localhost:9080'
+    'frontend-url': 'https://localhost:9080',
+    'env-file': 'my/.env'
   }
 }
 
@@ -60,7 +60,7 @@ const createTestLaunchConfiguration = (packageName) => {
         name: `Action:${packageName}/action-1`,
         request: 'launch',
         runtimeExecutable: '${workspaceFolder}/node_modules/.bin/wskdebug', // eslint-disable-line no-template-curly-in-string
-        envFile: '${workspaceFolder}/env-file', // eslint-disable-line no-template-curly-in-string
+        envFile: '${workspaceFolder}/my/.env', // eslint-disable-line no-template-curly-in-string
         timeout: 30000,
         localRoot: '${workspaceFolder}', // eslint-disable-line no-template-curly-in-string
         remoteRoot: '/code',
@@ -123,7 +123,7 @@ test('option app-config incomplete', async () => {
   const result = helpers.run(theGeneratorPath).withOptions(options)
 
   await expect(result).rejects.toEqual(new Error(
-    'App config missing keys: app.hasFrontend, app.hasBackend, ow.package, ow.apihost, manifest.packagePlaceholder, manifest.full.packages, web.src, web.distDev, root, envFile'))
+    'App config missing keys: app.hasFrontend, app.hasBackend, ow.package, ow.apihost, manifest.packagePlaceholder, manifest.full.packages, web.src, web.distDev, root'))
 })
 
 test('option frontend-url missing', async () => {
@@ -131,9 +131,21 @@ test('option frontend-url missing', async () => {
   options['app-config'].app.hasBackend = false
   options['app-config'].app.hasFrontend = true
   options['frontend-url'] = undefined
+  options['env-file'] = 'env-file'
 
   const result = helpers.run(theGeneratorPath).withOptions(options)
   await expect(result).rejects.toEqual(new Error('Missing option for generator: frontend-url'))
+})
+
+test('option env-file missing', async () => {
+  const options = createOptions()
+  options['app-config'].app.hasBackend = true
+  options['app-config'].app.hasFrontend = true
+  options['frontend-url'] = 'https://localhost:9999'
+  delete options['env-file']
+
+  const result = helpers.run(theGeneratorPath).withOptions(options)
+  await expect(result).rejects.toEqual(new Error('Missing option for generator: env-file'))
 })
 
 test('no missing options (action is a file)', async () => {
@@ -213,12 +225,6 @@ test('output check', async () => {
   const destFile = options['destination-file']
   assert.file(destFile) // destination file is written
   assert.JSONFileContent(destFile, createTestLaunchConfiguration(options['app-config'].ow.package))
-
-  const envFile = options['app-config'].envFile
-  assert.file(envFile) // env file is written
-  assert.fileContent(envFile, 'OW_NAMESPACE=')
-  assert.fileContent(envFile, 'OW_AUTH=')
-  assert.fileContent(envFile, 'OW_APIHOST=')
 })
 
 test('output check (custom package)', async () => {
@@ -244,12 +250,6 @@ test('output check (custom package)', async () => {
   const destFile = options['destination-file']
   assert.file(destFile) // destination file is written
   assert.JSONFileContent(destFile, createTestLaunchConfiguration(customPackage))
-
-  const envFile = options['app-config'].envFile
-  assert.file(envFile) // env file is written
-  assert.fileContent(envFile, 'OW_NAMESPACE=')
-  assert.fileContent(envFile, 'OW_AUTH=')
-  assert.fileContent(envFile, 'OW_APIHOST=')
 })
 
 test('vscode launch configuration exists', async () => {
@@ -270,10 +270,4 @@ test('vscode launch configuration exists', async () => {
 
   const destFile = options['destination-file']
   assert.noFile(destFile) // destination file is not written
-
-  const envFile = options['app-config'].envFile
-  assert.file(envFile) // env file is written
-  assert.fileContent(envFile, 'OW_NAMESPACE=')
-  assert.fileContent(envFile, 'OW_AUTH=')
-  assert.fileContent(envFile, 'OW_APIHOST=')
 })
