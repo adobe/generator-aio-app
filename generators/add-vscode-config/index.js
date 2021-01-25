@@ -35,14 +35,17 @@ const {
 
 const Default = {
   DESTINATION_FILE: '.vscode/launch.json',
-  REMOTE_ROOT: '/code'
+  REMOTE_ROOT: '/code',
+  SKIP_PROMPT: false
 }
 
 const Option = {
   DESTINATION_FILE: 'destination-file',
   FRONTEND_URL: 'frontend-url',
   REMOTE_ROOT: 'remote-root',
-  APP_CONFIG: 'app-config'
+  APP_CONFIG: 'app-config',
+  ENV_FILE: 'env-file',
+  SKIP_PROMPT: 'skip-prompt'
 }
 
 class AddVsCodeConfig extends Generator {
@@ -54,6 +57,8 @@ class AddVsCodeConfig extends Generator {
     this.option(Option.FRONTEND_URL, { type: String })
     this.option(Option.REMOTE_ROOT, { type: String, default: Default.REMOTE_ROOT })
     this.option(Option.DESTINATION_FILE, { type: String, default: Default.DESTINATION_FILE })
+    this.option(Option.ENV_FILE, { type: String })
+    this.option(Option.SKIP_PROMPT, { type: Boolean, default: Default.SKIP_PROMPT })
   }
 
   _verifyConfig () {
@@ -67,8 +72,7 @@ class AddVsCodeConfig extends Generator {
       'manifest.full.packages',
       'web.src',
       'web.distDev',
-      'root',
-      'envFile'
+      'root'
     ]
 
     const missingKeys = []
@@ -80,6 +84,11 @@ class AddVsCodeConfig extends Generator {
 
     if (missingKeys.length > 0) {
       throw new Error(`App config missing keys: ${missingKeys.join(', ')}`)
+    }
+
+    const envFile = this.options[Option.ENV_FILE]
+    if (!envFile) {
+      throw new Error(`Missing option for generator: ${Option.ENV_FILE}`)
     }
   }
 
@@ -109,12 +118,13 @@ class AddVsCodeConfig extends Generator {
     const appConfig = this.options[Option.APP_CONFIG]
     const nodeVersion = this.options[Option.NODE_VERSION]
     const remoteRoot = this.options[Option.REMOTE_ROOT]
+    const envFile = this.options[Option.ENV_FILE]
 
     const launchConfig = createPwaNodeLaunchConfiguration({
       packageName,
       actionName,
       actionFileRelativePath: action.function,
-      envFileRelativePath: appConfig.envFile,
+      envFileRelativePath: envFile,
       remoteRoot,
       nodeVersion
     })
@@ -208,11 +218,12 @@ class AddVsCodeConfig extends Generator {
   }
 
   async writing () {
-    const appConfig = this.options[Option.APP_CONFIG]
     const destFile = this.options[Option.DESTINATION_FILE]
+    const skipPrompt = this.options[Option.SKIP_PROMPT]
+
     let confirm = { overwriteVsCodeConfig: true }
 
-    if (fs.existsSync(destFile)) {
+    if (fs.existsSync(destFile) && !skipPrompt) {
       confirm = await this.prompt([
         {
           type: 'confirm',
