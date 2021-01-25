@@ -236,14 +236,6 @@ class AddVsCodeConfig extends Generator {
     if (confirm.overwriteVsCodeConfig) {
       this.fs.writeJSON(this.destinationPath(destFile), this.vsCodeConfig)
     }
-
-    this.sourceRoot(path.join(__dirname, './templates/'))
-
-    this.fs.copyTpl(
-      this.templatePath('env.local'),
-      this.destinationPath(appConfig.envFile),
-      {}
-    )
   }
 }
 
