@@ -44,7 +44,9 @@ function createLaunchConfiguration (params) {
 }
 
 /**
- * Create a VS Code Chrome launch configuration.
+ * Create a VS Code Google Chrome launch configuration.
+ *
+ * This configuration needs the Chrome Debugging extension for VS Code (created by Microsoft) to be installed.
  *
  * @param {Object} params the parameters
  * @param {String} params.url the frontend URL
@@ -65,7 +67,7 @@ function createChromeLaunchConfiguration (params) {
 }
 
 /**
- * Create a VS Code launch compound.
+ * Create a VS Code Node launch configuration.
  *
  * @param {Object} params the parameters
  * @param {String} params.packageName the Openwhisk package name
@@ -88,9 +90,9 @@ function createPwaNodeLaunchConfiguration (params) {
     outputCapture: 'std',
     attachSimplePort: 0,
     runtimeArgs: [
-            `${packageName}/${actionName}`,
-            `\${workspaceFolder}/${actionFileRelativePath}`,
-            '-v'
+      `${packageName}/${actionName}`,
+      `\${workspaceFolder}/${actionFileRelativePath}`,
+      '-v'
     ]
   }
 }
