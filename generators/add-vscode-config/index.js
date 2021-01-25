@@ -190,11 +190,24 @@ class AddVsCodeConfig extends Generator {
     }
   }
 
-  writing () {
+  async writing () {
     const appConfig = this.options[Option.APP_CONFIG]
     const destFile = this.options[Option.DESTINATION_FILE]
+    let confirm = { overwriteVsCodeConfig: true }
 
-    this.fs.writeJSON(this.destinationPath(destFile), this.vsCodeConfig)
+    if (fs.existsSync(destFile)) {
+      confirm = await this.prompt([
+        {
+          type: 'confirm',
+          name: 'overwriteVsCodeConfig',
+          message: `Please confirm the overwrite of your Visual Studio Code launch configuration in '${destFile}'?`
+        }
+      ])
+    }
+
+    if (confirm.overwriteVsCodeConfig) {
+      this.fs.writeJSON(this.destinationPath(destFile), this.vsCodeConfig)
+    }
 
     this.sourceRoot(path.join(__dirname, './templates/'))
 

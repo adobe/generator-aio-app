@@ -49,6 +49,7 @@ const createOptions = () => {
 
 beforeEach(() => {
   fs.lstatSync.mockReset()
+  fs.existsSync.mockReset()
 })
 
 test('exports a yeoman generator', () => {
@@ -202,6 +203,37 @@ test('output check', async () => {
       }
     ]
   })
+
+  const envFile = options['app-config'].envFile
+  assert.file(envFile) // env file is written
+  assert.fileContent(envFile, 'OW_NAMESPACE=')
+  assert.fileContent(envFile, 'OW_AUTH=')
+  assert.fileContent(envFile, 'OW_APIHOST=')
+})
+
+test('vscode launch configuration exists', async () => {
+  const options = createOptions()
+  options['app-config'].manifest.package.actions['action-1'].runtime = 'nodejs:14'
+  options['app-config'].manifest.package.actions['action-1'].annotations = {
+    'require-adobe-auth': true
+  }
+  options['app-config'].ow.apihost = 'https://adobeioruntime.net'
+  options['destination-file'] = 'foo/bar.json'
+
+  fs.lstatSync.mockReturnValue({
+    isDirectory: () => false
+  })
+
+  fs.existsSync.mockReturnValue(true) // destination file exists
+
+  const result = helpers
+    .run(theGeneratorPath)
+    .withOptions(options)
+    .withPrompts({ overwriteVsCodeConfig: false })
+  await expect(result).resolves.not.toThrow()
+
+  const destFile = options['destination-file']
+  assert.noFile(destFile) // destination file is not written
 
   const envFile = options['app-config'].envFile
   assert.file(envFile) // env file is written
