@@ -30,9 +30,14 @@ const createOptions = () => {
         apihost: 'https://my-api.host'
       },
       manifest: {
-        package: {
-          actions: {
-            'action-1': { function: 'src/actions/action-1' }
+        packagePlaceholder: '__APP_PACKAGE__',
+        full: {
+          packages: {
+            __APP_PACKAGE__: {
+              actions: {
+                'action-1': { function: 'src/actions/action-1' }
+              }
+            }
           }
         }
       },
@@ -44,6 +49,58 @@ const createOptions = () => {
       envFile: 'env-file'
     },
     'frontend-url': 'https://localhost:9080'
+  }
+}
+
+const createTestLaunchConfiguration = (packageName) => {
+  return {
+    configurations: [
+      {
+        type: 'pwa-node',
+        name: `Action:${packageName}/action-1`,
+        request: 'launch',
+        runtimeExecutable: '${workspaceFolder}/node_modules/.bin/wskdebug', // eslint-disable-line no-template-curly-in-string
+        envFile: '${workspaceFolder}/env-file', // eslint-disable-line no-template-curly-in-string
+        timeout: 30000,
+        localRoot: '${workspaceFolder}', // eslint-disable-line no-template-curly-in-string
+        remoteRoot: '/code',
+        outputCapture: 'std',
+        attachSimplePort: 0,
+        runtimeArgs: [
+          `${packageName}/__secured_action-1`,
+          '${workspaceFolder}/src/actions/action-1', // eslint-disable-line no-template-curly-in-string
+          '-v',
+          '--kind',
+          'nodejs:14'
+        ]
+      },
+      {
+        type: 'chrome',
+        name: 'Web',
+        request: 'launch',
+        url: 'https://localhost:9080',
+        webRoot: 'html',
+        breakOnLoad: true,
+        sourceMapPathOverrides: {
+          '*': path.join('dist-dev', '*')
+        }
+      }
+    ],
+    compounds: [
+      {
+        name: 'Actions',
+        configurations: [
+          `Action:${packageName}/action-1`
+        ]
+      },
+      {
+        name: 'WebAndActions',
+        configurations: [
+          `Action:${packageName}/action-1`,
+          'Web'
+        ]
+      }
+    ]
   }
 }
 
@@ -66,7 +123,7 @@ test('option app-config incomplete', async () => {
   const result = helpers.run(theGeneratorPath).withOptions(options)
 
   await expect(result).rejects.toEqual(new Error(
-    'App config missing keys: app.hasFrontend, app.hasBackend, ow.package, ow.apihost, manifest.package.actions, web.src, web.distDev, root, envFile'))
+    'App config missing keys: app.hasFrontend, app.hasBackend, ow.package, ow.apihost, manifest.packagePlaceholder, manifest.full.packages, web.src, web.distDev, root, envFile'))
 })
 
 test('option frontend-url missing', async () => {
@@ -111,7 +168,8 @@ test('no missing options (action is a folder)', async () => {
 
 test('no missing options (coverage: action has a runtime specifier)', async () => {
   const options = createOptions()
-  options['app-config'].manifest.package.actions['action-1'].runtime = 'nodejs:14'
+  const pkg = options['app-config'].manifest.full.packages.__APP_PACKAGE__
+  pkg.actions['action-1'].runtime = 'nodejs:14'
 
   fs.lstatSync.mockReturnValue({
     isDirectory: () => false
@@ -123,10 +181,9 @@ test('no missing options (coverage: action has a runtime specifier)', async () =
 
 test('no missing options (coverage: action has annotations)', async () => {
   const options = createOptions()
-  options['app-config'].manifest.package.actions['action-1'].annotations = {
-    'require-adobe-auth': true
-  }
   options['app-config'].ow.apihost = 'https://adobeioruntime.net'
+  const pkg = options['app-config'].manifest.full.packages.__APP_PACKAGE__
+  pkg.actions['action-1'].annotations = { 'require-adobe-auth': true }
 
   fs.lstatSync.mockReturnValue({
     isDirectory: () => false
@@ -138,8 +195,9 @@ test('no missing options (coverage: action has annotations)', async () => {
 
 test('output check', async () => {
   const options = createOptions()
-  options['app-config'].manifest.package.actions['action-1'].runtime = 'nodejs:14'
-  options['app-config'].manifest.package.actions['action-1'].annotations = {
+  const pkg = options['app-config'].manifest.full.packages.__APP_PACKAGE__
+  pkg.actions['action-1'].runtime = 'nodejs:14'
+  pkg.actions['action-1'].annotations = {
     'require-adobe-auth': true
   }
   options['app-config'].ow.apihost = 'https://adobeioruntime.net'
@@ -154,55 +212,38 @@ test('output check', async () => {
 
   const destFile = options['destination-file']
   assert.file(destFile) // destination file is written
-  assert.JSONFileContent(destFile, {
-    configurations: [
-      {
-        type: 'pwa-node',
-        name: 'Action:my-package/action-1',
-        request: 'launch',
-        runtimeExecutable: '${workspaceFolder}/node_modules/.bin/wskdebug', // eslint-disable-line no-template-curly-in-string
-        envFile: '${workspaceFolder}/env-file', // eslint-disable-line no-template-curly-in-string
-        timeout: 30000,
-        localRoot: '${workspaceFolder}', // eslint-disable-line no-template-curly-in-string
-        remoteRoot: '/code',
-        outputCapture: 'std',
-        attachSimplePort: 0,
-        runtimeArgs: [
-          'my-package/__secured_action-1',
-          '${workspaceFolder}/src/actions/action-1', // eslint-disable-line no-template-curly-in-string
-          '-v',
-          '--kind',
-          'nodejs:14'
-        ]
-      },
-      {
-        type: 'chrome',
-        name: 'Web',
-        request: 'launch',
-        url: 'https://localhost:9080',
-        webRoot: 'html',
-        breakOnLoad: true,
-        sourceMapPathOverrides: {
-          '*': path.join('dist-dev', '*')
-        }
-      }
-    ],
-    compounds: [
-      {
-        name: 'Actions',
-        configurations: [
-          'Action:my-package/action-1'
-        ]
-      },
-      {
-        name: 'WebAndActions',
-        configurations: [
-          'Action:my-package/action-1',
-          'Web'
-        ]
-      }
-    ]
+  assert.JSONFileContent(destFile, createTestLaunchConfiguration(options['app-config'].ow.package))
+
+  const envFile = options['app-config'].envFile
+  assert.file(envFile) // env file is written
+  assert.fileContent(envFile, 'OW_NAMESPACE=')
+  assert.fileContent(envFile, 'OW_AUTH=')
+  assert.fileContent(envFile, 'OW_APIHOST=')
+})
+
+test('output check (custom package)', async () => {
+  const customPackage = 'my-custom-package'
+  const options = createOptions()
+  const packages = options['app-config'].manifest.full.packages
+  packages[customPackage] = Object.assign({}, packages.__APP_PACKAGE__)
+  delete packages.__APP_PACKAGE__
+  packages[customPackage].actions['action-1'].runtime = 'nodejs:14'
+  packages[customPackage].actions['action-1'].annotations = {
+    'require-adobe-auth': true
+  }
+  options['app-config'].ow.apihost = 'https://adobeioruntime.net'
+  options['destination-file'] = 'foo/bar.json'
+
+  fs.lstatSync.mockReturnValue({
+    isDirectory: () => false
   })
+
+  const result = helpers.run(theGeneratorPath).withOptions(options)
+  await expect(result).resolves.not.toThrow()
+
+  const destFile = options['destination-file']
+  assert.file(destFile) // destination file is written
+  assert.JSONFileContent(destFile, createTestLaunchConfiguration(customPackage))
 
   const envFile = options['app-config'].envFile
   assert.file(envFile) // env file is written
@@ -213,11 +254,6 @@ test('output check', async () => {
 
 test('vscode launch configuration exists', async () => {
   const options = createOptions()
-  options['app-config'].manifest.package.actions['action-1'].runtime = 'nodejs:14'
-  options['app-config'].manifest.package.actions['action-1'].annotations = {
-    'require-adobe-auth': true
-  }
-  options['app-config'].ow.apihost = 'https://adobeioruntime.net'
   options['destination-file'] = 'foo/bar.json'
 
   fs.lstatSync.mockReturnValue({

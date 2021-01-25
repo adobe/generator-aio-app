@@ -13,6 +13,7 @@ const Generator = require('yeoman-generator')
 const path = require('path')
 const fs = require('fs-extra')
 const { absApp, objGetValue } = require('./utils')
+const cloneDeep = require('lodash.clonedeep')
 
 const {
   createVsCodeConfiguration,
@@ -55,14 +56,15 @@ class AddVsCodeConfig extends Generator {
     this.option(Option.DESTINATION_FILE, { type: String, default: Default.DESTINATION_FILE })
   }
 
-  verifyConfig () {
+  _verifyConfig () {
     const appConfig = this.options[Option.APP_CONFIG]
     const verifyKeys = [
       'app.hasFrontend',
       'app.hasBackend',
       'ow.package',
       'ow.apihost',
-      'manifest.package.actions',
+      'manifest.packagePlaceholder',
+      'manifest.full.packages',
       'web.src',
       'web.distDev',
       'root',
@@ -103,48 +105,63 @@ class AddVsCodeConfig extends Generator {
     return runtimeArgs
   }
 
-  _processForBackend () {
+  _processAction (packageName, actionName, action) {
     const appConfig = this.options[Option.APP_CONFIG]
     const nodeVersion = this.options[Option.NODE_VERSION]
     const remoteRoot = this.options[Option.REMOTE_ROOT]
 
-    const packageName = appConfig.ow.package
-    const manifestActions = appConfig.manifest.package.actions
+    const launchConfig = createPwaNodeLaunchConfiguration({
+      packageName,
+      actionName,
+      actionFileRelativePath: action.function,
+      envFileRelativePath: appConfig.envFile,
+      remoteRoot,
+      nodeVersion
+    })
 
-    Object.keys(manifestActions).map(actionName => {
-      const action = manifestActions[actionName]
+    launchConfig.runtimeArgs = this._processRuntimeArgsForActionEntryFile(action, launchConfig.runtimeArgs)
 
-      const launchConfig = createPwaNodeLaunchConfiguration({
-        packageName,
-        actionName,
-        actionFileRelativePath: action.function,
-        envFileRelativePath: appConfig.envFile,
-        remoteRoot,
-        nodeVersion
+    if (
+      action.annotations &&
+      action.annotations['require-adobe-auth'] &&
+      appConfig.ow.apihost === 'https://adobeioruntime.net'
+    ) {
+      // NOTE: The require-adobe-auth annotation is a feature implemented in the
+      // runtime plugin. The current implementation replaces the action by a sequence
+      // and renames the action to __secured_<action>. The annotation will soon be
+      // natively supported in Adobe I/O Runtime, at which point this condition won't
+      // be needed anymore.
+      /* instanbul ignore next */
+      launchConfig.runtimeArgs[0] = `${packageName}/__secured_${actionName}`
+    }
+
+    if (action.runtime) {
+      launchConfig.runtimeArgs.push('--kind')
+      launchConfig.runtimeArgs.push(action.runtime)
+    }
+
+    return launchConfig
+  }
+
+  _processForBackend () {
+    const appConfig = this.options[Option.APP_CONFIG]
+
+    const modifiedConfig = cloneDeep(appConfig)
+    const packages = modifiedConfig.manifest.full.packages
+    const packagePlaceholder = modifiedConfig.manifest.packagePlaceholder
+    if (packages[packagePlaceholder]) {
+      packages[modifiedConfig.ow.package] = packages[packagePlaceholder]
+      delete packages[packagePlaceholder]
+    }
+
+    Object.keys(packages).forEach(packageName => {
+      const pkg = packages[packageName]
+
+      Object.keys(pkg.actions).forEach(actionName => {
+        const action = pkg.actions[actionName]
+        const launchConfig = this._processAction(packageName, actionName, action)
+        this.vsCodeConfig.configurations.push(launchConfig)
       })
-
-      launchConfig.runtimeArgs = this._processRuntimeArgsForActionEntryFile(action, launchConfig.runtimeArgs)
-
-      if (
-        action.annotations &&
-        action.annotations['require-adobe-auth'] &&
-        appConfig.ow.apihost === 'https://adobeioruntime.net'
-      ) {
-        // NOTE: The require-adobe-auth annotation is a feature implemented in the
-        // runtime plugin. The current implementation replaces the action by a sequence
-        // and renames the action to __secured_<action>. The annotation will soon be
-        // natively supported in Adobe I/O Runtime, at which point this condition won't
-        // be needed anymore.
-        /* instanbul ignore next */
-        launchConfig.runtimeArgs[0] = `${packageName}/__secured_${actionName}`
-      }
-
-      if (action.runtime) {
-        launchConfig.runtimeArgs.push('--kind')
-        launchConfig.runtimeArgs.push(action.runtime)
-      }
-
-      this.vsCodeConfig.configurations.push(launchConfig)
     })
 
     this.vsCodeConfig.compounds.push({
@@ -176,7 +193,7 @@ class AddVsCodeConfig extends Generator {
   }
 
   initializing () {
-    this.verifyConfig()
+    this._verifyConfig()
     this.vsCodeConfig = createVsCodeConfiguration()
 
     const appConfig = this.options[Option.APP_CONFIG]
