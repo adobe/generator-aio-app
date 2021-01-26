@@ -93,7 +93,8 @@ function createPwaNodeLaunchConfiguration (params) {
     runtimeArgs: [
       `${packageName}/${actionName}`,
       `\${workspaceFolder}/${actionFileRelativePath}`,
-      '-v'
+      '-v',
+      '--disable-concurrency'
     ]
   }
 }

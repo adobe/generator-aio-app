@@ -71,6 +71,7 @@ const createTestLaunchConfiguration = (packageName) => {
           `${packageName}/__secured_action-1`,
           '${workspaceFolder}/src/actions/action-1', // eslint-disable-line no-template-curly-in-string
           '-v',
+          '--disable-concurrency',
           '--kind',
           'nodejs:14'
         ]

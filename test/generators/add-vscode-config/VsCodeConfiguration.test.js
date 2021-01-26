@@ -93,7 +93,8 @@ test('createPwaNodeLaunchConfiguration', () => {
     runtimeArgs: [
       `${params.packageName}/${params.actionName}`,
       `\${workspaceFolder}/${params.actionFileRelativePath}`, // eslint-disable-line no-template-curly-in-string
-      '-v'
+      '-v',
+      '--disable-concurrency'
     ]
   })
 })
