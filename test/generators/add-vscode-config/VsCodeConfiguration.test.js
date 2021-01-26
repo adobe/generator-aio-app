@@ -54,7 +54,7 @@ test('createChromeLaunchConfiguration', () => {
   expect(launchConfig.name).toEqual('Web')
   expect(launchConfig.request).toEqual('launch')
 
-  expect(launchConfig).toMatchObject({
+  expect(launchConfig).toStrictEqual({
     type: 'chrome',
     name: 'Web',
     request: 'launch',
@@ -78,10 +78,11 @@ test('createPwaNodeLaunchConfiguration', () => {
   }
   const launchConfig = createPwaNodeLaunchConfiguration(params)
 
-  expect(launchConfig).toMatchObject({
+  expect(launchConfig).toStrictEqual({
     type: 'pwa-node',
     name: `Action:${params.packageName}/${params.actionName}`,
     request: 'launch',
+    killBehavior: 'polite',
     runtimeExecutable: '${workspaceFolder}/node_modules/.bin/wskdebug', // eslint-disable-line no-template-curly-in-string
     envFile: '${workspaceFolder}/env-file-relative-path', // eslint-disable-line no-template-curly-in-string
     timeout: 30000,

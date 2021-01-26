@@ -59,6 +59,7 @@ const createTestLaunchConfiguration = (packageName) => {
         type: 'pwa-node',
         name: `Action:${packageName}/action-1`,
         request: 'launch',
+        killBehavior: 'polite',
         runtimeExecutable: '${workspaceFolder}/node_modules/.bin/wskdebug', // eslint-disable-line no-template-curly-in-string
         envFile: '${workspaceFolder}/my/.env', // eslint-disable-line no-template-curly-in-string
         timeout: 30000,
