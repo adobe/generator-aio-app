@@ -142,7 +142,7 @@ class AddVsCodeConfig extends Generator {
       // natively supported in Adobe I/O Runtime, at which point this condition won't
       // be needed anymore.
       /* instanbul ignore next */
-      launchConfig.runtimeArgs[0] = `${packageName}/__secured_${actionName}`
+      launchConfig.runtimeArgs[1] = `${packageName}/__secured_${actionName}`
     }
 
     if (action.runtime) {

@@ -68,6 +68,7 @@ const createTestLaunchConfiguration = (packageName) => {
         outputCapture: 'std',
         attachSimplePort: 0,
         runtimeArgs: [
+          '--disable-concurrency',
           `${packageName}/__secured_action-1`,
           '${workspaceFolder}/src/actions/action-1', // eslint-disable-line no-template-curly-in-string
           '-v',
