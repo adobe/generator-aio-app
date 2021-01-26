@@ -91,10 +91,10 @@ function createPwaNodeLaunchConfiguration (params) {
     outputCapture: 'std',
     attachSimplePort: 0,
     runtimeArgs: [
-      '--disable-concurrency',
       `${packageName}/${actionName}`,
       `\${workspaceFolder}/${actionFileRelativePath}`,
-      '-v'
+      '-v',
+      '--disable-concurrency'
     ]
   }
 }

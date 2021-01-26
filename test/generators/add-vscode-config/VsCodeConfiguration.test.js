@@ -91,10 +91,10 @@ test('createPwaNodeLaunchConfiguration', () => {
     outputCapture: 'std',
     attachSimplePort: 0,
     runtimeArgs: [
-      '--disable-concurrency',
       `${params.packageName}/${params.actionName}`,
       `\${workspaceFolder}/${params.actionFileRelativePath}`, // eslint-disable-line no-template-curly-in-string
-      '-v'
+      '-v',
+      '--disable-concurrency'
     ]
   })
 })
