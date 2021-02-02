@@ -32,10 +32,16 @@ async function actionWebInvoke (actionUrl, headers = {}, params = {}) {
   if (window.location.hostname === 'localhost') {
     actionHeaders['x-ow-extra-logging'] = 'on'
   }
+
+  // Switch between fetch method based on invocation params
+  const method = Object.keys(params).length ? 'post' : 'get'
+  // Set request body only for post
+  const body = (method === 'post') ? JSON.stringify(params) : null
+  
   const response = await fetch(actionUrl, {
-    method: 'post',
     headers: actionHeaders,
-    body: JSON.stringify(params)
+    method,
+    body,
   })
   let content = await response.text()
   if (!response.ok) {
