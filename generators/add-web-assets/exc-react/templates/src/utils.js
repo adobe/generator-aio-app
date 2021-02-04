@@ -24,26 +24,36 @@ governing permissions and limitations under the License.
  * @returns {Promise<string|object>} the response
  *
  */
-async function actionWebInvoke (actionUrl, headers = {}, params = {}) {
+async function actionWebInvoke (actionUrl, headers = {}, params = {}, options = { method: 'post' }) {
+  
   const actionHeaders = {
     'Content-Type': 'application/json',
     ...headers
   }
+
+  const fetchConfig = {
+    headers: actionHeaders
+  }
+
   if (window.location.hostname === 'localhost') {
     actionHeaders['x-ow-extra-logging'] = 'on'
   }
 
-  // Switch between fetch method based on invocation params
-  const method = Object.keys(params).length ? 'post' : 'get'
-  // Set request body only for post
-  const body = (method === 'post') ? JSON.stringify(params) : null
+  fetchConfig.method = options.method.toLocaleLowerCase()
+
+  if (fetchConfig.method === 'get') {
+    actionUrl = new URL(actionUrl)
+    Object.keys(params).forEach(key => actionUrl.searchParams.append(key, params[key]))
+  }
+
+  if (fetchConfig.method  === 'post') {
+    fetchConfig.body = JSON.stringify(params)
+  }
   
-  const response = await fetch(actionUrl, {
-    headers: actionHeaders,
-    method,
-    body,
-  })
+  const response = await fetch(actionUrl, fetchConfig)
+
   let content = await response.text()
+  
   if (!response.ok) {
     throw new Error(`failed request to '${actionUrl}' with status: ${response.status} and message: ${content}`)
   }
