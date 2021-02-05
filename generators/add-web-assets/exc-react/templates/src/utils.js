@@ -39,7 +39,7 @@ async function actionWebInvoke (actionUrl, headers = {}, params = {}, options = 
     actionHeaders['x-ow-extra-logging'] = 'on'
   }
 
-  fetchConfig.method = options.method.toLocaleLowerCase()
+  fetchConfig.method = options.method.toLowerCase()
 
   if (fetchConfig.method === 'get') {
     actionUrl = new URL(actionUrl)
