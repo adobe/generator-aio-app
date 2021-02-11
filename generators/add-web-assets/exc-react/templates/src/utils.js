@@ -24,8 +24,8 @@ governing permissions and limitations under the License.
  * @returns {Promise<string|object>} the response
  *
  */
-async function actionWebInvoke (actionUrl, headers = {}, params = {}, options = { method: 'POST' }) {
-  
+
+async function actionWebInvoke (actionUrl, headers = {}, params = {}, options = { method: 'POST' }) {  
   const actionHeaders = {
     'Content-Type': 'application/json',
     ...headers
