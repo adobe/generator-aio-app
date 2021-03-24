@@ -38,14 +38,12 @@ async function actionWebInvoke (actionUrl, headers = {}, params = {}, options = 
     actionHeaders['x-ow-extra-logging'] = 'on'
   }
 
-  fetchConfig.method = options.method.toLowerCase()
+  fetchConfig.method = options.method.toUpperCase()
 
   if (fetchConfig.method === 'GET') {
     actionUrl = new URL(actionUrl)
     Object.keys(params).forEach(key => actionUrl.searchParams.append(key, params[key]))
-  }
-
-  if (fetchConfig.method  === 'POST') {
+  } else if (fetchConfig.method === 'POST') {
     fetchConfig.body = JSON.stringify(params)
   }
   
