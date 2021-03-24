@@ -30,7 +30,6 @@ class AudienceManagerCDGenerator extends ActionGenerator {
 
     // get Customer Profile from Audience Manager Customer Data API
     const profiles = await audienceManagerClient.getProfile(params.id, params.dataSourceId)
-    logger.debug('profiles = ' + JSON.stringify(profiles, null, 2))
     const response = {
       statusCode: 200,
       body: profiles

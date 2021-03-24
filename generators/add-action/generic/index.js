@@ -27,7 +27,7 @@ class GenericGenerator extends ActionGenerator {
 const { Core } = require('@adobe/aio-sdk')`,
 
       responseCode: `// replace this with the api you want to access
-    const apiEndpoint = 'https://adobeioruntime.net/api/v1/api-docs'
+    const apiEndpoint = 'https://adobeioruntime.net/api/v1'
 
     // fetch content from external api endpoint
     const res = await fetch(apiEndpoint)
@@ -35,7 +35,6 @@ const { Core } = require('@adobe/aio-sdk')`,
       throw new Error('request to ' + apiEndpoint + ' failed with status code ' + res.status)
     }
     const content = await res.json()
-    logger.debug('fetch content = ' + JSON.stringify(content, null, 2))
     const response = {
       statusCode: 200,
       body: content
