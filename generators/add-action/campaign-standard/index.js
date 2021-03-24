@@ -29,7 +29,6 @@ class CampaignStandardGenerator extends ActionGenerator {
 
     // get profiles from Campaign Standard
     const profiles = await campaignClient.getAllProfiles()
-    logger.debug('profiles = ' + JSON.stringify(profiles, null, 2))
     const response = {
       statusCode: 200,
       body: profiles
