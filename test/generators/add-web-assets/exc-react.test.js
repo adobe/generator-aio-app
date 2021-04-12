@@ -182,4 +182,19 @@ describe('run', () => {
       .withOptions({ 'project-name': 'abc', 'skip-install': true })
     expect(installDependencies).toHaveBeenCalledTimes(0)
   })
+
+  test('with stage env, should use stage launch url prefix', async () => {
+    process.env.AIO_CLI_ENV = 'stage'
+    await helpers
+      .run(theGeneratorPath)
+      .withOptions({ 'project-name': 'abc', 'skip-install': true, 'has-backend': false })
+      .inTmpDir((dir) => {
+        fs.writeFileSync(path.join(dir, '.env'), prevDotEnv)
+      })
+    assert.fileContent(
+      '.env',
+      'AIO_LAUNCH_URL_PREFIX="https://experience-stage.adobe.com/?devMode=true#/custom-apps/?localDevUrl="'
+    )
+    delete process.env.AIO_CLI_ENV
+  })
 })
