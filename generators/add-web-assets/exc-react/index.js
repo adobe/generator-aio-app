@@ -13,13 +13,8 @@ const path = require('path')
 const Generator = require('yeoman-generator')
 
 const utils = require('../../../lib/utils')
-const { webAssetsDirname, dotenvFilename } = require('../../../lib/constants')
+const { webAssetsDirname } = require('../../../lib/constants')
 const { sdkCodes } = require('../../../lib/constants')
-
-const {
-  getCliEnv, /* function */
-  STAGE_ENV /* string */
-} = require('@adobe/aio-lib-env')
 
 class ExcReactGenerator extends Generator {
   constructor (args, opts) {
@@ -76,19 +71,6 @@ class ExcReactGenerator extends Generator {
         '@babel/preset-env': '^7.8.7'
       },
       true
-    )
-    // add env variable to load ui in exc shell
-    const launchPrefix = getCliEnv() === STAGE_ENV
-      ? 'https://experience-stage.adobe.com/?devMode=true#/custom-apps/?localDevUrl='
-      : 'https://experience.adobe.com/?devMode=true#/custom-apps/?localDevUrl='
-
-    utils.appendOrWrite(
-      this,
-      this.destinationPath(dotenvFilename),
-      `## URL prefix used to run your application in the Adobe Experience Cloud Shell
-AIO_LAUNCH_URL_PREFIX="${launchPrefix}"
-`,
-      'AIO_LAUNCH_URL_PREFIX'
     )
   }
 
