@@ -43,10 +43,6 @@ describe('prototype', () => {
 })
 
 function assertEnvContent (prevContent) {
-  assert.fileContent(
-    '.env',
-    'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/custom-apps/?localDevUrl="'
-  )
   assert.fileContent('.env', prevContent)
 }
 

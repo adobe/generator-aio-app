@@ -43,6 +43,7 @@
     "yeoman-test": "^2.6.0"
   },
   "dependencies": {
+    "@adobe/aio-lib-env": "^1.1.0",
     "fs-extra": "^9.0.0",
     "js-yaml": "^3.14.0",
     "lodash.clonedeep": "^4.5.0",
