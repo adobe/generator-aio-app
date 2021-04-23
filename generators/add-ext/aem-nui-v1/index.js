@@ -1,5 +1,5 @@
 /*
-Copyright 2019 Adobe. All rights reserved.
+Copyright 2021 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -12,32 +12,11 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const { atLeastOne } = require('../../lib/utils')
-
-const { sdkCodes, isLoopingPrompts } = require('../../lib/constants')
+const utils = require('../../../lib/utils')
 
 const inquirer = require('inquirer')
 
-// we have one actions generator per service, an action generator could generate different types of actions
-const sdkCodeToActionGenerator = {
-  [sdkCodes.target]: path.join(__dirname, 'target/index.js'),
-  [sdkCodes.analytics]: path.join(__dirname, 'analytics/index.js'),
-  [sdkCodes.campaign]: path.join(__dirname, 'campaign-standard/index.js'),
-  [sdkCodes.assetCompute]: path.join(__dirname, 'asset-compute/index.js'),
-  [sdkCodes.customerProfile]: path.join(__dirname, 'customer-profile/index.js'),
-  [sdkCodes.audienceManagerCD]: path.join(__dirname, 'audience-manager-cd/index.js')
-}
-
-const sdkCodeToTitle = {
-  [sdkCodes.target]: 'Adobe Target',
-  [sdkCodes.analytics]: 'Adobe Analytics',
-  [sdkCodes.campaign]: 'Adobe Campaign Standard',
-  [sdkCodes.assetCompute]: 'Adobe Asset Compute Worker',
-  [sdkCodes.customerProfile]: 'Adobe Experience Platform: Realtime Customer Profile',
-  [sdkCodes.audienceManagerCD]: 'Adobe Audience Manager: Customer Data'
-}
-
-const genericActionGenerator = path.join(__dirname, 'generic/index.js')
+const assetComputeGenerator = path.join(__dirname, '../../add-action/asset-compute/index.js')
 
 /*
       'initializing',
@@ -50,46 +29,50 @@ const genericActionGenerator = path.join(__dirname, 'generic/index.js')
       'end'
       */
 
-class AddActions extends Generator {
+class AemNuiV1 extends Generator {
   constructor (args, opts) {
     super(args, opts)
-
-    // required
-    this.option('action-folder', { type: String })
-    this.option('ext-config-path', { type: String })
 
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
     this.option('skip-install', { type: String, default: false })
-    /// Adobe services added to the Console Workspace
-    this.option('adobe-services', { type: String, default: '' })
-    /// Adobe services that are supported by the Org
-    this.option('supported-adobe-services', { type: String, default: '' })
-    // todo throw meaningful error if add actions in a non existing project, but what defines a project?
+  }
+
+  async initializing () {
+    // all paths are relative to root
+    this.extFolder = 'aem-nui-v1'
+    this.actionFolder = path.join(this.extFolder, 'actions')
+    this.extConfigPath = path.join(this.extFolder, 'ext.config.yaml')
+
+    // generate the nui action
+    this.composeWith(assetComputeGenerator, {
+      // forward needed args
+      'skip-prompt': this.options['skip-prompt'],
+      'action-folder': this.actionFolder,
+      'ext-config-path': this.extConfigPath
+    })
+  }
+
+  async writing () {
+    // 1. add the extension point config in root
+    utils.writeExtensionPointConfig(
+      this,
+      'aem/nui/v1',
+      {
+        config: this.extConfigPath,
+        operations: {
+          // TODO opcode is still tbd
+          worker: [
+            // todo package name and action name have to be given to assetCompute action gen
+            { type: 'headless', impl: 'aem-nui-v1/worker' }
+          ]
+        }
+      }
+    )
   }
 
   async prompting () {
-    // default if skip-prompt = true
-    let actionGenerators = [genericActionGenerator]
-
-    if (!this.options['skip-prompt']) {
-      // get list of choices
-      const choices = getPromptChoices(this.options['adobe-services'], this.options['supported-adobe-services'])
-      // prompt for selection
-      const promptProps = await this.prompt([
-        {
-          type: 'checkbox',
-          name: 'actionGenerators',
-          message: 'Which type of sample actions do you want to create?\nSelect type of actions to generate',
-          choices,
-          loop: isLoopingPrompts,
-          pageSize: choices.length,
-          validate: atLeastOne
-        }
-      ])
-      // retrieve selection
-      actionGenerators = promptProps.actionGenerators
-    }
+    // no prompts for now
 
     // run selected generators
     actionGenerators.forEach(gen => this.composeWith(gen, {
@@ -188,4 +171,4 @@ function getPromptChoices (adobeServicesOption, supportedAdobeServicesOption) {
   ]
 }
 
-module.exports = AddActions
+module.exports = AemNuiV1
