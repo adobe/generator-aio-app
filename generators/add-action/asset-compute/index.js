@@ -37,19 +37,6 @@ class AssetComputeGenerator extends ActionGenerator {
       devDependencies: {
         '@adobe/aio-cli-plugin-asset-compute': '^1.4.1'
       },
-      dotenvStub: {
-        label: 'please provide the following environment variables for the Asset Compute devtool. You can use AWS or Azure, not both:',
-        vars: [
-          'ASSET_COMPUTE_PRIVATE_KEY_FILE_PATH',
-          'S3_BUCKET',
-          'AWS_ACCESS_KEY_ID',
-          'AWS_SECRET_ACCESS_KEY',
-          'AWS_REGION',
-          'AZURE_STORAGE_ACCOUNT',
-          'AZURE_STORAGE_KEY',
-          'AZURE_STORAGE_CONTAINER_NAME'
-        ]
-      },
       actionManifestConfig: {
         limits: {
           concurrency: 10
@@ -59,32 +46,12 @@ class AssetComputeGenerator extends ActionGenerator {
         }
       }
     })
-
-    // modify the package.json to contain the Asset Compute testing and development tools
-    const packagejsonPath = this.destinationPath('package.json')
-    const packagejsonContent = this.fs.readJSON(packagejsonPath)
-
-    // add asset compute worker-tests in packages.json scripts
-    if (!packagejsonContent.scripts) {
-      packagejsonContent.scripts = {}
-      packagejsonContent.scripts.test = 'adobe-asset-compute test-worker'
-      packagejsonContent.scripts['post-app-run'] = 'adobe-asset-compute devtool'
-    } else {
-      packagejsonContent.scripts['post-app-run'] = 'adobe-asset-compute devtool'
-      if (packagejsonContent.scripts.test && !packagejsonContent.scripts.test.includes('adobe-asset-compute test-worker')) {
-        packagejsonContent.scripts.test = packagejsonContent.scripts.test.concat(' && adobe-asset-compute test-worker')
-      } else {
-        packagejsonContent.scripts.test = 'adobe-asset-compute test-worker'
-      }
-    }
-    this.fs.writeJSON(packagejsonPath, packagejsonContent)
-    const testsFilePath = this.destinationPath('test', 'asset-compute', this.props.actionName)
-    this.fs.delete(this.destinationPath('test/jest.setup.js')) // remove jest test setup since Asset Compute workers do not use jest
-
+    // TODO add support in ActionGenerator for copying test folders instead of files
+    const destTestFolder = this.destinationPath(`test/${this.options['action-folder']}/`)
     const workerTemplateTestFiles = `${this.templatePath()}/test/` // copy the rest of the worker template files
     this.fs.copyTpl(
       workerTemplateTestFiles,
-      testsFilePath,
+      destTestFolder,
       this.props
     )
   }

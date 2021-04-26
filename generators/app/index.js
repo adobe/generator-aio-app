@@ -12,8 +12,7 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const { isLoopingPrompts, dotenvFilename } = require('../../lib/constants')
-const { atLeastOne } = require('../../lib/utils')
+const { dotenvFilename } = require('../../lib/constants')
 /*
       'initializing',
       'prompting',
@@ -33,10 +32,6 @@ class CodeGenerator extends Generator {
     this.option('skip-prompt', { default: false })
     this.option('project-name', { type: String, default: path.basename(process.cwd()) })
     this.option('skip-install', { type: String, default: false })
-    /// Adobe services added to the Console Workspace
-    this.option('adobe-services', { type: String, default: '' })
-    /// Adobe services that are supported by the Org
-    this.option('supported-adobe-services', { type: String, default: '' })
 
     // props are passed to templates
     this.props = {}
@@ -44,82 +39,12 @@ class CodeGenerator extends Generator {
     this.props.aioAppTemplateVersion = `${this.rootGeneratorName()}@${this.rootGeneratorVersion()}`
   }
 
-  async prompting () {
-    this.log(`Generating code in: ${this.destinationPath()}`)
-
-    let components = ['actions', 'events', 'webAssets'] // defaults when skip prompt
-    if (!this.options['skip-prompt']) {
-      const res = await this.prompt([
-        {
-          type: 'checkbox',
-          name: 'components',
-          message: 'Which Adobe I/O App features do you want to enable for this project?\nSelect components to include',
-          loop: isLoopingPrompts,
-          choices: [
-            {
-              name: 'Actions: Deploy Runtime actions',
-              value: 'actions',
-              checked: true
-            },
-            {
-              name: 'Events: Publish to Adobe I/O Events',
-              value: 'events',
-              checked: true
-            },
-            {
-              name: 'Web Assets: Deploy hosted static assets',
-              value: 'webAssets',
-              checked: true
-            },
-            {
-              name: 'CI/CD: Include GitHub Actions based workflows for Build, Test and Deploy',
-              value: 'ci',
-              checked: true
-            }
-          ],
-          validate: atLeastOne
-        }
-      ])
-      components = res.components
-    }
-    const addActions = components.includes('actions')
-    const addEvents = components.includes('events')
-    const addWebAssets = components.includes('webAssets')
-    const addCI = components.includes('ci')
-
-    // run add action and add ui generators when applicable
-    if (addActions) {
-      this.composeWith(path.join(__dirname, '../add-action/index.js'), {
-        'skip-install': true,
-        'skip-prompt': this.options['skip-prompt'],
-        'adobe-services': this.options['adobe-services'],
-        'supported-adobe-services': this.options['supported-adobe-services']
-      })
-    }
-    if (addEvents) {
-      this.composeWith(path.join(__dirname, '../add-events/index.js'), {
-        'skip-install': true,
-        'skip-prompt': this.options['skip-prompt'],
-        'adobe-services': this.options['adobe-services']
-      })
-    }
-    if (addWebAssets) {
-      this.composeWith(path.join(__dirname, '../add-web-assets/index.js'), {
-        'skip-install': true,
-        'skip-prompt': this.options['skip-prompt'],
-        'adobe-services': this.options['adobe-services'],
-        'project-name': this.options['project-name'],
-        'has-backend': addActions || addEvents
-      })
-    }
-    if (addCI) {
-      this.composeWith(path.join(__dirname, '../add-ci/index.js'), {
-        'skip-prompt': true
-      })
-    }
+  async initializing () {
+    this.log(`Bootstrapping code in: ${this.destinationPath()}`)
   }
 
   writing () {
+    // setup basic app structure
     this.sourceRoot(path.join(__dirname, './templates/'))
     // copy everything that does not start with an _
     this.fs.copyTpl(
@@ -128,7 +53,6 @@ class CodeGenerator extends Generator {
         this.props
     )
     // the above excluded our strangely named .env file, lets fix it
-    // todo create dotenv programmatically from required vars
     this.fs.copyTpl(
       this.templatePath('_dot.env'),
       this.destinationPath(dotenvFilename),
@@ -146,7 +70,9 @@ class CodeGenerator extends Generator {
 
   async install () {
     // this condition makes sure it doesn't print any unwanted 'skip install message'
-    if (!this.options['skip-install']) return this.installDependencies({ bower: false, skipMessage: true })
+    if (!this.options['skip-install']) {
+      return this.installDependencies({ bower: false, skipMessage: true })
+    }
   }
 }
 

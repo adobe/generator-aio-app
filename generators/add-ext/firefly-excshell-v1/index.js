@@ -14,8 +14,8 @@ const Generator = require('yeoman-generator')
 
 const utils = require('../../../lib/utils')
 
-const assetComputeGenerator = path.join(__dirname, '../../add-action/asset-compute/index.js')
-
+const genericActionGenerator = path.join(__dirname, '../../add-action/generic/index.js')
+const excReactWebAssetsGenerator = path.join(__dirname, '../../add-web-assets/exc-react/index.js')
 /*
       'initializing',
       'prompting',
@@ -27,7 +27,7 @@ const assetComputeGenerator = path.join(__dirname, '../../add-action/asset-compu
       'end'
       */
 
-class AemNuiV1 extends Generator {
+class FireflyExcshellV1 extends Generator {
   constructor (args, opts) {
     super(args, opts)
 
@@ -40,15 +40,27 @@ class AemNuiV1 extends Generator {
 
   async initializing () {
     // all paths are relative to root
-    this.extFolder = 'aem-nui-v1'
+    this.extFolder = 'firefly-excshell-v1'
     this.actionFolder = path.join(this.extFolder, 'actions')
+    // todo support multi UI (could be one for each operation)
+    this.webSrcFolder = path.join(this.extFolder, 'web-src')
     this.extConfigPath = path.join(this.extFolder, 'ext.config.yaml')
 
-    // generate the nui action
-    this.composeWith(assetComputeGenerator, {
+    // generate the generic action
+    this.composeWith(genericActionGenerator, {
       // forward needed args
       'skip-prompt': this.options['skip-prompt'],
+      'skip-install': this.options['skip-install'],
       'action-folder': this.actionFolder,
+      'ext-config-path': this.extConfigPath
+    })
+
+    // generate the UI
+    this.composeWith(excReactWebAssetsGenerator, {
+      // forward needed args
+      'skip-prompt': this.options['skip-prompt'],
+      'skip-install': this.options['skip-install'],
+      'web-src-folder': this.webSrcFolder,
       'ext-config-path': this.extConfigPath
     })
   }
@@ -58,56 +70,17 @@ class AemNuiV1 extends Generator {
     utils.writeKeyAppConfig(
       this,
       // key
-      'extensionPoints.aem/nui/v1',
+      'extensionPoints.firefly/excshell/v1',
       // value
       {
         config: this.extConfigPath,
         operations: {
-          // TODO opcode is still tbd
-          worker: [
-            // todo package name and action name have to be given to assetCompute action gen
-            { type: 'headless', impl: 'aem-nui-v1/worker' }
+          view: [
+            { type: 'spa' }
           ]
         }
       }
     )
-
-    // add required dotenv vars
-    utils.appendStubVarsToDotenv(
-      this,
-      'please provide the following environment variables for the Asset Compute devtool. You can use AWS or Azure, not both:',
-      [
-        'ASSET_COMPUTE_PRIVATE_KEY_FILE_PATH',
-        'S3_BUCKET',
-        'AWS_ACCESS_KEY_ID',
-        'AWS_SECRET_ACCESS_KEY',
-        'AWS_REGION',
-        'AZURE_STORAGE_ACCOUNT',
-        'AZURE_STORAGE_KEY',
-        'AZURE_STORAGE_CONTAINER_NAME'
-      ]
-    )
-
-    // add hooks
-    utils.writeKeyYAMLConfig(
-      this,
-      this.extConfigPath,
-      // key
-      'hooks',
-      // value
-      {
-        'post-app-run': 'adobe-asset-compute devtool'
-      }
-    )
-
-    // add test command
-    // TODO NUI NEEDS TO OVERWRITE TEST SCRIPT... let's have a hook ?
-    // todo here we assume the test script is set already
-    const packagejson = utils.readPackageJson('package.json')
-    packagejson.scripts.test = packagejson.scripts.test.concat(' && adobe-asset-compute test-worker')
-    utils.writePackageJson(this, packagejson)
-
-    // TODO add .npmignore and readme
   }
 
   async install () {
@@ -118,4 +91,4 @@ class AemNuiV1 extends Generator {
   }
 }
 
-module.exports = AemNuiV1
+module.exports = FireflyExcshellV1
