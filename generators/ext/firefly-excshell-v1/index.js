@@ -84,7 +84,6 @@ class FireflyExcshellV1 extends Generator {
   }
 
   async install () {
-    // this condition makes sure it doesn't print any unwanted 'skip install message' into parent generator
     if (!this.options['skip-install']) {
       return this.installDependencies({ bower: false })
     }

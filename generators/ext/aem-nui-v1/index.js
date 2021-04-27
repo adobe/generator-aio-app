@@ -34,8 +34,6 @@ class AemNuiV1 extends Generator {
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
     this.option('skip-install', { type: String, default: false })
-
-    // todo ensure the basic app structure is there already (packagejson at least)
   }
 
   async initializing () {
@@ -88,7 +86,7 @@ class AemNuiV1 extends Generator {
       ]
     )
 
-    // add hooks
+    // add hooks to ext config
     utils.writeKeyYAMLConfig(
       this,
       this.extConfigPath,
@@ -111,7 +109,6 @@ class AemNuiV1 extends Generator {
   }
 
   async install () {
-    // this condition makes sure it doesn't print any unwanted 'skip install message' into parent generator
     if (!this.options['skip-install']) {
       return this.installDependencies({ bower: false })
     }
