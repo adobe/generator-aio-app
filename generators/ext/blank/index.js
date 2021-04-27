@@ -28,13 +28,13 @@ const utils = require('../../../lib/utils')
 class Blank extends Generator {
   async initializing () {
     // all paths are relative to root
-    this.extFolder = 'default'
+    this.extFolder = 'src/blank'
     this.extConfigPath = path.join(this.extFolder, 'ext.config.yaml')
   }
 
   async writing () {
     // add the extension point config in root
-    utils.writeKeyAppConfig(this, 'default', { config: this.extConfigPath })
+    utils.writeKeyAppConfig(this, 'extensionPoints.blank', { config: this.extConfigPath })
 
     // add default path to actions and web src, not required but gives some information to
     // the user and creates the basic path structure

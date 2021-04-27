@@ -40,7 +40,7 @@ class FireflyExcshellV1 extends Generator {
 
   async initializing () {
     // all paths are relative to root
-    this.extFolder = 'firefly-excshell-v1'
+    this.extFolder = 'src/firefly-excshell-v1'
     this.actionFolder = path.join(this.extFolder, 'actions')
     // todo support multi UI (could be one for each operation)
     this.webSrcFolder = path.join(this.extFolder, 'web-src')

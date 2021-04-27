@@ -38,7 +38,7 @@ class AemNuiV1 extends Generator {
 
   async initializing () {
     // all paths are relative to root
-    this.extFolder = 'aem-nui-v1'
+    this.extFolder = 'src/aem-nui-v1'
     this.actionFolder = path.join(this.extFolder, 'actions')
     this.extConfigPath = path.join(this.extFolder, 'ext.config.yaml')
 
@@ -101,7 +101,7 @@ class AemNuiV1 extends Generator {
     // add test command
     // TODO NUI NEEDS TO OVERWRITE TEST SCRIPT... let's have a hook ?
     // todo here we assume the test script is set already
-    const packagejson = utils.readPackageJson('package.json')
+    const packagejson = utils.readPackageJson(this)
     packagejson.scripts.test = packagejson.scripts.test.concat(' && adobe-asset-compute test-worker')
     utils.writePackageJson(this, packagejson)
 

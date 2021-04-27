@@ -4,6 +4,5 @@
 # to source control
 
 {
-  "aioAppTemplateVersion": "<%= aioAppTemplateVersion %>",
-  "cna": {}
+  "aioAppTemplateVersion": "<%= aioAppTemplateVersion %>"
 }

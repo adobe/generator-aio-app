@@ -24,7 +24,7 @@ class ExcReactGenerator extends Generator {
 
     // props are used by templates
     this.props = {}
-    this.props.projectName = utils.readPackageJson().name
+    this.props.projectName = utils.readPackageJson(this).name
   }
 
   // nothing for now
