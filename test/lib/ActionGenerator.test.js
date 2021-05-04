@@ -121,7 +121,7 @@ describe('implementation', () => {
               fakedefault: {
                 function: '/myAction/index.js',
                 web: 'yes',
-                runtime: 'nodejs:12'
+                runtime: 'nodejs:14'
               }
             }
           }
@@ -170,7 +170,7 @@ describe('implementation', () => {
               myAction: {
                 function: n(`${constants.actionsDirname}/myAction/index.js`), // relative path is important here
                 web: 'yes',
-                runtime: 'nodejs:12',
+                runtime: 'nodejs:14',
                 annotations: {
                   'require-adobe-auth': true
                 }
@@ -212,7 +212,7 @@ describe('implementation', () => {
               myAction: {
                 function: n(`${constants.actionsDirname}/myAction/index.js`), // relative path is important here
                 web: 'yes',
-                runtime: 'nodejs:12',
+                runtime: 'nodejs:14',
                 annotations: {
                   'require-adobe-auth': true
                 }

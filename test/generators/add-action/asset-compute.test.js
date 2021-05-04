@@ -61,7 +61,7 @@ function assertManifestContent (actionName) {
   expect(json.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
     function: `actions${path.sep}${actionName}${path.sep}index.js`,
     web: 'yes',
-    runtime: 'nodejs:12',
+    runtime: 'nodejs:14',
     limits: {
       concurrency: 10
     },

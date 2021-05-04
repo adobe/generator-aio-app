@@ -57,7 +57,7 @@ function assertManifestContent (actionName) {
   expect(json.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
     function: path.normalize(`${constants.actionsDirname}/${actionName}/index.js`),
     web: 'yes',
-    runtime: 'nodejs:12',
+    runtime: 'nodejs:14',
     inputs: {
       LOG_LEVEL: 'debug',
       apiKey: '$SERVICE_API_KEY'
