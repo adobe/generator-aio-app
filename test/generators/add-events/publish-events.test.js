@@ -119,7 +119,7 @@ describe('run', () => {
       'cloudevents-sdk': expect.any(String),
       uuid: expect.any(String)
     }, { '@openwhisk/wskdebug': expect.any(String) })
-    assertNodeEngines(fs, '^10 || ^12')
+    assertNodeEngines(fs, '^12 || ^14')
   })
 
   test('--skip-prompt, and action with default name already exists', async () => {
@@ -151,7 +151,7 @@ describe('run', () => {
       'cloudevents-sdk': expect.any(String),
       uuid: expect.any(String)
     }, { '@openwhisk/wskdebug': expect.any(String) })
-    assertNodeEngines(fs, '^10 || ^12')
+    assertNodeEngines(fs, '^12 || ^14')
   })
 
   test('user input actionName=fakeAction', async () => {
@@ -174,6 +174,6 @@ describe('run', () => {
       'cloudevents-sdk': expect.any(String),
       uuid: expect.any(String)
     }, { '@openwhisk/wskdebug': expect.any(String) })
-    assertNodeEngines(fs, '^10 || ^12')
+    assertNodeEngines(fs, '^12 || ^14')
   })
 })
