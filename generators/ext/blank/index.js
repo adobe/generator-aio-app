@@ -28,7 +28,7 @@ const utils = require('../../../lib/utils')
 class Blank extends Generator {
   async initializing () {
     // all paths are relative to root
-    this.extFolder = 'src/blank'
+    this.extFolder = ''
     this.extConfigPath = path.join(this.extFolder, 'ext.config.yaml')
   }
 
