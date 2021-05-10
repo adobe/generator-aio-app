@@ -61,7 +61,7 @@ function createChromeLaunchConfiguration (params) {
     webRoot,
     breakOnLoad: true,
     sourceMapPathOverrides: {
-      '*': path.join(webDistDev, '*')
+      '*': path.posix.join(webDistDev, '*')
     }
   }
 }

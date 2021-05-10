@@ -96,7 +96,7 @@ const createTestLaunchConfiguration = (
         webRoot: 'html',
         breakOnLoad: true,
         sourceMapPathOverrides: {
-          '*': path.join('dist-dev', '*')
+          '*': path.posix.join('dist-dev', '*')
         }
       }
     ],

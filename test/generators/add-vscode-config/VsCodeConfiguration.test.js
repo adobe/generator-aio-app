@@ -62,7 +62,7 @@ test('createChromeLaunchConfiguration', () => {
     webRoot: params.webRoot,
     breakOnLoad: true,
     sourceMapPathOverrides: {
-      '*': path.join(params.webDistDev, '*')
+      '*': path.posix.join(params.webDistDev, '*')
     }
   })
 })
