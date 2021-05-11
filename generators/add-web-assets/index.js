@@ -35,7 +35,10 @@ class AddWebAssets extends Generator {
   constructor (args, opts) {
     super(args, opts)
 
-    // options are inputs from CLI or yeoman parent generator
+    // required
+    // todo throw error on missing
+    this.option('web-src-folder', { type: String })
+
     this.option('skip-prompt', { default: false })
     this.option('adobe-services', { type: String, default: '' })
 

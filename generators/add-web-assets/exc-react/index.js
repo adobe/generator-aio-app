@@ -17,6 +17,7 @@ const utils = require('../../../lib/utils')
 class ExcReactGenerator extends Generator {
   constructor (args, opts) {
     super(args, opts)
+    // required
     this.option('web-src-folder', { type: String })
     // this.option('skip-prompt', { default: false }) // useless for now
     this.option('skip-install', { type: Boolean, default: false })

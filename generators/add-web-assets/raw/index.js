@@ -17,7 +17,9 @@ const utils = require('../../../lib/utils')
 class RawGenerator extends Generator {
   constructor (args, opts) {
     super(args, opts)
+    // required
     this.option('web-src-folder', { type: String })
+
     this.option('skip-install', { type: Boolean, default: false })
     this.option('ext-config-path', { type: String })
     // props are used by templates

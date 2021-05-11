@@ -57,6 +57,7 @@ class AddActions extends Generator {
     // required
     this.option('action-folder', { type: String })
     this.option('ext-config-path', { type: String })
+    // todo throw error on missing
 
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
