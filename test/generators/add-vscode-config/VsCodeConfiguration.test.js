@@ -92,7 +92,7 @@ test('createPwaNodeLaunchConfiguration', () => {
     attachSimplePort: 0,
     runtimeArgs: [
       `${params.packageName}/${params.actionName}`,
-      `\${workspaceFolder}/${params.actionFileRelativePath}`, // eslint-disable-line no-template-curly-in-string
+      path.join('${workspaceFolder}', params.actionFileRelativePath), // eslint-disable-line no-template-curly-in-string
       '-v',
       '--disable-concurrency'
     ]
