@@ -109,7 +109,7 @@ class AddVsCodeConfig extends Generator {
       // take package.json main or 'index.js'
       const zipMain = this._getActionEntryFile(path.join(actionPath, 'package.json'))
       // index 1 is the action file path
-      runtimeArgs[1] = path.posix.join(runtimeArgs[1], zipMain)
+      runtimeArgs[1] = path.join(runtimeArgs[1], zipMain)
     }
 
     return runtimeArgs

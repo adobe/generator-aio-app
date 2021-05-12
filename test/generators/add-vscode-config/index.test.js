@@ -36,7 +36,7 @@ const createOptions = () => {
             __APP_PACKAGE__: {
               actions: {
                 'action-1': {
-                  function: 'src/actions/action-1'
+                  function: path.join('src', 'actions', 'action-1')
                 }
               }
             }
@@ -60,9 +60,9 @@ const createTestLaunchConfiguration = (
   mainFile = null
 ) => {
   const actionName = `${packageName}/${requireAdobeAuth ? '__secured_' : ''}action-1`
-  let actionJs = '${workspaceFolder}/src/actions/action-1' // eslint-disable-line no-template-curly-in-string
+  let actionJs = path.join('${workspaceFolder}', 'src', 'actions', 'action-1') // eslint-disable-line no-template-curly-in-string
   if (mainFile) {
-    actionJs = `${actionJs}/${mainFile}`
+    actionJs = path.join(actionJs, mainFile)
   }
 
   return {
@@ -96,7 +96,7 @@ const createTestLaunchConfiguration = (
         webRoot: 'html',
         breakOnLoad: true,
         sourceMapPathOverrides: {
-          '*': path.posix.join('dist-dev', '*')
+          '*': path.join('dist-dev', '*')
         }
       }
     ],

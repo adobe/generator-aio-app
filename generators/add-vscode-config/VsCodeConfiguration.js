@@ -61,7 +61,7 @@ function createChromeLaunchConfiguration (params) {
     webRoot,
     breakOnLoad: true,
     sourceMapPathOverrides: {
-      '*': path.posix.join(webDistDev, '*')
+      '*': path.join(webDistDev, '*')
     }
   }
 }
@@ -92,7 +92,7 @@ function createPwaNodeLaunchConfiguration (params) {
     attachSimplePort: 0,
     runtimeArgs: [
       `${packageName}/${actionName}`,
-      `\${workspaceFolder}/${actionFileRelativePath}`,
+      path.join('${workspaceFolder}', actionFileRelativePath), // eslint-disable-line no-template-curly-in-string
       '-v',
       '--disable-concurrency'
     ]
