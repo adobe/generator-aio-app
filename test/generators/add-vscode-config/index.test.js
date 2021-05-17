@@ -35,7 +35,9 @@ const createOptions = () => {
           packages: {
             __APP_PACKAGE__: {
               actions: {
-                'action-1': { function: 'src/actions/action-1' }
+                'action-1': {
+                  function: path.join('src', 'actions', 'action-1')
+                }
               }
             }
           }
@@ -52,7 +54,17 @@ const createOptions = () => {
   }
 }
 
-const createTestLaunchConfiguration = (packageName) => {
+const createTestLaunchConfiguration = (
+  packageName,
+  requireAdobeAuth = false,
+  mainFile = null
+) => {
+  const actionName = `${packageName}/${requireAdobeAuth ? '__secured_' : ''}action-1`
+  let actionJs = path.join('${workspaceFolder}', 'src', 'actions', 'action-1') // eslint-disable-line no-template-curly-in-string
+  if (mainFile) {
+    actionJs = path.join(actionJs, mainFile)
+  }
+
   return {
     configurations: [
       {
@@ -68,8 +80,8 @@ const createTestLaunchConfiguration = (packageName) => {
         outputCapture: 'std',
         attachSimplePort: 0,
         runtimeArgs: [
-          `${packageName}/__secured_action-1`,
-          '${workspaceFolder}/src/actions/action-1', // eslint-disable-line no-template-curly-in-string
+          actionName,
+          actionJs,
           '-v',
           '--disable-concurrency',
           '--kind',
@@ -125,7 +137,17 @@ test('option app-config incomplete', async () => {
   const result = helpers.run(theGeneratorPath).withOptions(options)
 
   await expect(result).rejects.toEqual(new Error(
-    'App config missing keys: app.hasFrontend, app.hasBackend, ow.package, ow.apihost, manifest.packagePlaceholder, manifest.full.packages, web.src, web.distDev, root'))
+    'App config missing keys: app.hasFrontend, app.hasBackend, ow.package, ow.apihost, web.src, web.distDev, root'))
+})
+
+test('option backend keys missing', async () => {
+  const options = createOptions()
+  options['app-config'].app.hasBackend = true
+  options['app-config'].app.hasFrontend = false
+  delete options['app-config'].manifest
+
+  const result = helpers.run(theGeneratorPath).withOptions(options)
+  await expect(result).rejects.toEqual(new Error('App config missing keys: manifest.packagePlaceholder, manifest.full.packages'))
 })
 
 test('option frontend-url missing', async () => {
@@ -150,7 +172,7 @@ test('option env-file missing', async () => {
   await expect(result).rejects.toEqual(new Error('Missing option for generator: env-file'))
 })
 
-test('no missing options (action is a file)', async () => {
+test('no missing options -- coverage (no frontend or backend, runtime not specified)', async () => {
   const options = createOptions()
   options['app-config'].app.hasBackend = false
   options['app-config'].app.hasFrontend = false
@@ -163,8 +185,31 @@ test('no missing options (action is a file)', async () => {
   await expect(result).resolves.not.toThrow()
 })
 
-test('no missing options (action is a folder)', async () => {
+test('no missing options (action is a file)', async () => {
   const options = createOptions()
+  options['destination-file'] = 'foo/bar.json'
+  const pkg = options['app-config'].manifest.full.packages.__APP_PACKAGE__
+  pkg.actions['action-1'].runtime = 'nodejs:14'
+
+  fs.lstatSync.mockReturnValue({
+    isDirectory: () => false
+  })
+
+  const result = helpers.run(theGeneratorPath).withOptions(options)
+  await expect(result).resolves.not.toThrow()
+
+  assert.file(options['destination-file']) // destination file is written
+  assert.JSONFileContent(options['destination-file'],
+    createTestLaunchConfiguration(options['app-config'].ow.package))
+})
+
+test('no missing options (action is a folder)', async () => {
+  const destFile = 'foo/bar.json'
+  const options = createOptions()
+  options['destination-file'] = destFile
+  const pkg = options['app-config'].manifest.full.packages.__APP_PACKAGE__
+  pkg.actions['action-1'].runtime = 'nodejs:14'
+
   let result
 
   fs.lstatSync.mockReturnValue({
@@ -175,9 +220,27 @@ test('no missing options (action is a folder)', async () => {
   result = helpers.run(theGeneratorPath).withOptions(options)
   await expect(result).resolves.not.toThrow()
 
+  assert.file(destFile) // destination file is written
+  assert.JSONFileContent(destFile,
+    createTestLaunchConfiguration(
+      options['app-config'].ow.package,
+      false,
+      'index.js'
+    )
+  )
+
   fs.readJsonSync.mockReturnValue({ main: 'main.js' }) // has main property in package.json
   result = helpers.run(theGeneratorPath).withOptions(options)
   await expect(result).resolves.not.toThrow()
+
+  assert.file(destFile) // destination file is written
+  assert.JSONFileContent(destFile,
+    createTestLaunchConfiguration(
+      options['app-config'].ow.package,
+      false,
+      'main.js'
+    )
+  )
 })
 
 test('no missing options (coverage: action has a runtime specifier)', async () => {
@@ -226,7 +289,7 @@ test('output check', async () => {
 
   const destFile = options['destination-file']
   assert.file(destFile) // destination file is written
-  assert.JSONFileContent(destFile, createTestLaunchConfiguration(options['app-config'].ow.package))
+  assert.JSONFileContent(destFile, createTestLaunchConfiguration(options['app-config'].ow.package, true))
 })
 
 test('output check (custom package)', async () => {
@@ -251,7 +314,7 @@ test('output check (custom package)', async () => {
 
   const destFile = options['destination-file']
   assert.file(destFile) // destination file is written
-  assert.JSONFileContent(destFile, createTestLaunchConfiguration(customPackage))
+  assert.JSONFileContent(destFile, createTestLaunchConfiguration(customPackage, true))
 })
 
 test('vscode launch configuration exists', async () => {
