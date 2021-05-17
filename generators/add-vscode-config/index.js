@@ -63,27 +63,36 @@ class AddVsCodeConfig extends Generator {
 
   _verifyConfig () {
     const appConfig = this.options[Option.APP_CONFIG]
+    const _throwOnMissingKeys = function (requiredKeys, obj) {
+      const missingKeys = []
+      requiredKeys.forEach(key => {
+        if (objGetValue(obj, key) === undefined) {
+          missingKeys.push(key)
+        }
+      })
+
+      if (missingKeys.length > 0) {
+        throw new Error(`App config missing keys: ${missingKeys.join(', ')}`)
+      }
+    }
     const verifyKeys = [
       'app.hasFrontend',
       'app.hasBackend',
       'ow.package',
       'ow.apihost',
-      'manifest.packagePlaceholder',
-      'manifest.full.packages',
       'web.src',
       'web.distDev',
       'root'
     ]
 
-    const missingKeys = []
-    verifyKeys.forEach(key => {
-      if (objGetValue(appConfig, key) === undefined) {
-        missingKeys.push(key)
-      }
-    })
+    _throwOnMissingKeys(verifyKeys, appConfig)
 
-    if (missingKeys.length > 0) {
-      throw new Error(`App config missing keys: ${missingKeys.join(', ')}`)
+    if (appConfig.app.hasBackend) {
+      const requiredBackendKeys = [
+        'manifest.packagePlaceholder',
+        'manifest.full.packages'
+      ]
+      _throwOnMissingKeys(requiredBackendKeys, appConfig)
     }
 
     const envFile = this.options[Option.ENV_FILE]

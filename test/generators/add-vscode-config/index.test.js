@@ -137,7 +137,17 @@ test('option app-config incomplete', async () => {
   const result = helpers.run(theGeneratorPath).withOptions(options)
 
   await expect(result).rejects.toEqual(new Error(
-    'App config missing keys: app.hasFrontend, app.hasBackend, ow.package, ow.apihost, manifest.packagePlaceholder, manifest.full.packages, web.src, web.distDev, root'))
+    'App config missing keys: app.hasFrontend, app.hasBackend, ow.package, ow.apihost, web.src, web.distDev, root'))
+})
+
+test('option backend keys missing', async () => {
+  const options = createOptions()
+  options['app-config'].app.hasBackend = true
+  options['app-config'].app.hasFrontend = false
+  delete options['app-config'].manifest
+
+  const result = helpers.run(theGeneratorPath).withOptions(options)
+  await expect(result).rejects.toEqual(new Error('App config missing keys: manifest.packagePlaceholder, manifest.full.packages'))
 })
 
 test('option frontend-url missing', async () => {
