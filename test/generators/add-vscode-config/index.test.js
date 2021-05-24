@@ -96,7 +96,7 @@ const createTestLaunchConfiguration = (
         webRoot: 'html',
         breakOnLoad: true,
         sourceMapPathOverrides: {
-          '*': path.join('dist-dev', '*')
+          '/__parcel_source_root/*': '${workspaceFolder}/*' // eslint-disable-line no-template-curly-in-string
         }
       }
     ],

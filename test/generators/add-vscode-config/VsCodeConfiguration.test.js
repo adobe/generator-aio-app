@@ -62,7 +62,7 @@ test('createChromeLaunchConfiguration', () => {
     webRoot: params.webRoot,
     breakOnLoad: true,
     sourceMapPathOverrides: {
-      '*': path.join(params.webDistDev, '*')
+      '/__parcel_source_root/*': '${workspaceFolder}/*' // eslint-disable-line no-template-curly-in-string
     }
   })
 })
