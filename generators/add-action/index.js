@@ -56,7 +56,7 @@ class AddActions extends Generator {
 
     // required
     this.option('action-folder', { type: String })
-    this.option('ext-config-path', { type: String })
+    this.option('config-path', { type: String })
     // todo throw error on missing
 
     // options are inputs from CLI or yeoman parent generator
@@ -97,7 +97,7 @@ class AddActions extends Generator {
       // forward needed args
       'skip-prompt': this.options['skip-prompt'],
       'action-folder': this.options['action-folder'],
-      'ext-config-path': this.options['ext-config-path']
+      'config-path': this.options['config-path']
     }))
   }
 

@@ -33,9 +33,6 @@ class FireflyExcshellV1 extends Generator {
 
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
-    this.option('skip-install', { type: String, default: false })
-
-    // todo ensure the basic app structure is there already (packagejson at least)
   }
 
   async initializing () {
@@ -52,7 +49,7 @@ class FireflyExcshellV1 extends Generator {
       'skip-prompt': this.options['skip-prompt'],
       'skip-install': this.options['skip-install'],
       'action-folder': this.actionFolder,
-      'ext-config-path': this.extConfigPath
+      'config-path': this.extConfigPath
     })
 
     // generate the UI
@@ -61,7 +58,7 @@ class FireflyExcshellV1 extends Generator {
       'skip-prompt': this.options['skip-prompt'],
       'skip-install': this.options['skip-install'],
       'web-src-folder': this.webSrcFolder,
-      'ext-config-path': this.extConfigPath
+      'config-path': this.extConfigPath
     })
   }
 
@@ -70,23 +67,29 @@ class FireflyExcshellV1 extends Generator {
     utils.writeKeyAppConfig(
       this,
       // key
-      'extensionPoints.firefly/excshell/v1',
+      'extension.firefly/excshell/v1',
       // value
       {
-        config: this.extConfigPath,
-        operations: {
-          view: [
-            { type: 'spa' }
-          ]
-        }
+        $include: this.extConfigPath
       }
     )
-  }
 
-  async install () {
-    if (!this.options['skip-install']) {
-      return this.installDependencies({ bower: false })
-    }
+    // add extension point operation
+    utils.writeKeyYAMLConfig(
+      this,
+      this.extConfigPath,
+      // key
+      'operations', {
+        view: [
+          { type: 'web', impl: 'index.html' }
+        ]
+      }
+    )
+
+    // add actions path, relative to root
+    utils.writeKeyYAMLConfig(this, this.extConfigPath, 'actions', this.actionFolder)
+    // add web-src path, relative to root
+    utils.writeKeyYAMLConfig(this, this.extConfigPath, 'web', this.webSrcFolder)
   }
 }
 

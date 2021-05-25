@@ -21,7 +21,7 @@ class ExcReactGenerator extends Generator {
     this.option('web-src-folder', { type: String })
     // this.option('skip-prompt', { default: false }) // useless for now
     this.option('skip-install', { type: Boolean, default: false })
-    this.option('ext-config-path', { type: String })
+    this.option('config-path', { type: String })
 
     // props are used by templates
     this.props = {}

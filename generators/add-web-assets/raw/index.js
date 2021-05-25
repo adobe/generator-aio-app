@@ -21,7 +21,7 @@ class RawGenerator extends Generator {
     this.option('web-src-folder', { type: String })
 
     this.option('skip-install', { type: Boolean, default: false })
-    this.option('ext-config-path', { type: String })
+    this.option('config-path', { type: String })
     // props are used by templates
     this.props = {}
     this.props.projectName = this.options['project-name']

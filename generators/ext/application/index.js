@@ -25,8 +25,8 @@ const utils = require('../../../lib/utils')
       'install',
       'end'
       */
-
-class Default extends Generator {
+// this generator creates files for an application `aio app init --no-extension`
+class Application extends Generator {
   constructor (args, opts) {
     super(args, opts)
     this.option('supported-adobe-services', { type: String, default: '' })
@@ -41,19 +41,15 @@ class Default extends Generator {
   async initializing () {
     // all paths are relative to root
     this.extFolder = ''
-    this.extConfigPath = path.join(this.extFolder, 'ext.config.yaml')
     this.actionFolder = path.join(this.extFolder, 'actions')
     this.webSrcFolder = path.join(this.extFolder, 'web-src')
   }
 
   async writing () {
-    // add the extension point config in root
-    utils.writeKeyAppConfig(this, 'extensionPoints.blank', { config: this.extConfigPath })
-
-    // add default path to actions and web src, not required but gives some information to
-    // the user and creates the basic path structure
-    utils.writeKeyYAMLConfig(this, this.extConfigPath, 'actions', this.actionFolder)
-    utils.writeKeyYAMLConfig(this, this.extConfigPath, 'web-src', this.webSrcFolder)
+    // todo only write if selected
+    // add basic config to point to path
+    utils.writeKeyAppConfig(this, 'application.actions', this.actionFolder)
+    utils.writeKeyAppConfig(this, 'application.web-src', this.webSrcFolder)
   }
 
   async composeWithAddGenerators () {
@@ -106,7 +102,7 @@ class Default extends Generator {
         'adobe-services': this.options['adobe-services'],
         'supported-adobe-services': this.options['supported-adobe-services'],
         'action-folder': this.actionFolder,
-        'ext-config-path': this.extConfigPath
+        'config-path': this.configPath
       })
     }
     if (addEvents) {
@@ -115,7 +111,7 @@ class Default extends Generator {
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
         'action-folder': this.actionFolder,
-        'ext-config-path': this.extConfigPath
+        'config-path': this.configPath
       })
     }
     if (addWebAssets) {
@@ -126,7 +122,7 @@ class Default extends Generator {
         'project-name': this.options['project-name'],
         'has-backend': addActions || addEvents,
         'web-src-folder': this.webSrcFolder,
-        'ext-config-path': this.extConfigPath
+        'config-path': this.configPath
       })
     }
     if (addCI) {
@@ -137,4 +133,4 @@ class Default extends Generator {
   }
 }
 
-module.exports = Default
+module.exports = Application

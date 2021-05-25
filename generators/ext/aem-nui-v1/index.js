@@ -47,7 +47,7 @@ class AemNuiV1 extends Generator {
       // forward needed args
       'skip-prompt': this.options['skip-prompt'],
       'action-folder': this.actionFolder,
-      'ext-config-path': this.extConfigPath
+      'config-path': this.extConfigPath
     })
   }
 
@@ -56,17 +56,10 @@ class AemNuiV1 extends Generator {
     utils.writeKeyAppConfig(
       this,
       // key
-      'extensionPoints.aem/nui/v1',
+      'extension.aem/nui/v1',
       // value
       {
-        config: this.extConfigPath,
-        operations: {
-          // TODO opcode is still tbd
-          worker: [
-            // todo package name and action name have to be given to assetCompute action gen
-            { type: 'headless', impl: 'aem-nui-v1/worker' }
-          ]
-        }
+        $include: this.extConfigPath
       }
     )
 
@@ -86,6 +79,20 @@ class AemNuiV1 extends Generator {
       ]
     )
 
+    // add extension point operation
+    utils.writeKeyYAMLConfig(
+      this,
+      this.extConfigPath,
+      // key
+      'operations', {
+        // TODO opcode is still tbd
+        worker: [
+          // todo package name and action name have to be given to assetCompute action gen
+          { type: 'action', impl: 'aem-nui-v1/worker' }
+        ]
+      }
+    )
+
     // add hooks to ext config
     utils.writeKeyYAMLConfig(
       this,
@@ -97,6 +104,9 @@ class AemNuiV1 extends Generator {
         'post-app-run': 'adobe-asset-compute devtool'
       }
     )
+
+    // add actions path, relative to root
+    utils.writeKeyYAMLConfig(this, this.extConfigPath, 'actions', this.actionFolder)
 
     // add test command
     // TODO NUI NEEDS TO OVERWRITE TEST SCRIPT... let's have a hook ?
