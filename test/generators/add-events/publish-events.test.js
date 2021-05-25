@@ -116,7 +116,7 @@ describe('run', () => {
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, {
       '@adobe/aio-sdk': expect.any(String),
-      'cloudevents-sdk': expect.any(String),
+      cloudevents: expect.any(String),
       uuid: expect.any(String)
     }, { '@openwhisk/wskdebug': expect.any(String) })
     assertNodeEngines(fs, '^12 || ^14')
@@ -148,7 +148,7 @@ describe('run', () => {
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, {
       '@adobe/aio-sdk': expect.any(String),
-      'cloudevents-sdk': expect.any(String),
+      cloudevents: expect.any(String),
       uuid: expect.any(String)
     }, { '@openwhisk/wskdebug': expect.any(String) })
     assertNodeEngines(fs, '^12 || ^14')
@@ -171,7 +171,7 @@ describe('run', () => {
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, {
       '@adobe/aio-sdk': expect.any(String),
-      'cloudevents-sdk': expect.any(String),
+      cloudevents: expect.any(String),
       uuid: expect.any(String)
     }, { '@openwhisk/wskdebug': expect.any(String) })
     assertNodeEngines(fs, '^12 || ^14')
