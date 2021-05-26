@@ -124,7 +124,7 @@ describe('run', () => {
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, { '@adobe/aio-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
-    assertNodeEngines(fs, '^12 || ^14')
+    assertNodeEngines(fs, '^10 || ^12 || ^14')
   })
 
   test('--skip-prompt, and action with default name already exists', async () => {
@@ -152,7 +152,7 @@ describe('run', () => {
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, { '@adobe/aio-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
-    assertNodeEngines(fs, '^12 || ^14')
+    assertNodeEngines(fs, '^10 || ^12 || ^14')
   })
 
   test('user input actionName=fakeAction', async () => {
@@ -171,6 +171,6 @@ describe('run', () => {
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, { '@adobe/aio-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
-    assertNodeEngines(fs, '^12 || ^14')
+    assertNodeEngines(fs, '^10 || ^12 || ^14')
   })
 })
