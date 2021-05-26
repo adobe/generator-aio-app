@@ -54,14 +54,14 @@ function createLaunchConfiguration (params) {
  * @param {String} params.webDistDev the path to the web dist-dev folder
  */
 function createChromeLaunchConfiguration (params) {
-  const { url, webRoot, webDistDev } = params
+  const { url, webRoot } = params
   return {
     ...createLaunchConfiguration({ type: 'chrome', name: 'Web', request: 'launch' }),
     url,
     webRoot,
     breakOnLoad: true,
     sourceMapPathOverrides: {
-      '*': path.join(webDistDev, '*')
+      '/__parcel_source_root/*': '${workspaceFolder}/*' // eslint-disable-line no-template-curly-in-string
     }
   }
 }
