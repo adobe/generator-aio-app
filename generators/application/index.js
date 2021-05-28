@@ -12,8 +12,8 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const { isLoopingPrompts } = require('../../../lib/constants')
-const utils = require('../../../lib/utils')
+const { isLoopingPrompts } = require('../../lib/constants')
+const utils = require('../../lib/utils')
 
 /*
       'initializing',
@@ -40,16 +40,17 @@ class Application extends Generator {
 
   async initializing () {
     // all paths are relative to root
-    this.extFolder = ''
-    this.actionFolder = path.join(this.extFolder, 'actions')
-    this.webSrcFolder = path.join(this.extFolder, 'web-src')
+    this.appFolder = '' // = root
+    this.actionFolder = path.join(this.appFolder, 'actions')
+    this.webSrcFolder = path.join(this.appFolder, 'web-src')
+    this.configPath = path.join(this.appFolder, 'app.config.yaml')
   }
 
   async writing () {
     // todo only write if selected
     // add basic config to point to path
     utils.writeKeyAppConfig(this, 'application.actions', this.actionFolder)
-    utils.writeKeyAppConfig(this, 'application.web-src', this.webSrcFolder)
+    utils.writeKeyAppConfig(this, 'application.web', this.webSrcFolder)
   }
 
   async composeWithAddGenerators () {
@@ -96,7 +97,7 @@ class Application extends Generator {
     // TODO cleanup unecessary params in all generators
     // run add action and add ui generators when applicable
     if (addActions) {
-      this.composeWith(path.join(__dirname, '../../add-action/index.js'), {
+      this.composeWith(path.join(__dirname, '../add-action/index.js'), {
         'skip-install': true,
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
@@ -106,7 +107,7 @@ class Application extends Generator {
       })
     }
     if (addEvents) {
-      this.composeWith(path.join(__dirname, '../../add-events/index.js'), {
+      this.composeWith(path.join(__dirname, '../add-events/index.js'), {
         'skip-install': true,
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
@@ -115,7 +116,7 @@ class Application extends Generator {
       })
     }
     if (addWebAssets) {
-      this.composeWith(path.join(__dirname, '../../add-web-assets/index.js'), {
+      this.composeWith(path.join(__dirname, '../add-web-assets/index.js'), {
         'skip-install': true,
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
@@ -126,7 +127,7 @@ class Application extends Generator {
       })
     }
     if (addCI) {
-      this.composeWith(path.join(__dirname, '../../add-ci/index.js'), {
+      this.composeWith(path.join(__dirname, '../add-ci/index.js'), {
         'skip-prompt': true
       })
     }
