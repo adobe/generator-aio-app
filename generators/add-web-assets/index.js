@@ -43,7 +43,6 @@ class AddWebAssets extends Generator {
     this.option('adobe-services', { type: String, default: '' })
 
     this.option('project-name', { type: String, default: utils.guessProjectName(this) }) // project name is used in html template
-    this.option('skip-install', { type: String, default: false })
     this.option('has-backend', { type: Boolean, default: true })
 
     this.webAssetsPath = this.destinationPath(webAssetsDirname)
@@ -80,13 +79,6 @@ class AddWebAssets extends Generator {
     } else {
       // default template
       this.composeWith(excReactWebAssetsGenerator, this.options)
-    }
-  }
-
-  async install () {
-    // this condition makes sure it doesn't print any unwanted 'skip install message' into parent generator
-    if (!this.options['skip-install']) {
-      return this.installDependencies({ bower: false })
     }
   }
 }

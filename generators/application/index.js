@@ -33,7 +33,6 @@ class Application extends Generator {
     this.option('adobe-services', { type: String, default: '' })
 
     this.option('skip-prompt', { default: false })
-    this.option('skip-install', { type: String, default: false })
 
     this.options['project-name'] = utils.guessProjectName(this)
   }
@@ -98,7 +97,6 @@ class Application extends Generator {
     // run add action and add ui generators when applicable
     if (addActions) {
       this.composeWith(path.join(__dirname, '../add-action/index.js'), {
-        'skip-install': true,
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
         'supported-adobe-services': this.options['supported-adobe-services'],
@@ -108,7 +106,6 @@ class Application extends Generator {
     }
     if (addEvents) {
       this.composeWith(path.join(__dirname, '../add-events/index.js'), {
-        'skip-install': true,
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
         'action-folder': this.actionFolder,
@@ -117,7 +114,6 @@ class Application extends Generator {
     }
     if (addWebAssets) {
       this.composeWith(path.join(__dirname, '../add-web-assets/index.js'), {
-        'skip-install': true,
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
         'project-name': this.options['project-name'],

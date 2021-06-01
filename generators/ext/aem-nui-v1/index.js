@@ -33,7 +33,6 @@ class AemNuiV1 extends Generator {
 
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
-    this.option('skip-install', { type: String, default: false })
   }
 
   async initializing () {
@@ -116,12 +115,6 @@ class AemNuiV1 extends Generator {
     utils.writePackageJson(this, packagejson)
 
     // TODO add .npmignore and readme
-  }
-
-  async install () {
-    if (!this.options['skip-install']) {
-      return this.installDependencies({ bower: false })
-    }
   }
 }
 

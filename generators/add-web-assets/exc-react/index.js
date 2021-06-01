@@ -20,7 +20,6 @@ class ExcReactGenerator extends Generator {
     // required
     this.option('web-src-folder', { type: String })
     // this.option('skip-prompt', { default: false }) // useless for now
-    this.option('skip-install', { type: Boolean, default: false })
     this.option('config-path', { type: String })
 
     // props are used by templates
@@ -66,13 +65,6 @@ class ExcReactGenerator extends Generator {
       },
       true
     )
-  }
-
-  async install () {
-    // this condition makes sure it doesn't print any unwanted 'skip install message'
-    if (!this.options['skip-install']) {
-      return this.installDependencies({ bower: false, skipMessage: true })
-    }
   }
 }
 

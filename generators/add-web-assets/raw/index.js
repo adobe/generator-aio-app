@@ -20,7 +20,6 @@ class RawGenerator extends Generator {
     // required
     this.option('web-src-folder', { type: String })
 
-    this.option('skip-install', { type: Boolean, default: false })
     this.option('config-path', { type: String })
     // props are used by templates
     this.props = {}

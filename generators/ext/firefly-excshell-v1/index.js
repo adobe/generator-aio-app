@@ -47,7 +47,6 @@ class FireflyExcshellV1 extends Generator {
     this.composeWith(genericActionGenerator, {
       // forward needed args
       'skip-prompt': this.options['skip-prompt'],
-      'skip-install': this.options['skip-install'],
       'action-folder': this.actionFolder,
       'config-path': this.extConfigPath
     })
@@ -56,7 +55,6 @@ class FireflyExcshellV1 extends Generator {
     this.composeWith(excReactWebAssetsGenerator, {
       // forward needed args
       'skip-prompt': this.options['skip-prompt'],
-      'skip-install': this.options['skip-install'],
       'web-src-folder': this.webSrcFolder,
       'config-path': this.extConfigPath
     })

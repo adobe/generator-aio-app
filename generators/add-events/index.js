@@ -31,7 +31,6 @@ class AddEvents extends Generator {
 
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
-    this.option('skip-install', { type: String, default: false })
 
     // todo throw meaningful error if add actions in a non existing project, but what defines a project?
   }
@@ -61,14 +60,6 @@ class AddEvents extends Generator {
 
     // run action generators
     this.composeWith(eventGenerator, this.options)
-  }
-
-  async install () {
-    // this condition makes sure it doesn't print any unwanted 'skip install message' into parent generator
-    if (!this.options['skip-install']) {
-      return this.installDependencies(
-        { bower: false })
-    }
   }
 }
 

@@ -61,7 +61,7 @@ class AddActions extends Generator {
 
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
-    this.option('skip-install', { type: String, default: false })
+    this.option('', { type: String, default: false })
     /// Adobe services added to the Console Workspace
     this.option('adobe-services', { type: String, default: '' })
     /// Adobe services that are supported by the Org
@@ -99,13 +99,6 @@ class AddActions extends Generator {
       'action-folder': this.options['action-folder'],
       'config-path': this.options['config-path']
     }))
-  }
-
-  async install () {
-    // this condition makes sure it doesn't print any unwanted 'skip install message' into parent generator
-    if (!this.options['skip-install']) {
-      return this.installDependencies({ bower: false })
-    }
   }
 }
 

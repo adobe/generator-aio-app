@@ -21,21 +21,6 @@ const theGeneratorPath = require.resolve(
 )
 const Generator = require('yeoman-generator')
 
-const installDependencies = jest.spyOn(
-  Generator.prototype,
-  'installDependencies'
-)
-beforeAll(() => {
-  // mock implementations
-  installDependencies.mockReturnValue(undefined)
-})
-beforeEach(() => {
-  installDependencies.mockClear()
-})
-afterAll(() => {
-  installDependencies.mockRestore()
-})
-
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
     expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
@@ -87,7 +72,7 @@ describe('run', () => {
   test('--project-name abc', async () => {
     await helpers
       .run(theGeneratorPath)
-      .withOptions({ 'project-name': 'abc', 'skip-install': false })
+      .withOptions({ 'project-name': 'abc' })
       .inTmpDir((dir) => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnv)
       })
@@ -122,8 +107,6 @@ describe('run', () => {
 
     assertWithActions()
     assertWithDoc()
-
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 
   test('--project-name abc --has-backend false', async () => {
@@ -131,7 +114,6 @@ describe('run', () => {
       .run(theGeneratorPath)
       .withOptions({
         'project-name': 'abc',
-        'skip-install': false,
         'has-backend': false
       })
       .inTmpDir((dir) => {
@@ -168,14 +150,5 @@ describe('run', () => {
 
     assertWithNoActions()
     assertWithDoc()
-
-    expect(installDependencies).toHaveBeenCalledTimes(1)
-  })
-
-  test('--project-name abc --skip-install', async () => {
-    await helpers
-      .run(theGeneratorPath)
-      .withOptions({ 'project-name': 'abc', 'skip-install': true })
-    expect(installDependencies).toHaveBeenCalledTimes(0)
   })
 })

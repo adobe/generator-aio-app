@@ -31,7 +31,6 @@ class CodeGenerator extends Generator {
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
     this.option('project-name', { type: String, default: path.basename(process.cwd()) })
-    this.option('skip-install', { type: String, default: false })
 
     // props are passed to templates
     this.props = {}
@@ -66,13 +65,6 @@ class CodeGenerator extends Generator {
       this.props
     )
     // let actions and ui generator create subfolders + manifest
-  }
-
-  async install () {
-    // this condition makes sure it doesn't print any unwanted 'skip install message'
-    if (!this.options['skip-install']) {
-      return this.installDependencies({ bower: false, skipMessage: true })
-    }
   }
 }
 

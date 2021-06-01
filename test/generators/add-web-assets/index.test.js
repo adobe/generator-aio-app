@@ -19,20 +19,16 @@ const Generator = require('yeoman-generator')
 // spies
 const prompt = jest.spyOn(Generator.prototype, 'prompt')
 const composeWith = jest.spyOn(Generator.prototype, 'composeWith')
-const installDependencies = jest.spyOn(Generator.prototype, 'installDependencies')
 beforeAll(() => {
   // mock implementations
   composeWith.mockReturnValue(undefined)
-  installDependencies.mockReturnValue(undefined)
 })
 beforeEach(() => {
   prompt.mockClear()
   composeWith.mockClear()
-  installDependencies.mockClear()
 })
 afterAll(() => {
   composeWith.mockRestore()
-  installDependencies.mockRestore()
 })
 
 const expectedDefaultGenerator = expect.stringContaining(n('exc-react/index.js'))
@@ -63,7 +59,7 @@ describe('run', () => {
 
   test('--skip-prompt', async () => {
     const dir = await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'skip-install': false })
+      .withOptions({ 'skip-prompt': true })
 
     const expectProjectName = path.basename(dir)
 
@@ -75,12 +71,11 @@ describe('run', () => {
       'project-name': expectProjectName,
       'has-backend': true
     }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 
   test('--skip-prompt --has-backend false', async () => {
     const dir = await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'skip-install': false, 'has-backend': false })
+      .withOptions({ 'skip-prompt': true, 'has-backend': false })
 
     const expectProjectName = path.basename(dir)
 
@@ -92,12 +87,11 @@ describe('run', () => {
       'project-name': expectProjectName,
       'has-backend': false
     }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 
   test('--skip-prompt --project-name fake', async () => {
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'skip-install': false, 'project-name': 'fake' })
+      .withOptions({ 'skip-prompt': true, 'project-name': 'fake' })
 
     expect(composeWith).toHaveBeenCalledTimes(1)
     expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
@@ -106,26 +100,11 @@ describe('run', () => {
       'project-name': 'fake',
       'has-backend': true
     }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
-  })
-
-  test('--skip-prompt --skip-install --project-name fake', async () => {
-    await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'skip-install': true, 'project-name': 'fake' })
-
-    expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
-      'skip-prompt': true,
-      'adobe-services': '',
-      'project-name': 'fake',
-      'has-backend': true
-    }))
-    expect(installDependencies).toHaveBeenCalledTimes(0)
   })
 
   test('--skip-prompt --project-name fake --adobe-services=some,string', async () => {
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'skip-install': false, 'project-name': 'fake', 'adobe-services': 'some,string' })
+      .withOptions({ 'skip-prompt': true, 'project-name': 'fake', 'adobe-services': 'some,string' })
 
     expect(composeWith).toHaveBeenCalledTimes(1)
     expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
@@ -134,12 +113,11 @@ describe('run', () => {
       'project-name': 'fake',
       'has-backend': true
     }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 
   test('--project-name fake and selected prompt is fake generator "a"', async () => {
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-install': false, 'project-name': 'fake' })
+      .withOptions({ 'project-name': 'fake' })
       .withPrompts({ webAssetsGenerator: 'a' })
 
     // check choices
@@ -151,7 +129,6 @@ describe('run', () => {
       'adobe-services': '',
       'project-name': 'fake'
     }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 })
 

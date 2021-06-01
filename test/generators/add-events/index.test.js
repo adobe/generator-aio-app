@@ -16,20 +16,16 @@ const Generator = require('yeoman-generator')
 // spies
 const prompt = jest.spyOn(Generator.prototype, 'prompt')
 const composeWith = jest.spyOn(Generator.prototype, 'composeWith')
-const installDependencies = jest.spyOn(Generator.prototype, 'installDependencies')
 beforeAll(() => {
   // mock implementations
   composeWith.mockReturnValue(undefined)
-  installDependencies.mockReturnValue(undefined)
 })
 beforeEach(() => {
   prompt.mockClear()
   composeWith.mockClear()
-  installDependencies.mockClear()
 })
 afterAll(() => {
   composeWith.mockRestore()
-  installDependencies.mockRestore()
 })
 
 const expectedDefaultEventsGenerator = expect.stringContaining(n('publish-events/index.js'))
@@ -45,27 +41,12 @@ describe('prototype', () => {
 describe('run', () => {
   test('--skip-prompt "', async () => {
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'skip-install': false })
+      .withOptions({ 'skip-prompt': true })
     // with skip prompt defaults to generic action
     // make sure sub generators have been called
     expect(composeWith).toHaveBeenCalledTimes(1)
     expect(composeWith).toHaveBeenCalledWith(expectedDefaultEventsGenerator, expect.objectContaining({
       'skip-prompt': true
     }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
-  })
-
-  test('--skip-prompt --skip-install', async () => {
-    await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'skip-install': true })
-
-    // with skip prompt defaults to generic action
-    // make sure sub generators have been called
-    expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expectedDefaultEventsGenerator, expect.objectContaining({
-      'skip-prompt': true,
-      'skip-install': true
-    }))
-    expect(installDependencies).toHaveBeenCalledTimes(0)
   })
 })
