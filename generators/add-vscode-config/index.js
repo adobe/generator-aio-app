@@ -62,26 +62,42 @@ class AddVsCodeConfig extends Generator {
   }
 
   _verifyConfig () {
+    function getMissingKeys (config, keys) {
+      const missingKeys = []
+      keys.forEach(key => {
+        if (objGetValue(appConfig, key) === undefined) {
+          missingKeys.push(key)
+        }
+      })
+      return missingKeys
+    }
+
     const appConfig = this.options[Option.APP_CONFIG]
-    const verifyKeys = [
+    const verifyKeysCommon = [
       'app.hasFrontend',
       'app.hasBackend',
-      'ow.package',
-      'ow.apihost',
-      'manifest.packagePlaceholder',
-      'manifest.full.packages',
-      'web.src',
-      'web.distDev',
       'root'
     ]
 
-    const missingKeys = []
-    verifyKeys.forEach(key => {
-      if (objGetValue(appConfig, key) === undefined) {
-        missingKeys.push(key)
-      }
-    })
+    const verifyKeysFrontend = [
+      'web.src',
+      'web.distDev'
+    ]
 
+    const verifyKeysBackend = [
+      'ow.package',
+      'ow.apihost',
+      'manifest.packagePlaceholder',
+      'manifest.full.packages'
+    ]
+
+    const missingKeys = getMissingKeys(appConfig, verifyKeysCommon)
+    if (appConfig.app.hasFrontend) {
+      missingKeys.push(...getMissingKeys(appConfig, verifyKeysFrontend))
+    }
+    if (appConfig.app.hasBackend) {
+      missingKeys.push(...getMissingKeys(appConfig, verifyKeysBackend))
+    }
     if (missingKeys.length > 0) {
       throw new Error(`App config missing keys: ${missingKeys.join(', ')}`)
     }
