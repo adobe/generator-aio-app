@@ -55,7 +55,7 @@ class AemNuiV1 extends Generator {
     utils.writeKeyAppConfig(
       this,
       // key
-      'extension.aem/nui/v1',
+      'extensions.aem/nui/v1',
       // value
       {
         $include: this.extConfigPath

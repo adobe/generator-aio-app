@@ -65,7 +65,7 @@ class FireflyExcshellV1 extends Generator {
     utils.writeKeyAppConfig(
       this,
       // key
-      'extension.firefly/excshell/v1',
+      'extensions.firefly/excshell/v1',
       // value
       {
         $include: this.extConfigPath
