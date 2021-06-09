@@ -27,7 +27,7 @@ const excReactWebAssetsGenerator = path.join(__dirname, '../../add-web-assets/ex
       'end'
       */
 
-class FireflyExcshellV1 extends Generator {
+class DxExcshell1 extends Generator {
   constructor (args, opts) {
     super(args, opts)
 
@@ -37,7 +37,7 @@ class FireflyExcshellV1 extends Generator {
 
   async initializing () {
     // all paths are relative to root
-    this.extFolder = 'src/firefly-excshell-v1'
+    this.extFolder = 'src/dx-excshell-1'
     this.actionFolder = path.join(this.extFolder, 'actions')
     // todo support multi UI (could be one for each operation)
     this.webSrcFolder = path.join(this.extFolder, 'web-src')
@@ -65,7 +65,7 @@ class FireflyExcshellV1 extends Generator {
     utils.writeKeyAppConfig(
       this,
       // key
-      'extensions.firefly/excshell/v1',
+      'extensions.dx/excshell/1',
       // value
       {
         $include: this.extConfigPath
@@ -91,4 +91,4 @@ class FireflyExcshellV1 extends Generator {
   }
 }
 
-module.exports = FireflyExcshellV1
+module.exports = DxExcshell1

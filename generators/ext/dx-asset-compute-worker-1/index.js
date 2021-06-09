@@ -27,7 +27,7 @@ const assetComputeGenerator = path.join(__dirname, '../../add-action/asset-compu
       'end'
       */
 
-class AemNuiV1 extends Generator {
+class DxAssetComputeWorker1 extends Generator {
   constructor (args, opts) {
     super(args, opts)
 
@@ -37,7 +37,7 @@ class AemNuiV1 extends Generator {
 
   async initializing () {
     // all paths are relative to root
-    this.extFolder = 'src/aem-nui-v1'
+    this.extFolder = 'src/dx-asset-compute-worker-1'
     this.actionFolder = path.join(this.extFolder, 'actions')
     this.extConfigPath = path.join(this.extFolder, 'ext.config.yaml')
 
@@ -55,7 +55,7 @@ class AemNuiV1 extends Generator {
     utils.writeKeyAppConfig(
       this,
       // key
-      'extensions.aem/nui/v1',
+      'extensions.dx/asset-compute/worker/1',
       // value
       {
         $include: this.extConfigPath
@@ -87,7 +87,7 @@ class AemNuiV1 extends Generator {
         // TODO opcode is still tbd
         worker: [
           // todo package name and action name have to be given to assetCompute action gen
-          { type: 'action', impl: 'aem-nui-v1/worker' }
+          { type: 'action', impl: 'dx-asset-compute-worker-1/worker' }
         ]
       }
     )
@@ -118,4 +118,4 @@ class AemNuiV1 extends Generator {
   }
 }
 
-module.exports = AemNuiV1
+module.exports = DxAssetComputeWorker1
