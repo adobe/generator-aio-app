@@ -43,10 +43,6 @@ describe('prototype', () => {
 })
 
 function assertEnvContent (prevContent) {
-  assert.fileContent(
-    '.env',
-    'AIO_LAUNCH_URL_PREFIX="https://experience.adobe.com/?devMode=true#/custom-apps/?localDevUrl="'
-  )
   assert.fileContent('.env', prevContent)
 }
 
@@ -113,7 +109,8 @@ describe('run', () => {
       {
         '@babel/core': expect.any(String),
         '@babel/polyfill': expect.any(String),
-        '@babel/preset-env': expect.any(String)
+        '@babel/preset-env': expect.any(String),
+        '@babel/plugin-transform-react-jsx': expect.any(String)
       }
     )
     assertEnvContent(prevDotEnv)
@@ -159,7 +156,8 @@ describe('run', () => {
       {
         '@babel/core': expect.any(String),
         '@babel/polyfill': expect.any(String),
-        '@babel/preset-env': expect.any(String)
+        '@babel/preset-env': expect.any(String),
+        '@babel/plugin-transform-react-jsx': expect.any(String)
       }
     )
     assertEnvContent(prevDotEnv)

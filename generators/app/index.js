@@ -41,6 +41,7 @@ class CodeGenerator extends Generator {
     // props are passed to templates
     this.props = {}
     this.props.projectName = this.options && this.options['project-name']
+    this.props.aioAppTemplateVersion = `${this.rootGeneratorName()}@${this.rootGeneratorVersion()}`
   }
 
   async prompting () {

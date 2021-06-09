@@ -24,8 +24,7 @@ governing permissions and limitations under the License.
  * @returns {Promise<string|object>} the response
  *
  */
-async function actionWebInvoke (actionUrl, headers = {}, params = {}, options = { method: 'post' }) {
-  
+async function actionWebInvoke (actionUrl, headers = {}, params = {}, options = { method: 'POST' }) {  
   const actionHeaders = {
     'Content-Type': 'application/json',
     ...headers
@@ -39,14 +38,12 @@ async function actionWebInvoke (actionUrl, headers = {}, params = {}, options = 
     actionHeaders['x-ow-extra-logging'] = 'on'
   }
 
-  fetchConfig.method = options.method.toLowerCase()
+  fetchConfig.method = options.method.toUpperCase()
 
-  if (fetchConfig.method === 'get') {
+  if (fetchConfig.method === 'GET') {
     actionUrl = new URL(actionUrl)
     Object.keys(params).forEach(key => actionUrl.searchParams.append(key, params[key]))
-  }
-
-  if (fetchConfig.method  === 'post') {
+  } else if (fetchConfig.method === 'POST') {
     fetchConfig.body = JSON.stringify(params)
   }
   

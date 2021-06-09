@@ -29,7 +29,6 @@ class AnalyticsGenerator extends ActionGenerator {
 
     // get collections from analytics API
     const collections = await analyticsClient.getCollections({ limit: 5, page: 0 })
-    logger.debug('collections = ' + JSON.stringify(collections, null, 2))
     const response = {
       statusCode: 200,
       body: collections
