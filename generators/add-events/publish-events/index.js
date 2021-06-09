@@ -24,15 +24,19 @@ class CloudEventsGenerator extends ActionGenerator {
       requiredHeaders: `['Authorization', 'x-gw-ims-org-id']`,
       importCode: `const { Core, Events } = require('@adobe/aio-sdk')
 const uuid = require('uuid')
-const cloudEventV1 = require('cloudevents-sdk/v1')`,
+const {
+  CloudEvent
+} = require("cloudevents");`,
       inlineUtilityFunctions: `
 function createCloudEvent(providerId, eventCode, payload) {
-  let cloudevent = cloudEventV1.event()
-    .data(payload)
-    .source('urn:uuid:' + providerId)
-    .type(eventCode)
-    .id(uuid.v4())
-  return cloudevent.format()
+  let cloudevent = new CloudEvent({
+    source: 'urn:uuid:' + providerId,
+    type: eventCode,
+    datacontenttype: "application/json",
+    data: payload,
+    id: uuid.v4()
+  });
+  return cloudevent
 }`,
       responseCode: `
     // initialize the client
@@ -75,7 +79,7 @@ function createCloudEvent(providerId, eventCode, payload) {
       tplContext: this.props,
       dependencies: {
         '@adobe/aio-sdk': commonDependencyVersions['@adobe/aio-sdk'],
-        'cloudevents-sdk': '^1.0.0',
+        cloudevents: '^4.0.2',
         uuid: '^8.0.0'
       },
       actionManifestConfig: {
