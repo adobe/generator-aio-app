@@ -61,7 +61,6 @@ class AddActions extends Generator {
 
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
-    this.option('', { type: String, default: false })
     /// Adobe services added to the Console Workspace
     this.option('adobe-services', { type: String, default: '' })
     /// Adobe services that are supported by the Org

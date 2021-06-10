@@ -14,7 +14,7 @@ const Generator = require('yeoman-generator')
 
 const utils = require('../../../lib/utils')
 
-const assetComputeGenerator = path.join(__dirname, '../../add-action/asset-compute/index.js')
+const assetComputeActionGenerator = path.join(__dirname, '../../add-action/asset-compute/index.js')
 
 /*
       'initializing',
@@ -42,9 +42,9 @@ class DxAssetComputeWorker1 extends Generator {
     this.extConfigPath = path.join(this.extFolder, 'ext.config.yaml')
 
     // generate the nui action
-    this.composeWith(assetComputeGenerator, {
+    this.composeWith(assetComputeActionGenerator, {
       // forward needed args
-      'skip-prompt': this.options['skip-prompt'],
+      'skip-prompt': true, // do not prompt for action name
       'action-folder': this.actionFolder,
       'config-path': this.extConfigPath
     })
