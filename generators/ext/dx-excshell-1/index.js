@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 
 const path = require('path')
 const Generator = require('yeoman-generator')
+const { runtimeManifestKey } = require('../../../lib/constants')
 
 const utils = require('../../../lib/utils')
 
@@ -48,7 +49,8 @@ class DxExcshell1 extends Generator {
       // forward needed args
       'skip-prompt': this.options['skip-prompt'],
       'action-folder': this.actionFolder,
-      'config-path': this.extConfigPath
+      'config-path': this.extConfigPath,
+      'full-key-to-manifest': runtimeManifestKey
     })
 
     // generate the UI

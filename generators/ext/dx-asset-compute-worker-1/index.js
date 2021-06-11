@@ -13,6 +13,7 @@ const path = require('path')
 const Generator = require('yeoman-generator')
 
 const utils = require('../../../lib/utils')
+const { runtimeManifestKey } = require('../../../lib/constants')
 
 const assetComputeActionGenerator = path.join(__dirname, '../../add-action/asset-compute/index.js')
 
@@ -46,7 +47,8 @@ class DxAssetComputeWorker1 extends Generator {
       // forward needed args
       'skip-prompt': true, // do not prompt for action name
       'action-folder': this.actionFolder,
-      'config-path': this.extConfigPath
+      'config-path': this.extConfigPath,
+      'full-key-to-manifest': runtimeManifestKey
     })
   }
 

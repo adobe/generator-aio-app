@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const { isLoopingPrompts } = require('../../lib/constants')
+const { isLoopingPrompts, runtimeManifestKey } = require('../../lib/constants')
 const utils = require('../../lib/utils')
 
 /*
@@ -101,7 +101,8 @@ class Application extends Generator {
         'adobe-services': this.options['adobe-services'],
         'supported-adobe-services': this.options['supported-adobe-services'],
         'action-folder': this.actionFolder,
-        'config-path': this.configPath
+        'config-path': this.configPath,
+        'full-key-to-manifest': `application.${runtimeManifestKey}`
       })
     }
     if (addEvents) {
