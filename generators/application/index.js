@@ -119,7 +119,6 @@ class Application extends Generator {
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
         'project-name': this.options['project-name'],
-        'has-backend': addActions || addEvents,
         'web-src-folder': this.webSrcFolder,
         'config-path': this.configPath
       })

@@ -15,8 +15,6 @@ const fs = require('fs-extra')
 
 const utils = require('../../lib/utils')
 
-const { webAssetsDirname } = require('../../lib/constants')
-
 const rawWebAssetsGenerator = path.join(__dirname, 'raw/index.js')
 const excReactWebAssetsGenerator = path.join(__dirname, 'exc-react/index.js')
 
@@ -43,14 +41,13 @@ class AddWebAssets extends Generator {
     this.option('adobe-services', { type: String, default: '' })
 
     this.option('project-name', { type: String, default: utils.guessProjectName(this) }) // project name is used in html template
-    this.option('has-backend', { type: Boolean, default: true })
 
-    this.webAssetsPath = this.destinationPath(webAssetsDirname)
+    this.webSrcFolder = this.destinationPath(this.options['web-src-folder'])
     // throw meaningful error if add actions/webassets in a non existing project
   }
 
   initializing () {
-    if (fs.existsSync(this.webAssetsPath)) {
+    if (fs.existsSync(this.webSrcFolder)) {
       throw new Error('you already have web assets in your project, please delete first')
     }
   }
