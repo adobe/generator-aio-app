@@ -57,7 +57,7 @@ class AddActions extends Generator {
     // required
     this.option('action-folder', { type: String })
     this.option('config-path', { type: String })
-    // todo throw error on missing
+    this.option('full-key-to-manifest', { type: String, default: '' }) // key in config path that resolves to manifest e.g. 'application.runtimeManifest'
 
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
@@ -65,7 +65,6 @@ class AddActions extends Generator {
     this.option('adobe-services', { type: String, default: '' })
     /// Adobe services that are supported by the Org
     this.option('supported-adobe-services', { type: String, default: '' })
-    // todo throw meaningful error if add actions in a non existing project, but what defines a project?
   }
 
   async prompting () {
@@ -96,7 +95,8 @@ class AddActions extends Generator {
       // forward needed args
       'skip-prompt': this.options['skip-prompt'],
       'action-folder': this.options['action-folder'],
-      'config-path': this.options['config-path']
+      'config-path': this.options['config-path'],
+      'full-key-to-manifest': this.options['full-key-to-manifest']
     }))
   }
 }

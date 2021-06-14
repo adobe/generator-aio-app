@@ -88,7 +88,6 @@ class DxAssetComputeWorker1 extends Generator {
       'operations', {
         // TODO opcode is still tbd
         worker: [
-          // todo package name and action name have to be given to assetCompute action gen
           { type: 'action', impl: 'dx-asset-compute-worker-1/worker' }
         ]
       }

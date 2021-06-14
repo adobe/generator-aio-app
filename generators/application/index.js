@@ -43,6 +43,7 @@ class Application extends Generator {
     this.actionFolder = path.join(this.appFolder, 'actions')
     this.webSrcFolder = path.join(this.appFolder, 'web-src')
     this.configPath = path.join(this.appFolder, 'app.config.yaml')
+    this.keyToManifest = 'application.' + runtimeManifestKey
   }
 
   async writing () {
@@ -102,7 +103,7 @@ class Application extends Generator {
         'supported-adobe-services': this.options['supported-adobe-services'],
         'action-folder': this.actionFolder,
         'config-path': this.configPath,
-        'full-key-to-manifest': `application.${runtimeManifestKey}`
+        'full-key-to-manifest': this.keyToManifest
       })
     }
     if (addEvents) {
