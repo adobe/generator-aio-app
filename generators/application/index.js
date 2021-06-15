@@ -111,7 +111,8 @@ class Application extends Generator {
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
         'action-folder': this.actionFolder,
-        'config-path': this.configPath
+        'config-path': this.configPath,
+        'full-key-to-manifest': this.keyToManifest
       })
     }
     if (addWebAssets) {
