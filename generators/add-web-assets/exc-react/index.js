@@ -42,7 +42,8 @@ class ExcReactGenerator extends Generator {
     // add .babelrc
     /// NOTE this is a global file and might conflict
     this.fs.writeJSON(this.destinationPath('.babelrc'), {
-      presets: [['@babel/preset-env', { targets: { node: 'current' } }]]
+      presets: [['@babel/preset-env', { targets: { node: 'current' } }]],
+      plugins: ['@babel/plugin-transform-react-jsx']
     })
     // add dependencies
     utils.addDependencies(this, {
@@ -61,7 +62,8 @@ class ExcReactGenerator extends Generator {
       {
         '@babel/core': '^7.8.7',
         '@babel/polyfill': '^7.8.7',
-        '@babel/preset-env': '^7.8.7'
+        '@babel/preset-env': '^7.8.7',
+        '@babel/plugin-transform-react-jsx': '^7.8.3'
       },
       true
     )

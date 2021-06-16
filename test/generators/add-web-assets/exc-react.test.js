@@ -94,7 +94,8 @@ describe('run', () => {
       {
         '@babel/core': expect.any(String),
         '@babel/polyfill': expect.any(String),
-        '@babel/preset-env': expect.any(String)
+        '@babel/preset-env': expect.any(String),
+        '@babel/plugin-transform-react-jsx': expect.any(String)
       }
     )
     assertEnvContent(prevDotEnv)
@@ -137,7 +138,8 @@ describe('run', () => {
       {
         '@babel/core': expect.any(String),
         '@babel/polyfill': expect.any(String),
-        '@babel/preset-env': expect.any(String)
+        '@babel/preset-env': expect.any(String),
+        '@babel/plugin-transform-react-jsx': expect.any(String)
       }
     )
     assertEnvContent(prevDotEnv)
