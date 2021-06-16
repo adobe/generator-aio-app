@@ -47,7 +47,7 @@ class DxExcshell1 extends Generator {
     // generate the generic action
     this.composeWith(genericActionGenerator, {
       // forward needed args
-      'skip-prompt': this.options['skip-prompt'],
+      'skip-prompt': true, // do not ask for action name
       'action-folder': this.actionFolder,
       'config-path': this.extConfigPath,
       'full-key-to-manifest': runtimeManifestKey

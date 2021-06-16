@@ -2,7 +2,7 @@
   "name": "@adobe/generator-aio-app",
   "version": "1.12.0",
   "description": "Adobe I/O application yeoman code generator",
-  "main": "generators/app/index.js",
+  "main": "generators/index.js",
   "scripts": {
     "test": "npm run lint && npm run unit-tests",
     "lint": "eslint .",
