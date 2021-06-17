@@ -41,7 +41,7 @@ class DxAssetComputeWorker1 extends Generator {
     this.extFolder = 'src/dx-asset-compute-worker-1'
     this.actionFolder = path.join(this.extFolder, 'actions')
     this.extConfigPath = path.join(this.extFolder, 'ext.config.yaml')
-
+    this.configName = 'dx/asset-compute/worker/1'
     // generate the nui action
     this.composeWith(assetComputeActionGenerator, {
       // forward needed args
@@ -57,7 +57,7 @@ class DxAssetComputeWorker1 extends Generator {
     utils.writeKeyAppConfig(
       this,
       // key
-      'extensions.dx/asset-compute/worker/1',
+      'extensions.' + this.configName,
       // value
       {
         $include: this.extConfigPath
@@ -105,8 +105,8 @@ class DxAssetComputeWorker1 extends Generator {
       }
     )
 
-    // add actions path, relative to root
-    utils.writeKeyYAMLConfig(this, this.extConfigPath, 'actions', this.actionFolder)
+    // add actions path, relative to config path
+    utils.writeKeyYAMLConfig(this, this.extConfigPath, 'actions', path.relative(this.extFolder, this.actionFolder))
 
     // add test command
     // TODO NUI NEEDS TO OVERWRITE TEST SCRIPT... let's have a hook ?

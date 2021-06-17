@@ -47,10 +47,9 @@ class Application extends Generator {
   }
 
   async writing () {
-    // todo only write if selected
-    // add basic config to point to path
-    utils.writeKeyAppConfig(this, 'application.actions', this.actionFolder)
-    utils.writeKeyAppConfig(this, 'application.web', this.webSrcFolder)
+    // add basic config to point to path, relative to config file
+    utils.writeKeyAppConfig(this, 'application.actions', path.relative(this.appFolder, this.actionFolder))
+    utils.writeKeyAppConfig(this, 'application.web', path.relative(this.appFolder, this.webSrcFolder))
   }
 
   async composeWithAddGenerators () {

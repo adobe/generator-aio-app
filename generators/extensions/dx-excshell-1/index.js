@@ -43,6 +43,7 @@ class DxExcshell1 extends Generator {
     // todo support multi UI (could be one for each operation)
     this.webSrcFolder = path.join(this.extFolder, 'web-src')
     this.extConfigPath = path.join(this.extFolder, 'ext.config.yaml')
+    this.configName = 'dx/excshell/1'
 
     // generate the generic action
     this.composeWith(genericActionGenerator, {
@@ -67,7 +68,7 @@ class DxExcshell1 extends Generator {
     utils.writeKeyAppConfig(
       this,
       // key
-      'extensions.dx/excshell/1',
+      'extensions.' + this.configName,
       // value
       {
         $include: this.extConfigPath
@@ -86,10 +87,10 @@ class DxExcshell1 extends Generator {
       }
     )
 
-    // add actions path, relative to root
-    utils.writeKeyYAMLConfig(this, this.extConfigPath, 'actions', this.actionFolder)
-    // add web-src path, relative to root
-    utils.writeKeyYAMLConfig(this, this.extConfigPath, 'web', this.webSrcFolder)
+    // add actions path, relative to config file
+    utils.writeKeyYAMLConfig(this, this.extConfigPath, 'actions', path.relative(this.extFolder, this.actionFolder))
+    // add web-src path, relative to config file
+    utils.writeKeyYAMLConfig(this, this.extConfigPath, 'web', path.relative(this.extFolder, this.webSrcFolder))
   }
 }
 
