@@ -19,7 +19,7 @@ jobs:
       - name: npm install
         run: npm i
       - name: Setup CLI
-        uses: adobe/aio-cli-setup-action@1.0.1
+        uses: adobe/aio-cli-setup-action@1.1.0
         with:
           os: ${{ matrix.os }}
       - name: Build
