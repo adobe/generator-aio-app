@@ -46,7 +46,10 @@ describe('run', () => {
 
     // added files
     assert.file('.github/workflows/pr_test.yml')
+    assert.fileContent('.github/workflows/pr_test.yml', 'version: 7.x.x')
     assert.file('.github/workflows/deploy_prod.yml')
+    assert.fileContent('.github/workflows/deploy_prod.yml', 'version: 7.x.x')
     assert.file('.github/workflows/deploy_stage.yml')
+    assert.fileContent('.github/workflows/deploy_stage.yml', 'version: 7.x.x')
   })
 })
