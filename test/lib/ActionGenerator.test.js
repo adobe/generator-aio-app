@@ -384,7 +384,7 @@ describe('implementation', () => {
       }
       actionGenerator.addAction('myAction', './templateFile.js', { e2eTestFile: './template.test.js' })
 
-      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/e2e/${constants.actionsDirname}/myAction.e2e.js`), {}, {}, {})
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/e2e/${constants.actionsDirname}/myAction.e2e.test.js`), {}, {}, {})
     })
 
     test('with sharedLibFile option', () => {
