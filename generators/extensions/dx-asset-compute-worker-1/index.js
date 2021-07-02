@@ -101,7 +101,8 @@ class DxAssetComputeWorker1 extends Generator {
       'hooks',
       // value
       {
-        'post-app-run': 'adobe-asset-compute devtool'
+        'post-app-run': 'adobe-asset-compute devtool',
+        'test': 'adobe-asset-compute test-worker'
       }
     )
 
