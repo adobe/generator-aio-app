@@ -109,13 +109,6 @@ class DxAssetComputeWorker1 extends Generator {
     // add actions path, relative to config path
     utils.writeKeyYAMLConfig(this, this.extConfigPath, 'actions', path.relative(this.extFolder, this.actionFolder))
 
-    // add test command
-    // TODO NUI NEEDS TO OVERWRITE TEST SCRIPT... let's have a hook ?
-    // todo here we assume the test script is set already
-    const packagejson = utils.readPackageJson(this)
-    packagejson.scripts.test = packagejson.scripts.test.concat(' && adobe-asset-compute test-worker')
-    utils.writePackageJson(this, packagejson)
-
     // TODO add .npmignore and readme
   }
 }
