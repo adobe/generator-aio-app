@@ -45,7 +45,7 @@ describe('run', () => {
     assert.file('.gitignore')
     assert.file('README.md')
     assert.file('package.json')
-    assert.file('test/jest.setup.js')
+    assert.file('jest.setup.js')
   }
 
   function expectDotEnv () {
