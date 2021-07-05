@@ -47,7 +47,7 @@ class AssetComputeGenerator extends ActionGenerator {
       }
     })
 
-    const extFolder = path.dirname(this.actionFolder)
+    const extFolder = path.dirname(this.configPath)
 
     // TODO add support in ActionGenerator for copying test folders instead of files
     const destTestFolder = this.destinationPath(extFolder, 'test')
