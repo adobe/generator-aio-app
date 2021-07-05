@@ -20,9 +20,6 @@ class AssetComputeGenerator extends ActionGenerator {
   constructor (args, opts) {
     super(args, opts)
     this.props = {}
-    this.option('action-folder', { type: String })
-
-    this.actionFolder = this.options['action-folder']
   }
 
   async prompting () {
