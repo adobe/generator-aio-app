@@ -1,6 +1,6 @@
 {
   "name": "@adobe/generator-aio-app",
-  "version": "2.0.1-next.1",
+  "version": "2.0.1-next.2",
   "description": "Adobe I/O application yeoman code generator",
   "main": "generators/index.js",
   "scripts": {
