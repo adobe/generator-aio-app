@@ -54,20 +54,16 @@ const expectedChoices = {
 // spies
 const prompt = jest.spyOn(Generator.prototype, 'prompt')
 const composeWith = jest.spyOn(Generator.prototype, 'composeWith')
-const installDependencies = jest.spyOn(Generator.prototype, 'installDependencies')
 beforeAll(() => {
   // mock implementations
   composeWith.mockReturnValue(undefined)
-  installDependencies.mockReturnValue(undefined)
 })
 beforeEach(() => {
   prompt.mockClear()
   composeWith.mockClear()
-  installDependencies.mockClear()
 })
 afterAll(() => {
   composeWith.mockRestore()
-  installDependencies.mockRestore()
 })
 
 jest.mock('../../../lib/utils')
@@ -81,31 +77,17 @@ describe('prototype', () => {
 describe('run', () => {
   test('--skip-prompt --adobe-services="analytics,target,campaign-standard,customer-profile"', async () => {
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'adobe-services': `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign},${sdkCodes.customerProfile}`, 'skip-install': false })
+      .withOptions({ 'skip-prompt': true, 'adobe-services': `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign},${sdkCodes.customerProfile}` })
     // with skip prompt defaults to generic action
     // make sure sub generators have been called
     expect(composeWith).toHaveBeenCalledTimes(1)
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('generic/index.js')), expect.objectContaining({
       'skip-prompt': true
     }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 
-  test('--skip-prompt --skip-install', async () => {
-    await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'skip-install': true })
-
-    // with skip prompt defaults to generic action
-    // make sure sub generators have been called
-    expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(n('generic/index.js')), expect.objectContaining({
-      'skip-prompt': true
-    }))
-    expect(installDependencies).toHaveBeenCalledTimes(0)
-  })
   test('no input, selects one generator', async () => {
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-install': false })
       .withPrompts({ actionGenerators: ['a'] })
 
     expect(prompt).toHaveBeenCalledTimes(1)
@@ -130,11 +112,9 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({
       'skip-prompt': false
     }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
   test('no input, selects multiple generators', async () => {
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-install': false })
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
     expect(prompt).toHaveBeenCalledTimes(1)
@@ -159,11 +139,10 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
   test('--adobe-services="NOTEXISTING" --adobe-supported-services="notexistting" and selects multiple generators', async () => {
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'adobe-services': 'NOTEXITING', '--adobe-supported-services': 'notexistting', 'skip-install': false })
+      .withOptions({ 'adobe-services': 'NOTEXITING', '--adobe-supported-services': 'notexistting' })
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
     expect(prompt).toHaveBeenCalledTimes(1)
@@ -188,11 +167,10 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
   test('--adobe-services="analytics,customerProfile"', async () => {
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'adobe-services': `${sdkCodes.analytics},${sdkCodes.customerProfile}`, 'skip-install': false })
+      .withOptions({ 'adobe-services': `${sdkCodes.analytics},${sdkCodes.customerProfile}` })
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
     expect(prompt).toHaveBeenCalledTimes(1)
@@ -218,14 +196,12 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
   test('--adobe-services="analytics,customerProfile", supported-adobe-services="analytics,assetCompute,customerProfile,target"', async () => {
     await helpers.run(theGeneratorPath)
       .withOptions({
         'adobe-services': `${sdkCodes.analytics},${sdkCodes.customerProfile}`,
-        'supported-adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.target}`,
-        'skip-install': false
+        'supported-adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.target}`
       })
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -253,15 +229,13 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 
   test('--adobe-services="analytics,customerProfile", supported-adobe-services=ALL', async () => {
     await helpers.run(theGeneratorPath)
       .withOptions({
         'adobe-services': `${sdkCodes.analytics},${sdkCodes.customerProfile}`,
-        'supported-adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`,
-        'skip-install': false
+        'supported-adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
       })
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -288,15 +262,13 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 
   test('--adobe-services=ALL, supported-adobe-services=ALL', async () => {
     await helpers.run(theGeneratorPath)
       .withOptions({
         'adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`,
-        'supported-adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`,
-        'skip-install': false
+        'supported-adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
       })
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -322,14 +294,12 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 
   test('--adobe-services=ALL', async () => {
     await helpers.run(theGeneratorPath)
       .withOptions({
-        'adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`,
-        'skip-install': false
+        'adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
       })
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -355,15 +325,13 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 
   test('--adobe-services="", supported-adobe-services=analytics,assetCompute,customerProfile,target', async () => {
     await helpers.run(theGeneratorPath)
       .withOptions({
         'adobe-services': '',
-        'supported-adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.target}`,
-        'skip-install': false
+        'supported-adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.target}`
       })
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -391,15 +359,13 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 
   test('--adobe-services="", supported-adobe-services=ALL', async () => {
     await helpers.run(theGeneratorPath)
       .withOptions({
         'adobe-services': '',
-        'supported-adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`,
-        'skip-install': false
+        'supported-adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
       })
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -426,7 +392,6 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
     expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 })
 // todo check with existing files in project

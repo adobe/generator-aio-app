@@ -29,11 +29,12 @@ class AddEvents extends Generator {
   constructor (args, opts) {
     super(args, opts)
 
-    // options are inputs from CLI or yeoman parent generator
-    this.option('skip-prompt', { default: false })
-    this.option('skip-install', { type: String, default: false })
-
-    // todo throw meaningful error if add actions in a non existing project, but what defines a project?
+    // options to be forwarded to publish events action generator
+    this.option('skip-prompt', { default: false }) // prompt to ask action name
+    // required
+    this.option('action-folder', { type: String })
+    this.option('config-path', { type: String })
+    this.option('full-key-to-manifest', { type: String, default: '' }) // key in config path that resolves to manifest e.g. 'application.runtimeManifest'
   }
 
   async prompting () {
@@ -61,14 +62,6 @@ class AddEvents extends Generator {
 
     // run action generators
     this.composeWith(eventGenerator, this.options)
-  }
-
-  async install () {
-    // this condition makes sure it doesn't print any unwanted 'skip install message' into parent generator
-    if (!this.options['skip-install']) {
-      return this.installDependencies(
-        { bower: false })
-    }
   }
 }
 
