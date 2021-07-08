@@ -86,8 +86,7 @@ class DxAssetComputeWorker1 extends Generator {
       this.extConfigPath,
       // key
       'operations', {
-        // TODO opcode is still tbd
-        worker: [
+        apply: [
           { type: 'action', impl: 'dx-asset-compute-worker-1/worker' }
         ]
       }
