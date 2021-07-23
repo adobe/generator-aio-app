@@ -12,6 +12,7 @@ const helpers = require('yeoman-test')
 const path = require('path')
 const fs = require('fs-extra')
 const utils = require('../../../lib/utils')
+const cloneDeep = require('lodash.clonedeep')
 
 const theGeneratorPath = require.resolve('../../../generators/add-web-assets')
 const Generator = require('yeoman-generator')
@@ -50,16 +51,24 @@ describe('prototype', () => {
 
 describe('run', () => {
   test('web assets already in project --skip-prompt', async () => {
+    let options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = true
+    options['project-name'] = 'fake'
+    options['adobe-services'] = 'some,string'
+    options['web-src-folder'] = 'web-src'
     await expect(helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'project-name': 'fake', 'adobe-services': 'some,string' })
+      .withOptions(options)
       .inTmpDir(dir => {
         fs.mkdirSync(path.join(dir, 'web-src'))
       })).rejects.toThrow('you already have web assets in your project, please delete first')
   })
 
   test('--skip-prompt', async () => {
+    let options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = true
+    options['web-src-folder'] = 'web-src'
     const dir = await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true })
+      .withOptions(options)
 
     const expectProjectName = path.basename(dir)
 
@@ -68,14 +77,17 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
-      'project-name': expectProjectName,
-      'has-backend': true
+      'project-name': expectProjectName
     }))
   })
 
   test('--skip-prompt --has-backend false', async () => {
+    let options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = true
+    options['web-src-folder'] = 'web-src'
+    options['has-backend'] = false
     const dir = await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'has-backend': false })
+      .withOptions(options)
 
     const expectProjectName = path.basename(dir)
 
@@ -90,34 +102,44 @@ describe('run', () => {
   })
 
   test('--skip-prompt --project-name fake', async () => {
+    let options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = true
+    options['web-src-folder'] = 'web-src'
+    options['project-name'] = 'fake'
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'project-name': 'fake' })
+      .withOptions(options)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
     expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
-      'project-name': 'fake',
-      'has-backend': true
+      'project-name': 'fake'
     }))
   })
 
   test('--skip-prompt --project-name fake --adobe-services=some,string', async () => {
+    let options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = true
+    options['web-src-folder'] = 'web-src'
+    options['project-name'] = 'fake'
+    options['adobe-services'] = 'some,string'
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'project-name': 'fake', 'adobe-services': 'some,string' })
+      .withOptions(options)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
     expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': 'some,string',
-      'project-name': 'fake',
-      'has-backend': true
+      'project-name': 'fake'
     }))
   })
 
   test('--project-name fake and selected prompt is fake generator "a"', async () => {
+    let options = cloneDeep(global.basicGeneratorOptions)
+    options['web-src-folder'] = 'web-src'
+    options['project-name'] = 'fake'
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'project-name': 'fake' })
+      .withOptions(options)
       .withPrompts({ webAssetsGenerator: 'a' })
 
     // check choices
