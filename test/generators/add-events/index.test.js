@@ -12,6 +12,7 @@ const helpers = require('yeoman-test')
 
 const theGeneratorPath = require.resolve('../../../generators/add-events')
 const Generator = require('yeoman-generator')
+const cloneDeep = require('lodash.clonedeep')
 
 // spies
 const prompt = jest.spyOn(Generator.prototype, 'prompt')
@@ -40,8 +41,10 @@ describe('prototype', () => {
 
 describe('run', () => {
   test('--skip-prompt "', async () => {
+    let options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = true
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true })
+      .withOptions(options)
     // with skip prompt defaults to generic action
     // make sure sub generators have been called
     expect(composeWith).toHaveBeenCalledTimes(1)

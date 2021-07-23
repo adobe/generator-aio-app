@@ -36,3 +36,8 @@ global.assertNodeEngines = (fs, nodeEngines) => {
     engines: { node: nodeEngines }
   }))
 }
+global.basicGeneratorOptions = {
+  'action-folder': 'actions',
+  'config-path': 'ext.config.yaml',
+  'full-key-to-manifest' : 'runtimeManifest'
+}
