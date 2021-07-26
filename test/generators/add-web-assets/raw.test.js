@@ -28,7 +28,7 @@ describe('prototype', () => {
 
 describe('run', () => {
   test('--project-name abc --adobe-services analytics,target,campaign-standard', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['project-name'] = 'abc'
     options['web-src-folder'] = 'web-src'
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign}`
@@ -49,7 +49,7 @@ describe('run', () => {
   })
 
   test('--project-name abc --adobe-services analytics', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['project-name'] = 'abc'
     options['web-src-folder'] = 'web-src'
     options['adobe-services'] = `${sdkCodes.analytics}`

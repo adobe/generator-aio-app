@@ -14,7 +14,6 @@ const helpers = require('yeoman-test')
 const assert = require('yeoman-assert')
 const fs = require('fs')
 const yaml = require('js-yaml')
-const path = require('path')
 const cloneDeep = require('lodash.clonedeep')
 
 const theGeneratorPath = require.resolve('../../../generators/add-action/audience-manager-cd')
@@ -55,7 +54,7 @@ function assertGeneratedFiles (actionName) {
 function assertManifestContent (actionName) {
   const json = yaml.safeLoad(fs.readFileSync('ext.config.yaml').toString())
   expect(json.runtimeManifest.packages).toBeDefined()
-  //TODO we get app root instead of manifestPackagePlaceholder, possible bug
+  // TODO we get app root instead of manifestPackagePlaceholder, possible bug
   // expect(json.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
   //   function: path.normalize(`${constants.actionsDirname}/${actionName}/index.js`),
   //   web: 'yes',
@@ -98,7 +97,7 @@ function assertActionCodeContent (actionName) {
 
 describe('run', () => {
   test('--skip-prompt', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     await helpers.run(theGeneratorPath)
       .withOptions(options)
@@ -113,7 +112,7 @@ describe('run', () => {
   })
 
   test('--skip-prompt, and action with default name already exists', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     await helpers.run(theGeneratorPath)
       .withOptions(options)
@@ -140,7 +139,7 @@ describe('run', () => {
   })
 
   test('user input actionName=fakeAction', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = false
     await helpers.run(theGeneratorPath)
       .withOptions(options)

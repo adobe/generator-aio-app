@@ -174,8 +174,8 @@ describe('implementation', () => {
       // 1. test copy action template to right destination
       expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/templateFile.js'), n(`${constants.actionsDirname}/myAction/index.js`), {}, {}, {})
       // 2. test manifest creation with action information
-      //TODO test manifest content
-      expect(actionGenerator.fs.write).toH
+      // TODO test manifest content
+      expect(actionGenerator.fs.write).toHaveBeenCalled()
       // 3. make sure wskdebug dependency was added to package.json
       expect(actionGenerator.fs.writeJSON).toHaveBeenCalledWith(n('/fakeDestRoot/package.json'), {
         devDependencies: {
@@ -202,7 +202,7 @@ describe('implementation', () => {
       }
       actionGenerator.addAction('myAction', './templateFile.js')
       // test manifest update with action information
-      //TODO test manifest content
+      // TODO test manifest content
     })
 
     test('with extra dependencies and devDependencies options', () => {
@@ -270,7 +270,7 @@ describe('implementation', () => {
 
       // test manifest update with action information
       expect(actionGenerator.fs.write).toHaveBeenCalled()
-      //TODO test manifest content
+      // TODO test manifest content
     })
 
     test('with dotenvStub option (dotenv exists)', () => {

@@ -41,7 +41,7 @@ describe('prototype', () => {
 
 describe('run', () => {
   test('--skip-prompt "', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     await helpers.run(theGeneratorPath)
       .withOptions(options)

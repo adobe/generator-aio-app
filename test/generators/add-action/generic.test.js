@@ -14,7 +14,6 @@ const helpers = require('yeoman-test')
 const assert = require('yeoman-assert')
 const fs = require('fs')
 const yaml = require('js-yaml')
-const path = require('path')
 const cloneDeep = require('lodash.clonedeep')
 
 const theGeneratorPath = require.resolve('../../../generators/add-action/generic')
@@ -87,7 +86,7 @@ function assertActionCodeContent (actionName) {
 
 describe('run', () => {
   test('--skip-prompt', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     await helpers.run(theGeneratorPath)
       .withOptions(options)
@@ -103,7 +102,7 @@ describe('run', () => {
   })
 
   test('--skip-prompt, and action with default name already exists', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     await helpers.run(theGeneratorPath)
       .withOptions(options)
@@ -130,7 +129,7 @@ describe('run', () => {
   })
 
   test('user input actionName=fakeAction', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = false
     await helpers.run(theGeneratorPath)
       .withOptions(options)

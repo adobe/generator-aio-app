@@ -51,7 +51,7 @@ describe('prototype', () => {
 
 describe('run', () => {
   test('web assets already in project --skip-prompt', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     options['project-name'] = 'fake'
     options['adobe-services'] = 'some,string'
@@ -64,7 +64,7 @@ describe('run', () => {
   })
 
   test('--skip-prompt', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     options['web-src-folder'] = 'web-src'
     const dir = await helpers.run(theGeneratorPath)
@@ -82,7 +82,7 @@ describe('run', () => {
   })
 
   test('--skip-prompt --has-backend false', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     options['web-src-folder'] = 'web-src'
     options['has-backend'] = false
@@ -102,7 +102,7 @@ describe('run', () => {
   })
 
   test('--skip-prompt --project-name fake', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     options['web-src-folder'] = 'web-src'
     options['project-name'] = 'fake'
@@ -118,7 +118,7 @@ describe('run', () => {
   })
 
   test('--skip-prompt --project-name fake --adobe-services=some,string', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     options['web-src-folder'] = 'web-src'
     options['project-name'] = 'fake'
@@ -135,7 +135,7 @@ describe('run', () => {
   })
 
   test('--project-name fake and selected prompt is fake generator "a"', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['web-src-folder'] = 'web-src'
     options['project-name'] = 'fake'
     await helpers.run(theGeneratorPath)

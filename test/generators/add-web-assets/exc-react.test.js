@@ -71,7 +71,7 @@ const prevDotEnv = 'FAKECONTENT'
 
 describe('run', () => {
   test('--project-name abc', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['project-name'] = 'abc'
     options['web-src-folder'] = 'web-src'
     await helpers
@@ -116,7 +116,7 @@ describe('run', () => {
   })
 
   test('--project-name abc --has-backend false', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['project-name'] = 'abc'
     options['has-backend'] = false
     options['web-src-folder'] = 'web-src'

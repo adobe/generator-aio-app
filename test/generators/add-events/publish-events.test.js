@@ -53,6 +53,7 @@ function assertGeneratedFiles (actionName) {
   // assert.file('.env')
 }
 
+/* eslint no-unused-vars: 0 */
 function assertManifestContent (actionName) {
   const json = yaml.safeLoad(fs.readFileSync('manifest.yml').toString())
   expect(json.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
@@ -101,16 +102,16 @@ function assertEventCodeContent (actionName) {
 
 describe('run', () => {
   test('--skip-prompt', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
-    try{
-    await helpers.run(theGeneratorPath)
-      .withOptions(options)
-      .inTmpDir(dir => {
-        fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
-      })
-    } catch(e) {
+    try {
+      await helpers.run(theGeneratorPath)
+        .withOptions(options)
+        .inTmpDir(dir => {
+          fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
+        })
+    } catch (e) {
       console.error(e)
     }
 
@@ -131,20 +132,21 @@ describe('run', () => {
 
   test('--skip-prompt, and action with default name already exists', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     await helpers.run(theGeneratorPath)
       .withOptions(options)
       .inTmpDir(dir => {
         fs.writeFileSync('ext.config.yaml', yaml.dump({
           runtimeManifest: {
-          packages: {
-            __APP_PACKAGE__: {
-              actions: {
-                'publish-events': { function: 'fake.js' }
+            packages: {
+              __APP_PACKAGE__: {
+                actions: {
+                  'publish-events': { function: 'fake.js' }
+                }
               }
             }
-          }}
+          }
         }))
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
       })
@@ -166,7 +168,7 @@ describe('run', () => {
 
   test('user input actionName=fakeAction', async () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = false
     await helpers.run(theGeneratorPath)
       .withOptions(options)

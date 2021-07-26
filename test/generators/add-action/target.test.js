@@ -57,7 +57,7 @@ function assertGeneratedFiles (actionName) {
 function assertManifestContent (actionName) {
   const json = yaml.safeLoad(fs.readFileSync('ext.config.yaml').toString())
   expect(json.runtimeManifest.packages).toBeDefined()
-  //TODO we get app root instead of manifestPackagePlaceholder, possible bug
+  // TODO we get app root instead of manifestPackagePlaceholder, possible bug
   // expect(json.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
   //   function: path.normalize(`${constants.actionsDirname}/${actionName}/index.js`),
   //   web: 'yes',
@@ -106,7 +106,7 @@ function assertActionCodeContent (actionName) {
 
 describe('run', () => {
   test('--skip-prompt', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     await helpers.run(theGeneratorPath)
@@ -127,7 +127,7 @@ describe('run', () => {
   })
 
   test('--skip-prompt, and action with default name already exists', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     await helpers.run(theGeneratorPath)
@@ -158,7 +158,7 @@ describe('run', () => {
   })
 
   test('user input actionName=fakeAction', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = false
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     await helpers.run(theGeneratorPath)

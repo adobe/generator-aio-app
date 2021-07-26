@@ -77,7 +77,7 @@ describe('prototype', () => {
 
 describe('run', () => {
   test('--skip-prompt --adobe-services="analytics,target,campaign-standard,customer-profile"', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign},${sdkCodes.customerProfile}`
     await helpers.run(theGeneratorPath)
@@ -145,7 +145,7 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
   })
   test('--adobe-services="NOTEXISTING" --adobe-supported-services="notexistting" and selects multiple generators', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = 'NOTEXITING'
     options['--adobe-supported-services'] = 'notexistting'
     await helpers.run(theGeneratorPath)
@@ -176,7 +176,7 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
   })
   test('--adobe-services="analytics,customerProfile"', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.customerProfile}`
     await helpers.run(theGeneratorPath)
       .withOptions(options)
@@ -207,7 +207,7 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
   })
   test('--adobe-services="analytics,customerProfile", supported-adobe-services="analytics,assetCompute,customerProfile,target"', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.customerProfile}`
     options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.target}`
     await helpers.run(theGeneratorPath)
@@ -241,7 +241,7 @@ describe('run', () => {
   })
 
   test('--adobe-services="analytics,customerProfile", supported-adobe-services=ALL', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.customerProfile}`
     options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
     await helpers.run(theGeneratorPath)
@@ -274,7 +274,7 @@ describe('run', () => {
   })
 
   test('--adobe-services=ALL, supported-adobe-services=ALL', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
     options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
     await helpers.run(theGeneratorPath)
@@ -306,7 +306,7 @@ describe('run', () => {
   })
 
   test('--adobe-services=ALL', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
     await helpers.run(theGeneratorPath)
       .withOptions({
@@ -339,7 +339,7 @@ describe('run', () => {
   })
 
   test('--adobe-services="", supported-adobe-services=analytics,assetCompute,customerProfile,target', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = ''
     options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.target}`
     await helpers.run(theGeneratorPath)
@@ -373,7 +373,7 @@ describe('run', () => {
   })
 
   test('--adobe-services="", supported-adobe-services=ALL', async () => {
-    let options = cloneDeep(global.basicGeneratorOptions)
+    const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = ''
     options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
     await helpers.run(theGeneratorPath)
