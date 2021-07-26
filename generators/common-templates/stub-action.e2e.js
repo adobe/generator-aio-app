@@ -19,7 +19,7 @@ const fetch = require('node-fetch')
 const namespace = Config.get('runtime.namespace')
 const hostname = Config.get('cna.hostname') || 'adobeioruntime.net'
 const packagejson = JSON.parse(fs.readFileSync('package.json').toString())
-const runtimePackage = `${packagejson.name}-${packagejson.version}`
+const runtimePackage = '<%= runtimePackageName %>'
 const actionUrl = `https://${namespace}.${hostname}/api/v1/web/${runtimePackage}/<%= actionName %>`
 
 // The deployed actions are secured with the `require-adobe-auth` annotation.
