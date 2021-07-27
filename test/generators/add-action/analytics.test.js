@@ -48,7 +48,7 @@ function assertGeneratedFiles (actionName) {
   assert.file(`e2e/${actionName}.e2e.test.js`)
 
   assert.file(`${constants.actionsDirname}/utils.js`)
-  assert.file(`test//utils.test.js`)
+  assert.file('test//utils.test.js')
 
   assert.file('ext.config.yaml')
   assert.file('.env')

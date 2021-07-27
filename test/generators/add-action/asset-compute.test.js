@@ -41,7 +41,7 @@ describe('prototype', () => {
 
 function assertGeneratedFiles (actionName) {
   const actionPath = `actions/${actionName}`
-  const testPath = `test`
+  const testPath = 'test'
 
   assert.file(`${actionPath}/index.js`)
 
