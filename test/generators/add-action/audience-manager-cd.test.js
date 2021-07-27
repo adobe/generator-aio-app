@@ -41,12 +41,12 @@ describe('prototype', () => {
 
 function assertGeneratedFiles (actionName) {
   assert.file(`${constants.actionsDirname}/${actionName}/index.js`)
-  // TODO fix issue with test file path
-  // assert.file(`test/${constants.actionsDirname}/${actionName}.test.js`)
-  // assert.file(`e2e/${constants.actionsDirname}/${actionName}.e2e.js`)
+
+  assert.file(`test/${actionName}.test.js`)
+  assert.file(`e2e/${actionName}.e2e.test.js`)
 
   assert.file(`${constants.actionsDirname}/utils.js`)
-  // assert.file(`test/${constants.actionsDirname}/utils.test.js`)
+  assert.file(`test/utils.test.js`)
 
   assert.file('ext.config.yaml')
 }

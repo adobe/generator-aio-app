@@ -41,15 +41,15 @@ describe('prototype', () => {
 
 function assertGeneratedFiles (actionName) {
   const actionPath = `actions/${actionName}`
-  // const testPath = `test/asset-compute/${actionName}`
+  const testPath = `test`
 
   assert.file(`${actionPath}/index.js`)
-  // TODO fix issue with test file path
-  // assert.file(`${testPath}/corrupt-input/file.jpg`)
-  // assert.file(`${testPath}/corrupt-input/params.json`)
-  // assert.file(`${testPath}/simple-test/file.jpg`)
-  // assert.file(`${testPath}/simple-test/params.json`)
-  // assert.file(`${testPath}/simple-test/rendition.jpg`)
+
+  assert.file(`${testPath}/corrupt-input/file.jpg`)
+  assert.file(`${testPath}/corrupt-input/params.json`)
+  assert.file(`${testPath}/simple-test/file.jpg`)
+  assert.file(`${testPath}/simple-test/params.json`)
+  assert.file(`${testPath}/simple-test/rendition.jpg`)
 
   assert.file('ext.config.yaml')
   assert.file('.env')
