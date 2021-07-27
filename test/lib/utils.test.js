@@ -249,4 +249,38 @@ describe('addDependencies', () => {
     expect(mockWrite).toHaveBeenCalledTimes(1)
     expect(mockWrite).toHaveBeenCalledWith('some-path', { devDependencies: { a: 'b', c: 'd', e: 'f' }, dependencies: { g: 'h' } })
   })
+
+  test('appendStubVarsToDotenv', () => {
+    const mockRead = jest.fn(() => 'some fake content')
+    const mockExists = jest.fn(() => {
+      return false
+    })
+    const generator = {
+      destinationPath: jest.fn(() => 'some-path'),
+      fs: {
+        read: mockRead,
+        append: jest.fn(),
+        exists: mockExists
+      }
+    }
+
+    utils.appendStubVarsToDotenv(generator, 'fake', ['a', 'b', 'c'])
+    expect(generator.fs.append).toHaveBeenCalled()
+  })
+
+  test('writeMultiLayerKeyInObject', () => {
+    const obj = {
+      test: 'somevalue',
+      a: {
+        b: {
+          c: [{
+            test1: 'fakevalue',
+            test2: 'fakevalue'
+          }]
+        }
+      }
+    }
+    utils.writeMultiLayerKeyInObject(obj, 'a.b.c', [{ test: 'new value' }])
+    expect(obj.a.b.c[1]).toEqual({ test: 'new value' })
+  })
 })
