@@ -14,6 +14,8 @@ governing permissions and limitations under the License.
 const helpers = require('yeoman-test')
 const fs = require('fs')
 const path = require('path')
+const assert = require('yeoman-assert')
+const yaml = require('js-yaml')
 
 const theGeneratorPath = require.resolve('../../../../generators/extensions/dx-asset-compute-worker-1/')
 const Generator = require('yeoman-generator')
@@ -36,6 +38,12 @@ describe('prototype', () => {
   })
 })
 
+function assertScripts () {
+  const config = yaml.load(fs.readFileSync('src/dx-asset-compute-worker-1/ext.config.yaml').toString())
+  assert.strictEqual(config.hooks.test, 'adobe-asset-compute test-worker')
+  assert.strictEqual(config.hooks['post-app-run'], 'adobe-asset-compute devtool')
+}
+
 describe('run', () => {
   test('test basic ext generator', async () => {
     const options = { 'skip-prompt': true }
@@ -46,5 +54,6 @@ describe('run', () => {
       })
     expect(composeWith).toHaveBeenCalledTimes(1)
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-action/asset-compute/index.js')), expect.any(Object))
+    assertScripts()
   })
 })

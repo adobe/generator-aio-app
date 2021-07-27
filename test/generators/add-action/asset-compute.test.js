@@ -101,13 +101,6 @@ function assertActionCodeContent (actionName) {
   )
 }
 
-function assertScripts () {
-  // TODO fix no scripts in jsonContent, possible bug
-  // const jsonContent = JSON.parse(fs.readFileSync('package.json').toString())
-  // assert.ok(jsonContent.scripts.test.includes('adobe-asset-compute test-worker'))
-  // assert.strictEqual(jsonContent.scripts['post-app-run'], 'adobe-asset-compute devtool')
-}
-
 describe('run', () => {
   test('asset-compute: --skip-prompt', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
@@ -217,9 +210,7 @@ describe('run', () => {
     const actionName2 = 'new-asset-compute-action-second-of-its-name'
     await helpers.run(theGeneratorPath)
       .withOptions(options)
-      .withPrompts({ actionName: 'new-asset-compute-action-second-of-its-name' })
-
-    assertScripts(actionName2)
+      .withPrompts({ actionName: actionName2 })
   })
 
   test('asset-compute: verifying scripts are not overridden', async () => {
@@ -252,8 +243,6 @@ describe('run', () => {
     const actionName2 = 'new-asset-compute-action-second-of-its-name'
     await helpers.run(theGeneratorPath)
       .withOptions(options)
-      .withPrompts({ actionName: 'new-asset-compute-action-second-of-its-name' })
-
-    assertScripts(actionName2)
+      .withPrompts({ actionName: actionName2 })
   })
 })

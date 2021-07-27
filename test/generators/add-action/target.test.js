@@ -134,10 +134,12 @@ describe('run', () => {
       .withOptions(options)
       .inTmpDir(dir => {
         fs.writeFileSync('ext.config.yaml', yaml.dump({
-          packages: {
-            __APP_PACKAGE__: {
-              actions: {
-                target: { function: 'fake.js' }
+          runtimeManifest: {
+            packages: {
+              somepackage: {
+                actions: {
+                  target: { function: 'fake.js' }
+                }
               }
             }
           }
@@ -148,9 +150,8 @@ describe('run', () => {
     // default
     const actionName = 'target-1'
 
-    // TODO fix, possible bug, generated file doesnt have same name
-    // assertGeneratedFiles(actionName)
-    // assertActionCodeContent(actionName)
+    assertGeneratedFiles(actionName)
+    assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, { '@adobe/aio-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })

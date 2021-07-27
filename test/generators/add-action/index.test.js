@@ -405,4 +405,3 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
   })
 })
-// todo check with existing files in project
