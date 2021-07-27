@@ -65,7 +65,7 @@ function assertManifestContent (actionName, pkgName) {
   pkgName = pkgName || path.basename(process.cwd())
 
   expect(json.runtimeManifest.packages[pkgName].actions[actionName]).toEqual({
-    function: `actions${path.sep}${actionName}${path.sep}index.js`,
+    function: `actions/${actionName}/index.js`,
     web: 'yes',
     runtime: 'nodejs:14',
     limits: {
