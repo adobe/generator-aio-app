@@ -56,21 +56,25 @@ function assertGeneratedFiles (actionName) {
   assert.file('package.json')
 }
 
-function assertManifestContent (actionName) {
+// pkgName is optional
+function assertManifestContent (actionName, pkgName) {
   const json = yaml.safeLoad(fs.readFileSync('ext.config.yaml').toString())
   expect(json.runtimeManifest.packages).toBeDefined()
-  // TODO we get app root instead of manifestPackagePlaceholder, possible bug
-  // expect(json.runtimeManifest.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
-  //   function: `actions${path.sep}${actionName}${path.sep}index.js`,
-  //   web: 'yes',
-  //   runtime: 'nodejs:14',
-  //   limits: {
-  //     concurrency: 10
-  //   },
-  //   annotations: {
-  //     'require-adobe-auth': true
-  //   }
-  // })
+
+  // default packageName is path.basename(path.dirname('ext.config.yaml'))
+  pkgName = pkgName || path.basename(process.cwd())
+
+  expect(json.runtimeManifest.packages[pkgName].actions[actionName]).toEqual({
+    function: `actions${path.sep}${actionName}${path.sep}index.js`,
+    web: 'yes',
+    runtime: 'nodejs:14',
+    limits: {
+      concurrency: 10
+    },
+    annotations: {
+      'require-adobe-auth': true
+    }
+  })
 }
 
 function assertEnvContent (prevContent) {
@@ -126,26 +130,29 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
-    const actionName = 'worker'
 
     await helpers.run(theGeneratorPath)
       .withOptions(options)
       .inTmpDir(dir => {
-        fs.writeFileSync('manifest.yml', yaml.dump({
-          packages: {
-            __APP_PACKAGE__: {
-              actions: {
-                example: { function: 'fake.js' }
+        fs.writeFileSync('ext.config.yaml', yaml.dump({
+          runtimeManifest: {
+            packages: {
+              somepackagename: {
+                actions: {
+                  worker: { function: 'fake.js' }
+                }
               }
             }
           }
+
         }))
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
       })
 
+    const actionName = 'worker-1'
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)
-    assertManifestContent(actionName)
+    assertManifestContent(actionName, 'somepackagename')
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, { '@adobe/asset-compute-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String), '@adobe/aio-cli-plugin-asset-compute': expect.any(String) })
     assertNodeEngines(fs, '^10 || ^12 || ^14')

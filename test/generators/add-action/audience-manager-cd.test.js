@@ -15,7 +15,7 @@ const assert = require('yeoman-assert')
 const fs = require('fs')
 const yaml = require('js-yaml')
 const cloneDeep = require('lodash.clonedeep')
-
+const path = require('path')
 const theGeneratorPath = require.resolve('../../../generators/add-action/audience-manager-cd')
 const Generator = require('yeoman-generator')
 
@@ -51,23 +51,27 @@ function assertGeneratedFiles (actionName) {
   assert.file('ext.config.yaml')
 }
 
-function assertManifestContent (actionName) {
+// pkgName is optional
+function assertManifestContent (actionName, pkgName) {
   const json = yaml.safeLoad(fs.readFileSync('ext.config.yaml').toString())
   expect(json.runtimeManifest.packages).toBeDefined()
-  // TODO we get app root instead of manifestPackagePlaceholder, possible bug
-  // expect(json.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
-  //   function: path.normalize(`${constants.actionsDirname}/${actionName}/index.js`),
-  //   web: 'yes',
-  //   runtime: 'nodejs:14',
-  //   inputs: {
-  //     LOG_LEVEL: 'debug',
-  //     apiKey: '$SERVICE_API_KEY'
-  //   },
-  //   annotations: {
-  //     final: true,
-  //     'require-adobe-auth': true
-  //   }
-  // })
+
+  // default packageName is path.basename(path.dirname('ext.config.yaml'))
+  pkgName = pkgName || path.basename(process.cwd())
+
+  expect(json.runtimeManifest.packages[pkgName].actions[actionName]).toEqual({
+    function: path.normalize(`${constants.actionsDirname}/${actionName}/index.js`),
+    web: 'yes',
+    runtime: 'nodejs:14',
+    inputs: {
+      LOG_LEVEL: 'debug',
+      apiKey: '$SERVICE_API_KEY'
+    },
+    annotations: {
+      final: true,
+      'require-adobe-auth': true
+    }
+  })
 }
 
 function assertActionCodeContent (actionName) {
@@ -134,7 +138,7 @@ describe('run', () => {
     const actionName = 'audience-manager-cd-1'
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)
-    assertManifestContent(actionName)
+    assertManifestContent(actionName, 'somepackage')
     assertDependencies(fs, { '@adobe/aio-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
     assertNodeEngines(fs, '^10 || ^12 || ^14')
   })
