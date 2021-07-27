@@ -9,8 +9,6 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 const path = require('path')
-const yaml = require('js-yaml')
-const { EOL } = require('os')
 const cloneDeep = require('lodash.clonedeep')
 
 const constants = require('../../lib/constants')
@@ -19,27 +17,26 @@ jest.mock('yeoman-generator')
 
 const ActionGenerator = require('../../lib/ActionGenerator')
 const Generator = require('yeoman-generator')
-const mockfs = {
-  copyTpl: jest.fn(),
-  exists: jest.fn().mockReturnValue(true), // called on manifest
-  write: jest.fn(),
-  read: jest.fn().mockReturnValue(yaml.safeDump({
-    packages: {
-      [constants.manifestPackagePlaceholder]: {
-        actions: {},
-        fake: 'value'
-      }
-    }
-  })),
-  writeJSON: jest.fn(),
-  readJSON: jest.fn().mockReturnValue({}) // package.json read
-}
+
+jest.mock('../../lib/utils.js')
+const utils = require('../../lib/utils.js')
+
 const generatorOptions = cloneDeep(global.basicGeneratorOptions)
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
     expect(ActionGenerator.prototype).toBeInstanceOf(Generator)
   })
+})
+
+beforeEach(() => {
+  utils.readYAMLConfig.mockRestore()
+  utils.readPackageJson.mockRestore()
+  utils.writeYAMLConfig.mockRestore()
+  utils.writePackageJson.mockRestore()
+  utils.appendStubVarsToDotenv.mockRestore()
+  utils.addDependencies.mockRestore()
+  utils.writeKeyYAMLConfig.mockRestore()
 })
 
 describe('implementation', () => {
@@ -61,54 +58,53 @@ describe('implementation', () => {
     })
   })
   describe('promptForActionName', () => {
-    let spy
+    let promptSpy
     let actionGenerator
     beforeEach(() => {
-      spy = jest.spyOn(ActionGenerator.prototype, 'prompt')
+      promptSpy = jest.spyOn(ActionGenerator.prototype, 'prompt')
       actionGenerator = new ActionGenerator()
       actionGenerator.options = { 'skip-prompt': false }
-      actionGenerator.fs = mockfs
     })
     afterEach(() => {
-      spy.mockRestore()
+      promptSpy.mockRestore()
     })
     test('calls prompt and returns the input actionName', async () => {
-      spy.mockResolvedValue({
+      promptSpy.mockResolvedValue({
         actionName: 'inputName'
       })
       const actionName = await actionGenerator.promptForActionName('fake purpose', 'fake default')
       expect(actionName).toEqual('inputName')
-      expect(spy).toHaveBeenCalledWith([expect.objectContaining({
+      expect(promptSpy).toHaveBeenCalledWith([expect.objectContaining({
         when: true,
         default: 'fake default',
         message: expect.stringContaining('fake purpose')
       })])
-      expect(spy).toHaveBeenCalledTimes(1)
+      expect(promptSpy).toHaveBeenCalledTimes(1)
     })
     test('if options.skip-prompt is set should return the default value', async () => {
-      spy.mockResolvedValue({
+      promptSpy.mockResolvedValue({
         actionName: undefined
       })
       actionGenerator.options['skip-prompt'] = true
       const actionName = await actionGenerator.promptForActionName('fake purpose', 'fake default')
       expect(actionName).toEqual('fake default')
-      expect(spy).toHaveBeenCalledTimes(0)
+      expect(promptSpy).toHaveBeenCalledTimes(0)
     })
     test('validates input `abc-1234, 1234-abc, ABC-1234, 1234-ABC`', async () => {
-      spy.mockReturnValue({ actionName: 'fake' })
+      promptSpy.mockReturnValue({ actionName: 'fake' })
       await actionGenerator.promptForActionName()
-      expect(spy.mock.calls[0][0][0].validate).toBeInstanceOf(Function)
-      const validate = spy.mock.calls[0][0][0].validate
+      expect(promptSpy.mock.calls[0][0][0].validate).toBeInstanceOf(Function)
+      const validate = promptSpy.mock.calls[0][0][0].validate
       expect(validate('abc-1234')).toBe(true)
       expect(validate('1234-abc')).toBe(true)
       expect(validate('ABC-1234')).toBe(true)
       expect(validate('1234-ABC')).toBe(true)
     })
     test('rejects inputs `a, 1, ab, 12, -abc-1234, abc@, abc_1234, 1234-abc!, abc123456789012345678901234567890`', async () => {
-      spy.mockReturnValue({ actionName: 'fake' })
+      promptSpy.mockReturnValue({ actionName: 'fake' })
       await actionGenerator.promptForActionName()
-      expect(spy.mock.calls[0][0][0].validate).toBeInstanceOf(Function)
-      const validate = spy.mock.calls[0][0][0].validate
+      expect(promptSpy.mock.calls[0][0][0].validate).toBeInstanceOf(Function)
+      const validate = promptSpy.mock.calls[0][0][0].validate
       expect(validate('a')).not.toEqual(true)
       expect(validate('1')).not.toEqual(true)
       expect(validate('ab')).not.toEqual(true)
@@ -119,333 +115,216 @@ describe('implementation', () => {
       expect(validate('abc@')).not.toEqual(true)
       expect(validate('abc123456789012345678901234567890')).not.toEqual(true)
     })
-    // test('returns new action name in case of conflict', async () => {
-    //   spy.mockResolvedValue({
-    //     actionName: 'fake'
-    //   })
-    //   const spyManifest = jest.spyOn(actionGenerator, 'loadRuntimeManifest')
-    //   spyManifest.mockReturnValue({
-    //     packages: {
-    //       [constants.manifestPackagePlaceholder]: {
-    //         license: 'Apache-2.0',
-    //         runtimeManifest: {
-    //           packages: {
-    //             __APP_PACKAGE__: {
-    //               actions: {
-    //                 'test': { function: 'fake.js' }
-    //               }
-    //             }
-    //           }}
-    //       }
-    //     }
-    //   })
-    //   const actionName = await actionGenerator.promptForActionName('fakepurpose', 'fakedefault')
-    //   expect(actionName).toEqual('fake')
-    //   expect(spy).toHaveBeenCalledWith([expect.objectContaining({
-    //     when: true,
-    //     default: 'fakedefault-1',
-    //     message: expect.stringContaining('fakepurpose')
-    //   })])
-    // })
+
+    test('returns new default name in case of conflict', async () => {
+      utils.readYAMLConfig.mockReturnValue({
+        runtimeManifest: {
+          license: 'Apache-2.0',
+          packages: {
+            mypackage: {
+              actions: {
+                defaulttest: { function: 'fake.js' },
+                'defaulttest-1': { function: 'fake.js' }
+              }
+            }
+          }
+        }
+      })
+      actionGenerator.options = { 'skip-prompt': true }
+
+      const actionName = await actionGenerator.promptForActionName('fakepurpose', 'defaulttest')
+      expect(actionName).toEqual('defaulttest-2')
+    })
   })
 
   describe('addAction', () => {
-  //   // mock path resolvers
-  //   ActionGenerator.prototype.templatePath = p => path.join('/fakeTplDir', p)
-  //   ActionGenerator.prototype.destinationPath = (...args) => path.join('/fakeDestRoot', ...args)
-
     let actionGenerator
     beforeEach(() => {
       actionGenerator = new ActionGenerator()
-      // actionGenerator.options = { 'skip-prompt': false }
+      actionGenerator.options = { 'skip-prompt': false }
+      actionGenerator.fs = { copyTpl: jest.fn() }
+      // mock path resolvers
+      actionGenerator.templatePath = p => path.join('/fakeTplDir', p)
+      actionGenerator.destinationPath = (...args) => args[0].startsWith('/fakeDestRoot') ? path.join(...args) : path.join('/fakeDestRoot', ...args)
     })
 
     test('with no options and manifest does not exist', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
-        write: jest.fn(),
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({}) // package.json read
-      }
+      // mock files
+      utils.readPackageJson.mockReturnValue({})
+      utils.readYAMLConfig.mockReturnValue({})
+
       actionGenerator.addAction('myAction', './templateFile.js')
 
       // 1. test copy action template to right destination
       expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/templateFile.js'), n(`${constants.actionsDirname}/myAction/index.js`), {}, {}, {})
       // 2. test manifest creation with action information
-      // TODO test manifest content
-      expect(actionGenerator.fs.write).toHaveBeenCalled()
-      // 3. make sure wskdebug dependency was added to package.json
-      expect(actionGenerator.fs.writeJSON).toHaveBeenCalledWith(n('/fakeDestRoot/package.json'), {
-        devDependencies: {
-          '@openwhisk/wskdebug': expect.any(String)
-        }
-      })
+      expect(utils.writeKeyYAMLConfig).toHaveBeenCalledWith(
+        actionGenerator,
+        '/fakeDestRoot/ext.config.yaml',
+        'runtimeManifest',
+        // function path should be checked to be relative to config file
+        { packages: { fakeDestRoot: { actions: { myAction: { annotations: { 'require-adobe-auth': true }, function: expect.stringContaining(n('myAction/index.js')), runtime: 'nodejs:14', web: 'yes' } }, license: 'Apache-2.0' } } })
+
+      // 3. make sure wskdebug dev dependency was added to package.json
+      expect(utils.addDependencies).toHaveBeenCalledWith(actionGenerator, { '@openwhisk/wskdebug': expect.any(String) }, true)
     })
-    test('with no options and manifest already exists', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(true), // called on manifest
-        write: jest.fn(),
-        read: jest.fn().mockReturnValue(yaml.safeDump({
+
+    test('with extra dependencies and manifest already exists', () => {
+      // mock files
+      utils.readPackageJson.mockReturnValue({})
+      utils.readYAMLConfig.mockReturnValue({
+        runtimeManifest: {
           packages: {
-            [constants.manifestPackagePlaceholder]: {
-              actions: {},
-              fake: 'value'
+            somepackage: {
+              actions: {
+                actionxyz: { function: 'fake.js' }
+
+              }
             }
           }
-        })),
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({}) // package.json read
-      }
-      actionGenerator.addAction('myAction', './templateFile.js')
-      // test manifest update with action information
-      // TODO test manifest content
-    })
-
-    test('with extra dependencies and devDependencies options', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
-        write: jest.fn(),
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({}) // package.json read
-      }
-      actionGenerator.addAction('myAction', './templateFile.js', { dependencies: { abc: '1.2.3', def: '4.5.6' }, devDependencies: { xyz: '3.2.1', vuw: '6.5.4' } })
-
-      // dependencies are added to package.json + still adds wskdebug dependency
-      expect(actionGenerator.fs.writeJSON).toHaveBeenCalledWith(n('/fakeDestRoot/package.json'), {
-        dependencies: { abc: '1.2.3', def: '4.5.6' },
-        devDependencies: {
-          xyz: '3.2.1',
-          vuw: '6.5.4',
-          '@openwhisk/wskdebug': expect.any(String)
         }
       })
-    })
 
-    test('with tplContext option', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
-        write: jest.fn(),
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({}) // package.json read
-      }
-      actionGenerator.addAction('myAction', './templateFile.js', { tplContext: { fake: 'context', with: { fake: 'values' } } })
+      actionGenerator.addAction('myAction', './templateFile.js', { dependencies: { abc: '1.2.3', def: '4.5.6' }, devDependencies: { xyz: '3.2.1', vuw: '6.5.4' } })
 
       // 1. test copy action template to right destination
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/templateFile.js'), n(`${constants.actionsDirname}/myAction/index.js`), {}, {}, {})
+      // 2. test manifest creation with action information, and preserving previous content
+      expect(utils.writeKeyYAMLConfig).toHaveBeenCalledWith(
+        actionGenerator,
+        '/fakeDestRoot/ext.config.yaml',
+        'runtimeManifest',
+        // function path should be checked to be relative to config file
+        { packages: { somepackage: { actions: { actionxyz: { function: 'fake.js' }, myAction: { annotations: { 'require-adobe-auth': true }, function: expect.stringContaining(n('myAction/index.js')), runtime: 'nodejs:14', web: 'yes' } } } } })
+      // 3. make sure wskdebug dev dependency was added to package.json
+      // prod
+      expect(utils.addDependencies).toHaveBeenCalledWith(actionGenerator, {
+        abc: '1.2.3', def: '4.5.6'
+      })
+      // dev
+      expect(utils.addDependencies).toHaveBeenCalledWith(actionGenerator, {
+        xyz: '3.2.1',
+        vuw: '6.5.4',
+        '@openwhisk/wskdebug': expect.any(String)
+      }, true)
+    })
+
+    test('with tplContext and no manifest', () => {
+      // mock files
+      utils.readPackageJson.mockReturnValue({})
+      utils.readYAMLConfig.mockReturnValue({})
+
+      actionGenerator.addAction('myAction', './templateFile.js', { tplContext: { fake: 'context', with: { fake: 'values' } } })
+
+      // 1. test copy action template to right destination with template options
       expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/templateFile.js'), n(`${constants.actionsDirname}/myAction/index.js`), { fake: 'context', with: { fake: 'values' } }, {}, {})
     })
 
-    test('with tplContext option and actionDestPath already set', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
-        write: jest.fn(),
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({}) // package.json read
-      }
+    test('with tplContext option and actionDestPath already set and no maniifest', () => {
+      // mock files
+      utils.readPackageJson.mockReturnValue({})
+      utils.readYAMLConfig.mockReturnValue({})
+
       actionGenerator.addAction('myAction', './templateFile.js', { tplContext: { actionDestPath: `${path.sep}fakeDestRoot${path.sep}${constants.actionsDirname}${path.sep}myAction${path.sep}index.js`, fake: 'context', with: { fake: 'values' } } })
 
       // 1. test copy action template to predefined destination
       expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/templateFile.js'), n(`${constants.actionsDirname}${path.sep}myAction${path.sep}index.js`), { actionDestPath: `${path.sep}fakeDestRoot${path.sep}${constants.actionsDirname}${path.sep}myAction${path.sep}index.js`, fake: 'context', with: { fake: 'values' } }, {}, {})
     })
 
-    test('with actionManifestConfig option that also overwrite runtime action config', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
-        write: jest.fn(),
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({}) // package.json read
-      }
+    test('with extra actionManifestConfig and no manifest', () => {
+      // mock files
+      utils.readPackageJson.mockReturnValue({})
+      utils.readYAMLConfig.mockReturnValue({})
+
       actionGenerator.addAction('myAction', './templateFile.js', { actionManifestConfig: { runtime: 'fake:42', inputs: { fake: 'value' } } })
-
-      // test manifest update with action information
-      expect(actionGenerator.fs.write).toHaveBeenCalled()
-      // TODO test manifest content
+      // test manifest creation with action information
+      expect(utils.writeKeyYAMLConfig).toHaveBeenCalledWith(
+        actionGenerator,
+        '/fakeDestRoot/ext.config.yaml',
+        'runtimeManifest',
+        // function path should be checked to be relative to config file
+        { packages: { fakeDestRoot: { actions: { myAction: { runtime: 'fake:42', inputs: { fake: 'value' }, annotations: { 'require-adobe-auth': true }, function: expect.stringContaining(n('myAction/index.js')), web: 'yes' } }, license: 'Apache-2.0' } } })
     })
 
-    test('with dotenvStub option (dotenv exists)', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockImplementation(f => f === n(`/fakeDestRoot/${constants.dotenvFilename}`)),
-        write: jest.fn(),
-        append: jest.fn(),
-        read: jest.fn().mockReturnValue(`PREV=123${EOL}`), // previous dotenv content
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({}) // package.json read
-      }
+    test('with dotenvStub option', () => {
+      // mock files
+      utils.readPackageJson.mockReturnValue({})
+      utils.readYAMLConfig.mockReturnValue({})
+
       actionGenerator.addAction('myAction', './templateFile.js', { dotenvStub: { label: 'fake label', vars: ['FAKE', 'FAKE2'] } })
-
-      expect(actionGenerator.fs.append).toHaveBeenCalledWith(n(`/fakeDestRoot/${constants.dotenvFilename}`), `## fake label${EOL}#FAKE=${EOL}#FAKE2=${EOL}`)
-    })
-
-    test('with dotenvStub option but dotenv label is already set in dotenv (should ignore)', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockImplementation(f => f === n(`/fakeDestRoot/${constants.dotenvFilename}`)),
-        write: jest.fn(),
-        append: jest.fn(),
-        read: jest.fn().mockReturnValue('## fake label\nPREV=123\n'), // previous dotenv content
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({}) // package.json read
-      }
-      actionGenerator.addAction('myAction', './templateFile.js', { dotenvStub: { label: 'fake label', vars: ['FAKE', 'FAKE2'] } })
-
-      expect(actionGenerator.fs.write).toHaveBeenCalledTimes(1) // manifest.yml
-      expect(actionGenerator.fs.write).toBeCalledWith(n('/fakeDestRoot/ext.config.yaml'), expect.any(String))
-      expect(actionGenerator.fs.append).not.toHaveBeenCalled()
+      expect(utils.appendStubVarsToDotenv).toHaveBeenCalledWith(actionGenerator, 'fake label', ['FAKE', 'FAKE2'])
     })
 
     test('with testFile option', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
-        write: jest.fn(),
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({}) // package.json read
-      }
-      actionGenerator.addAction('myAction', './templateFile.js', { testFile: './template.test.js' })
-      expect(actionGenerator.fs.copyTpl).toHaveBeenCalled()
+      // mock files
+      utils.readPackageJson.mockReturnValue({})
+      utils.readYAMLConfig.mockReturnValue({})
 
-      // TODO fix expected test file checks, possible bug with repeated dest root added to path
-      // expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/test/${constants.actionsDirname}/myAction.test.js`), { actionRelPath: `../../${constants.actionsDirname}/myAction/index.js` }, {}, {})
+      actionGenerator.addAction('myAction', './templateFile.js', { testFile: './template.test.js' })
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledTimes(2)
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n('/fakeDestRoot/test/myAction.test.js'), { actionRelPath: expect.stringContaining('myAction/index.js') }, {}, {})
     })
 
-    test('with testFile option and tplContext option (should append relative path to tested file to test template context)', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
-        write: jest.fn(),
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({}) // package.json read
-      }
+    test('with testFile option and tplContext option', () => {
+      // mock files
+      utils.readPackageJson.mockReturnValue({})
+      utils.readYAMLConfig.mockReturnValue({})
+
       actionGenerator.addAction('myAction', './templateFile.js', { testFile: './template.test.js', tplContext: { fake: 'context', with: { fake: 'values' } } })
 
-      expect(actionGenerator.fs.copyTpl).toHaveBeenCalled()
-
-      // test manifest update with action information
-      // TODO fix expected test file checks, possible bug as copyTpl called with action file and not test file
-      // expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/test/${constants.actionsDirname}/myAction.test.js`), { actionRelPath: (`../../${constants.actionsDirname}/myAction/index.js`), fake: 'context', with: { fake: 'values' } }, {}, {})
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledTimes(2)
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n('/fakeDestRoot/test/myAction.test.js'), { actionRelPath: expect.stringContaining('myAction/index.js'), fake: 'context', with: { fake: 'values' } }, {}, {})
     })
 
     test('with e2eTestFile option', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
-        write: jest.fn(),
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({}) // package.json read
-      }
-      actionGenerator.addAction('myAction', './templateFile.js', { e2eTestFile: './template.test.js' })
-      expect(actionGenerator.fs.copyTpl).toHaveBeenCalled()
-      // TODO fix expected test file checks, possible bug as copyTpl called with action file and not test file
-      // expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/template.test.js'), n(`/fakeDestRoot/e2e/${constants.actionsDirname}/myAction.e2e.test.js`), {}, {}, {})
+      // mock files
+      utils.readPackageJson.mockReturnValue({})
+      utils.readYAMLConfig.mockReturnValue({})
+
+      actionGenerator.addAction('myAction', './templateFile.js', { e2eTestFile: './templatee2e.test.js' })
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledTimes(2)
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/templatee2e.test.js'), n('/fakeDestRoot/e2e/myAction.e2e.test.js'), {}, {}, {})
     })
 
     test('with sharedLibFile option', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
-        write: jest.fn(),
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({}) // package.json read
-      }
+      // mock files
+      utils.readPackageJson.mockReturnValue({})
+      utils.readYAMLConfig.mockReturnValue({})
+
       actionGenerator.addAction('myAction', './templateFile.js', { sharedLibFile: './utils.js' })
 
       expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/utils.js'), n(`/fakeDestRoot/${constants.actionsDirname}/utils.js`), {})
     })
 
     test('with sharedLibTestFile option', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
-        write: jest.fn(),
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({}) // package.json read
-      }
+      // mock files
+      utils.readPackageJson.mockReturnValue({})
+      utils.readYAMLConfig.mockReturnValue({})
+
       actionGenerator.addAction('myAction', './templateFile.js', { sharedLibTestFile: './utils.test.js' })
 
       expect(actionGenerator.fs.copyTpl).not.toHaveBeenCalledWith(n('/fakeTplDir/utils.test.js'), n(`/fakeDestRoot/test/${constants.actionsDirname}/utils.test.js`), {})
     })
 
     test('with sharedLibFile and sharedLibTestFile option', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
-        write: jest.fn(),
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({}) // package.json read
-      }
+      // mock files
+      utils.readPackageJson.mockReturnValue({})
+      utils.readYAMLConfig.mockReturnValue({})
+
       actionGenerator.addAction('myAction', './templateFile.js', { sharedLibFile: './utils.js', sharedLibTestFile: './utils.test.js' })
       expect(actionGenerator.fs.copyTpl).toHaveBeenCalled()
 
-      // TODO fix expected test file checks, possible bug as copyTpl called with action file and not test file
-      // expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/utils.js'), n(`/fakeDestRoot/${constants.actionsDirname}/utils.js`), {})
-      // expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/utils.test.js'), n(`/fakeDestRoot/test/${constants.actionsDirname}/utils.test.js`), {})
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/utils.js'), n(`/fakeDestRoot/${constants.actionsDirname}/utils.js`), {})
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/utils.test.js'), n('/fakeDestRoot/test/utils.test.js'), { utilsRelPath: expect.stringContaining('../actions/utils.js') }, {}, {})
     })
     test('with existing package.json node engines', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
-        write: jest.fn(),
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({ engines: { node: '1 || 2' } }) // package.json read
-      }
+      // mock files
+      utils.readPackageJson.mockReturnValue({ engines: { node: '1 || 2' } })
+      utils.readYAMLConfig.mockReturnValue({})
+
       actionGenerator.addAction('myAction', './templateFile.js')
 
-      expect(actionGenerator.fs.writeJSON).not.toHaveBeenCalledWith(expect.any(String), expect.objectContaining({
-        engines: { node: '^10 || ^12 || ^14' }
-      }))
-      // as part of addDependency call
-      expect(actionGenerator.fs.writeJSON).toHaveBeenCalledWith(n('/fakeDestRoot/package.json'), expect.objectContaining({
-        engines: { node: '1 || 2' }
-      }))
-    })
-    test('with existing package.json non-node engines', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
-        write: jest.fn(),
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({ engines: { notnode: '1 || 2' } }) // package.json read
-      }
-      actionGenerator.addAction('myAction', './templateFile.js')
-
-      expect(actionGenerator.fs.writeJSON).toHaveBeenCalledWith(n('/fakeDestRoot/package.json'), expect.objectContaining({
-        engines: { notnode: '1 || 2', node: '^10 || ^12 || ^14' }
-      }))
-    })
-    test('with non existing package.json engines', () => {
-      // mock fs
-      actionGenerator.fs = {
-        copyTpl: jest.fn(),
-        exists: jest.fn().mockReturnValue(false), // called on manifest
-        write: jest.fn(),
-        writeJSON: jest.fn(),
-        readJSON: jest.fn().mockReturnValue({}) // package.json read
-      }
-      actionGenerator.addAction('myAction', './templateFile.js')
-
-      expect(actionGenerator.fs.writeJSON).toHaveBeenCalledWith(n('/fakeDestRoot/package.json'), expect.objectContaining({
+      expect(utils.writePackageJson).not.toHaveBeenCalledWith(actionGenerator, expect.objectContaining({
         engines: { node: '^10 || ^12 || ^14' }
       }))
     })

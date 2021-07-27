@@ -250,8 +250,26 @@ describe('addDependencies', () => {
     expect(mockWrite).toHaveBeenCalledWith('some-path', { devDependencies: { a: 'b', c: 'd', e: 'f' }, dependencies: { g: 'h' } })
   })
 
+  test('appendStubVarsToDotenv existing label', () => {
+    const mockRead = jest.fn(() => '# label')
+    const mockExists = jest.fn(() => {
+      return true
+    })
+    const generator = {
+      destinationPath: jest.fn(() => 'some-path'),
+      fs: {
+        read: mockRead,
+        append: jest.fn(),
+        exists: mockExists
+      }
+    }
+
+    utils.appendStubVarsToDotenv(generator, 'label', ['a', 'b', 'c'])
+    expect(generator.fs.append).not.toHaveBeenCalled()
+  })
+
   test('appendStubVarsToDotenv', () => {
-    const mockRead = jest.fn(() => 'some fake content')
+    const mockRead = jest.fn(() => '')
     const mockExists = jest.fn(() => {
       return false
     })
@@ -265,7 +283,11 @@ describe('addDependencies', () => {
     }
 
     utils.appendStubVarsToDotenv(generator, 'fake', ['a', 'b', 'c'])
-    expect(generator.fs.append).toHaveBeenCalled()
+    expect(generator.fs.append).toHaveBeenCalledWith('some-path', `## fake
+#a=
+#b=
+#c=
+`)
   })
 
   test('writeMultiLayerKeyInObject', () => {

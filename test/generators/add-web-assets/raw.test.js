@@ -70,4 +70,3 @@ describe('run', () => {
   })
 })
 
-// todo check with existing files in project
