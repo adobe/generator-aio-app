@@ -78,16 +78,7 @@ function assertManifestContent (actionName, pkgName) {
 }
 
 function assertEnvContent (prevContent) {
-  // TODO fix missing env content
-  // assert.fileContent('.env', '## please provide the following environment variables for the Asset Compute devtool. You can use AWS or Azure, not both:')
-  // assert.fileContent('.env', '#ASSET_COMPUTE_PRIVATE_KEY_FILE_PATH=')
-  // assert.fileContent('.env', '#S3_BUCKET=')
-  // assert.fileContent('.env', '#AWS_ACCESS_KEY_ID=')
-  // assert.fileContent('.env', '#AWS_SECRET_ACCESS_KEY=')
-  // assert.fileContent('.env', '#AWS_REGION=')
-  // assert.fileContent('.env', '#AZURE_STORAGE_ACCOUNT=')
-  // assert.fileContent('.env', '#AZURE_STORAGE_KEY=')
-  // assert.fileContent('.env', '#AZURE_STORAGE_CONTAINER_NAME=')
+  // the generator does not write anything to .env
   assert.fileContent('.env', prevContent)
 }
 
