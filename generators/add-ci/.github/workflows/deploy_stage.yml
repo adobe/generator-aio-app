@@ -30,15 +30,26 @@ jobs:
       - name: Build
         env:
           AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE_STAGE }}
-        uses: adobe/aio-apps-action@1.1.0
+        uses: adobe/aio-apps-action@2.0.0
         with:
           os: ${{ matrix.os }}
           command: build
+      - name: Auth
+        uses: adobe/aio-apps-action@2.0.0
+        with:
+          os: ${{ matrix.os }}
+          command: auth
+          CLIENTID: ${{ secrets.CLIENTID_STAGE }}
+          CLIENTSECRET: ${{ secrets.CLIENTSECRET_STAGE }}
+          TECHNICALACCOUNTID: ${{ secrets.TECHNICALACCID_STAGE }}
+          IMSORGID: ${{ secrets.IMSORGID_STAGE }}
+          SCOPES: ${{ secrets.SCOPES_STAGE }}
+          KEY: ${{ secrets.KEY_STAGE }}
       - name: Deploy
         env:
           AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE_STAGE }}
           AIO_RUNTIME_AUTH: ${{ secrets.AIO_RUNTIME_AUTH_STAGE }}
-        uses: adobe/aio-apps-action@1.1.0
+        uses: adobe/aio-apps-action@2.0.0
         with:
           os: ${{ matrix.os }}
           command: deploy
