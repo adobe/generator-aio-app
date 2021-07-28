@@ -69,4 +69,3 @@ describe('run', () => {
     assert.fileContent('web-src/index.html', '<script src="./src/index.js"></script>')
   })
 })
-
