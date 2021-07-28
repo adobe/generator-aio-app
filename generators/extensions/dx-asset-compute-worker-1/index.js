@@ -86,7 +86,7 @@ class DxAssetComputeWorker1 extends Generator {
       this.extConfigPath,
       // key
       'operations', {
-        apply: [
+        workerProcess: [
           { type: 'action', impl: 'dx-asset-compute-worker-1/worker' }
         ]
       }
