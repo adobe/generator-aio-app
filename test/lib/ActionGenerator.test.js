@@ -284,7 +284,7 @@ describe('implementation', () => {
 
       actionGenerator.addAction('myAction', './templateFile.js', { e2eTestFile: './templatee2e.test.js' })
       expect(actionGenerator.fs.copyTpl).toHaveBeenCalledTimes(2)
-      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/templatee2e.test.js'), n('/fakeDestRoot/e2e/myAction.e2e.test.js'), {}, {}, {})
+      expect(actionGenerator.fs.copyTpl).toHaveBeenCalledWith(n('/fakeTplDir/templatee2e.test.js'), n('/fakeDestRoot/e2e/myAction.e2e.test.js'), { runtimePackageName: 'fakeDestRoot' }, {}, {})
     })
 
     test('with sharedLibFile option', () => {
