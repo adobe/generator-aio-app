@@ -12,6 +12,7 @@ const helpers = require('yeoman-test')
 const path = require('path')
 const fs = require('fs-extra')
 const utils = require('../../../lib/utils')
+const cloneDeep = require('lodash.clonedeep')
 
 const theGeneratorPath = require.resolve('../../../generators/add-web-assets')
 const Generator = require('yeoman-generator')
@@ -19,20 +20,16 @@ const Generator = require('yeoman-generator')
 // spies
 const prompt = jest.spyOn(Generator.prototype, 'prompt')
 const composeWith = jest.spyOn(Generator.prototype, 'composeWith')
-const installDependencies = jest.spyOn(Generator.prototype, 'installDependencies')
 beforeAll(() => {
   // mock implementations
   composeWith.mockReturnValue(undefined)
-  installDependencies.mockReturnValue(undefined)
 })
 beforeEach(() => {
   prompt.mockClear()
   composeWith.mockClear()
-  installDependencies.mockClear()
 })
 afterAll(() => {
   composeWith.mockRestore()
-  installDependencies.mockRestore()
 })
 
 const expectedDefaultGenerator = expect.stringContaining(n('exc-react/index.js'))
@@ -54,16 +51,24 @@ describe('prototype', () => {
 
 describe('run', () => {
   test('web assets already in project --skip-prompt', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = true
+    options['project-name'] = 'fake'
+    options['adobe-services'] = 'some,string'
+    options['web-src-folder'] = 'web-src'
     await expect(helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'project-name': 'fake', 'adobe-services': 'some,string' })
+      .withOptions(options)
       .inTmpDir(dir => {
         fs.mkdirSync(path.join(dir, 'web-src'))
       })).rejects.toThrow('you already have web assets in your project, please delete first')
   })
 
   test('--skip-prompt', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = true
+    options['web-src-folder'] = 'web-src'
     const dir = await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'skip-install': false })
+      .withOptions(options)
 
     const expectProjectName = path.basename(dir)
 
@@ -72,15 +77,17 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
-      'project-name': expectProjectName,
-      'has-backend': true
+      'project-name': expectProjectName
     }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 
   test('--skip-prompt --has-backend false', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = true
+    options['web-src-folder'] = 'web-src'
+    options['has-backend'] = false
     const dir = await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'skip-install': false, 'has-backend': false })
+      .withOptions(options)
 
     const expectProjectName = path.basename(dir)
 
@@ -92,54 +99,47 @@ describe('run', () => {
       'project-name': expectProjectName,
       'has-backend': false
     }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 
   test('--skip-prompt --project-name fake', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = true
+    options['web-src-folder'] = 'web-src'
+    options['project-name'] = 'fake'
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'skip-install': false, 'project-name': 'fake' })
+      .withOptions(options)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
     expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
-      'project-name': 'fake',
-      'has-backend': true
+      'project-name': 'fake'
     }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
-  })
-
-  test('--skip-prompt --skip-install --project-name fake', async () => {
-    await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'skip-install': true, 'project-name': 'fake' })
-
-    expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
-      'skip-prompt': true,
-      'adobe-services': '',
-      'project-name': 'fake',
-      'has-backend': true
-    }))
-    expect(installDependencies).toHaveBeenCalledTimes(0)
   })
 
   test('--skip-prompt --project-name fake --adobe-services=some,string', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = true
+    options['web-src-folder'] = 'web-src'
+    options['project-name'] = 'fake'
+    options['adobe-services'] = 'some,string'
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true, 'skip-install': false, 'project-name': 'fake', 'adobe-services': 'some,string' })
+      .withOptions(options)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
     expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': 'some,string',
-      'project-name': 'fake',
-      'has-backend': true
+      'project-name': 'fake'
     }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 
   test('--project-name fake and selected prompt is fake generator "a"', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['web-src-folder'] = 'web-src'
+    options['project-name'] = 'fake'
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-install': false, 'project-name': 'fake' })
+      .withOptions(options)
       .withPrompts({ webAssetsGenerator: 'a' })
 
     // check choices
@@ -151,8 +151,5 @@ describe('run', () => {
       'adobe-services': '',
       'project-name': 'fake'
     }))
-    expect(installDependencies).toHaveBeenCalledTimes(1)
   })
 })
-
-// todo check with existing files in project

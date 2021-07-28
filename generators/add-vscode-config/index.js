@@ -62,37 +62,44 @@ class AddVsCodeConfig extends Generator {
   }
 
   _verifyConfig () {
-    const appConfig = this.options[Option.APP_CONFIG]
-    const _throwOnMissingKeys = function (requiredKeys, obj) {
+    function getMissingKeys (config, keys) {
       const missingKeys = []
-      requiredKeys.forEach(key => {
-        if (objGetValue(obj, key) === undefined) {
+      keys.forEach(key => {
+        if (objGetValue(appConfig, key) === undefined) {
           missingKeys.push(key)
         }
       })
-
-      if (missingKeys.length > 0) {
-        throw new Error(`App config missing keys: ${missingKeys.join(', ')}`)
-      }
+      return missingKeys
     }
-    const verifyKeys = [
+
+    const appConfig = this.options[Option.APP_CONFIG]
+    const verifyKeysCommon = [
       'app.hasFrontend',
       'app.hasBackend',
-      'ow.package',
-      'ow.apihost',
-      'web.src',
-      'web.distDev',
       'root'
     ]
 
-    _throwOnMissingKeys(verifyKeys, appConfig)
+    const verifyKeysFrontend = [
+      'web.src',
+      'web.distDev'
+    ]
 
+    const verifyKeysBackend = [
+      'ow.package',
+      'ow.apihost',
+      'manifest.packagePlaceholder',
+      'manifest.full.packages'
+    ]
+
+    const missingKeys = getMissingKeys(appConfig, verifyKeysCommon)
+    if (appConfig.app.hasFrontend) {
+      missingKeys.push(...getMissingKeys(appConfig, verifyKeysFrontend))
+    }
     if (appConfig.app.hasBackend) {
-      const requiredBackendKeys = [
-        'manifest.packagePlaceholder',
-        'manifest.full.packages'
-      ]
-      _throwOnMissingKeys(requiredBackendKeys, appConfig)
+      missingKeys.push(...getMissingKeys(appConfig, verifyKeysBackend))
+    }
+    if (missingKeys.length > 0) {
+      throw new Error(`App config missing keys: ${missingKeys.join(', ')}`)
     }
 
     const envFile = this.options[Option.ENV_FILE]

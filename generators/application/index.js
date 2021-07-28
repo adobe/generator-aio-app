@@ -1,5 +1,5 @@
 /*
-Copyright 2019 Adobe. All rights reserved.
+Copyright 2021 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -12,8 +12,9 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const { isLoopingPrompts, dotenvFilename } = require('../../lib/constants')
-const { atLeastOne } = require('../../lib/utils')
+const { isLoopingPrompts, runtimeManifestKey } = require('../../lib/constants')
+const utils = require('../../lib/utils')
+
 /*
       'initializing',
       'prompting',
@@ -24,29 +25,34 @@ const { atLeastOne } = require('../../lib/utils')
       'install',
       'end'
       */
-
-class CodeGenerator extends Generator {
+// this generator creates files for an application `aio app init --no-extension`
+class Application extends Generator {
   constructor (args, opts) {
     super(args, opts)
-
-    // options are inputs from CLI or yeoman parent generator
-    this.option('skip-prompt', { default: false })
-    this.option('project-name', { type: String, default: path.basename(process.cwd()) })
-    this.option('skip-install', { type: String, default: false })
-    /// Adobe services added to the Console Workspace
-    this.option('adobe-services', { type: String, default: '' })
-    /// Adobe services that are supported by the Org
     this.option('supported-adobe-services', { type: String, default: '' })
+    this.option('adobe-services', { type: String, default: '' })
 
-    // props are passed to templates
-    this.props = {}
-    this.props.projectName = this.options && this.options['project-name']
-    this.props.aioAppTemplateVersion = `${this.rootGeneratorName()}@${this.rootGeneratorVersion()}`
+    this.option('skip-prompt', { default: false })
+
+    this.options['project-name'] = utils.guessProjectName(this)
   }
 
-  async prompting () {
-    this.log(`Generating code in: ${this.destinationPath()}`)
+  async initializing () {
+    // all paths are relative to root
+    this.appFolder = '' // = root
+    this.actionFolder = path.join(this.appFolder, 'actions')
+    this.webSrcFolder = path.join(this.appFolder, 'web-src')
+    this.configPath = path.join(this.appFolder, 'app.config.yaml')
+    this.keyToManifest = 'application.' + runtimeManifestKey
+  }
 
+  async writing () {
+    // add basic config to point to path, relative to config file
+    utils.writeKeyAppConfig(this, 'application.actions', path.relative(this.appFolder, this.actionFolder))
+    utils.writeKeyAppConfig(this, 'application.web', path.relative(this.appFolder, this.webSrcFolder))
+  }
+
+  async composeWithAddGenerators () {
     let components = ['actions', 'events', 'webAssets'] // defaults when skip prompt
     if (!this.options['skip-prompt']) {
       const res = await this.prompt([
@@ -77,7 +83,7 @@ class CodeGenerator extends Generator {
               checked: true
             }
           ],
-          validate: atLeastOne
+          validate: utils.atLeastOne
         }
       ])
       components = res.components
@@ -87,29 +93,34 @@ class CodeGenerator extends Generator {
     const addWebAssets = components.includes('webAssets')
     const addCI = components.includes('ci')
 
+    // TODO cleanup unecessary params in all generators
     // run add action and add ui generators when applicable
     if (addActions) {
       this.composeWith(path.join(__dirname, '../add-action/index.js'), {
-        'skip-install': true,
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
-        'supported-adobe-services': this.options['supported-adobe-services']
+        'supported-adobe-services': this.options['supported-adobe-services'],
+        'action-folder': this.actionFolder,
+        'config-path': this.configPath,
+        'full-key-to-manifest': this.keyToManifest
       })
     }
     if (addEvents) {
       this.composeWith(path.join(__dirname, '../add-events/index.js'), {
-        'skip-install': true,
         'skip-prompt': this.options['skip-prompt'],
-        'adobe-services': this.options['adobe-services']
+        'adobe-services': this.options['adobe-services'],
+        'action-folder': this.actionFolder,
+        'config-path': this.configPath,
+        'full-key-to-manifest': this.keyToManifest
       })
     }
     if (addWebAssets) {
       this.composeWith(path.join(__dirname, '../add-web-assets/index.js'), {
-        'skip-install': true,
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
         'project-name': this.options['project-name'],
-        'has-backend': addActions || addEvents
+        'web-src-folder': this.webSrcFolder,
+        'config-path': this.configPath
       })
     }
     if (addCI) {
@@ -118,36 +129,6 @@ class CodeGenerator extends Generator {
       })
     }
   }
-
-  writing () {
-    this.sourceRoot(path.join(__dirname, './templates/'))
-    // copy everything that does not start with an _
-    this.fs.copyTpl(
-        `${this.templatePath()}/**/!(_)*/`,
-        this.destinationPath(),
-        this.props
-    )
-    // the above excluded our strangely named .env file, lets fix it
-    // todo create dotenv programmatically from required vars
-    this.fs.copyTpl(
-      this.templatePath('_dot.env'),
-      this.destinationPath(dotenvFilename),
-      this.props
-    )
-    // npm pack will not include .gitignore template files so we need to rename it
-    // see https://github.com/npm/npm/issues/3763
-    this.fs.copyTpl(
-      this.templatePath('_dot.gitignore'),
-      this.destinationPath('.gitignore'),
-      this.props
-    )
-    // let actions and ui generator create subfolders + manifest
-  }
-
-  async install () {
-    // this condition makes sure it doesn't print any unwanted 'skip install message'
-    if (!this.options['skip-install']) return this.installDependencies({ bower: false, skipMessage: true })
-  }
 }
 
-module.exports = CodeGenerator
+module.exports = Application

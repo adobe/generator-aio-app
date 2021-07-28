@@ -13,41 +13,34 @@ const path = require('path')
 const Generator = require('yeoman-generator')
 
 const utils = require('../../../lib/utils')
-const { webAssetsDirname } = require('../../../lib/constants')
-const { sdkCodes } = require('../../../lib/constants')
 
 class ExcReactGenerator extends Generator {
   constructor (args, opts) {
     super(args, opts)
-    // todo check that those are set
-    this.option('adobe-services', { type: String, default: '' })
-    this.option('project-name', { type: String })
+    // required
+    this.option('web-src-folder', { type: String })
     // this.option('skip-prompt', { default: false }) // useless for now
-    this.option('skip-install', { type: Boolean, default: false })
-    this.option('has-backend', { type: Boolean, default: true })
+    this.option('config-path', { type: String })
 
     // props are used by templates
     this.props = {}
-    this.props.adobeServices = this.options['adobe-services']
-      .split(',')
-      .map((x) => x.trim())
-    this.props.projectName = this.options['project-name']
-    this.props.sdkCodes = sdkCodes
-    this.props.hasBackend = this.options['has-backend']
+    this.props.projectName = utils.readPackageJson(this).name
   }
 
   // nothing for now
   // async prompting () {}
 
   writing () {
+    const destFolder = this.options['web-src-folder']
     this.sourceRoot(path.join(__dirname, './templates/'))
 
     this.fs.copyTpl(
       this.templatePath('./**/*'),
-      this.destinationPath(webAssetsDirname),
+      this.destinationPath(destFolder),
       this.props
     )
     // add .babelrc
+    /// NOTE this is a global file and might conflict
     this.fs.writeJSON(this.destinationPath('.babelrc'), {
       presets: [['@babel/preset-env', { targets: { node: 'current' } }]],
       plugins: ['@babel/plugin-transform-react-jsx']
@@ -74,13 +67,6 @@ class ExcReactGenerator extends Generator {
       },
       true
     )
-  }
-
-  async install () {
-    // this condition makes sure it doesn't print any unwanted 'skip install message'
-    if (!this.options['skip-install']) {
-      return this.installDependencies({ bower: false, skipMessage: true })
-    }
   }
 }
 

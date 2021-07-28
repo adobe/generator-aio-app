@@ -14,7 +14,7 @@ governing permissions and limitations under the License.
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 
-import React from 'react'
+window.React = require('react')
 import ReactDOM from 'react-dom'
 
 import Runtime, { init } from '@adobe/exc-app'

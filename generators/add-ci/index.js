@@ -10,10 +10,10 @@ governing permissions and limitations under the License.
 */
 
 const path = require('path')
-const ActionGenerator = require('../../lib/ActionGenerator')
+const Generator = require('yeoman-generator')
 const { ciDirName } = require('../../lib/constants')
 
-class CIGenerator extends ActionGenerator {
+class CIGenerator extends Generator {
   constructor (args, opts) {
     super(args, opts)
     this.props = {}

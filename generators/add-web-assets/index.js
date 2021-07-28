@@ -15,8 +15,6 @@ const fs = require('fs-extra')
 
 const utils = require('../../lib/utils')
 
-const { webAssetsDirname } = require('../../lib/constants')
-
 const rawWebAssetsGenerator = path.join(__dirname, 'raw/index.js')
 const excReactWebAssetsGenerator = path.join(__dirname, 'exc-react/index.js')
 
@@ -35,20 +33,21 @@ class AddWebAssets extends Generator {
   constructor (args, opts) {
     super(args, opts)
 
-    // options are inputs from CLI or yeoman parent generator
+    // required
+    // todo throw error on missing
+    this.option('web-src-folder', { type: String })
+
     this.option('skip-prompt', { default: false })
     this.option('adobe-services', { type: String, default: '' })
 
     this.option('project-name', { type: String, default: utils.guessProjectName(this) }) // project name is used in html template
-    this.option('skip-install', { type: String, default: false })
-    this.option('has-backend', { type: Boolean, default: true })
 
-    this.webAssetsPath = this.destinationPath(webAssetsDirname)
+    this.webSrcFolder = this.destinationPath(this.options['web-src-folder'])
     // throw meaningful error if add actions/webassets in a non existing project
   }
 
   initializing () {
-    if (fs.existsSync(this.webAssetsPath)) {
+    if (fs.existsSync(this.webSrcFolder)) {
       throw new Error('you already have web assets in your project, please delete first')
     }
   }
@@ -77,13 +76,6 @@ class AddWebAssets extends Generator {
     } else {
       // default template
       this.composeWith(excReactWebAssetsGenerator, this.options)
-    }
-  }
-
-  async install () {
-    // this condition makes sure it doesn't print any unwanted 'skip install message' into parent generator
-    if (!this.options['skip-install']) {
-      return this.installDependencies({ bower: false })
     }
   }
 }

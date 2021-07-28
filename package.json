@@ -2,7 +2,7 @@
   "name": "@adobe/generator-aio-app",
   "version": "2.1.0",
   "description": "Adobe I/O application yeoman code generator",
-  "main": "generators/app/index.js",
+  "main": "generators/index.js",
   "scripts": {
     "test": "npm run lint && npm run unit-tests",
     "lint": "eslint .",
@@ -30,6 +30,7 @@
   "devDependencies": {
     "@types/jest": "^25.1.0",
     "codecov": "^3.6.5",
+    "eol": "^0.9.1",
     "eslint": "^7.1.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.19.1",

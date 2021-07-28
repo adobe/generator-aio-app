@@ -137,7 +137,7 @@ test('option app-config incomplete', async () => {
   const result = helpers.run(theGeneratorPath).withOptions(options)
 
   await expect(result).rejects.toEqual(new Error(
-    'App config missing keys: app.hasFrontend, app.hasBackend, ow.package, ow.apihost, web.src, web.distDev, root'))
+    'App config missing keys: app.hasFrontend, app.hasBackend, root'))
 })
 
 test('option backend keys missing', async () => {
