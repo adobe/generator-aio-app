@@ -16,11 +16,10 @@ const fs = require('fs')
 const yaml = require('js-yaml')
 const path = require('path')
 const { EOL } = require('os')
+const cloneDeep = require('lodash.clonedeep')
 
 const theGeneratorPath = require.resolve('../../../generators/add-action/asset-compute')
 const Generator = require('yeoman-generator')
-
-const constants = require('../../../lib/constants')
 
 const installDependencies = jest.spyOn(Generator.prototype, 'installDependencies')
 beforeAll(() => {
@@ -42,24 +41,31 @@ describe('prototype', () => {
 
 function assertGeneratedFiles (actionName) {
   const actionPath = `actions/${actionName}`
-  const testPath = `test/asset-compute/${actionName}`
+  const testPath = 'test'
 
   assert.file(`${actionPath}/index.js`)
+
   assert.file(`${testPath}/corrupt-input/file.jpg`)
   assert.file(`${testPath}/corrupt-input/params.json`)
   assert.file(`${testPath}/simple-test/file.jpg`)
   assert.file(`${testPath}/simple-test/params.json`)
   assert.file(`${testPath}/simple-test/rendition.jpg`)
 
-  assert.file('manifest.yml')
+  assert.file('ext.config.yaml')
   assert.file('.env')
   assert.file('package.json')
 }
 
-function assertManifestContent (actionName) {
-  const json = yaml.safeLoad(fs.readFileSync('manifest.yml').toString())
-  expect(json.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
-    function: `actions${path.sep}${actionName}${path.sep}index.js`,
+// pkgName is optional
+function assertManifestContent (actionName, pkgName) {
+  const json = yaml.safeLoad(fs.readFileSync('ext.config.yaml').toString())
+  expect(json.runtimeManifest.packages).toBeDefined()
+
+  // default packageName is path.basename(path.dirname('ext.config.yaml'))
+  pkgName = pkgName || path.basename(process.cwd())
+
+  expect(json.runtimeManifest.packages[pkgName].actions[actionName]).toEqual({
+    function: `actions/${actionName}/index.js`,
     web: 'yes',
     runtime: 'nodejs:14',
     limits: {
@@ -72,15 +78,7 @@ function assertManifestContent (actionName) {
 }
 
 function assertEnvContent (prevContent) {
-  assert.fileContent('.env', '## please provide the following environment variables for the Asset Compute devtool. You can use AWS or Azure, not both:')
-  assert.fileContent('.env', '#ASSET_COMPUTE_PRIVATE_KEY_FILE_PATH=')
-  assert.fileContent('.env', '#S3_BUCKET=')
-  assert.fileContent('.env', '#AWS_ACCESS_KEY_ID=')
-  assert.fileContent('.env', '#AWS_SECRET_ACCESS_KEY=')
-  assert.fileContent('.env', '#AWS_REGION=')
-  assert.fileContent('.env', '#AZURE_STORAGE_ACCOUNT=')
-  assert.fileContent('.env', '#AZURE_STORAGE_KEY=')
-  assert.fileContent('.env', '#AZURE_STORAGE_CONTAINER_NAME=')
+  // the generator does not write anything to .env
   assert.fileContent('.env', prevContent)
 }
 
@@ -98,19 +96,15 @@ function assertActionCodeContent (actionName) {
   )
 }
 
-function assertScripts () {
-  const jsonContent = JSON.parse(fs.readFileSync('package.json').toString())
-  assert.ok(jsonContent.scripts.test.includes('adobe-asset-compute test-worker'))
-  assert.strictEqual(jsonContent.scripts['post-app-run'], 'adobe-asset-compute devtool')
-}
-
 describe('run', () => {
   test('asset-compute: --skip-prompt', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = true
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     const actionName = 'worker' // default value
 
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true })
+      .withOptions(options)
       .inTmpDir(dir => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
       })
@@ -124,38 +118,45 @@ describe('run', () => {
   })
 
   test('asset-compute: --skip-prompt, and action with default name already exists', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = true
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
-    const actionName = 'worker'
 
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true })
+      .withOptions(options)
       .inTmpDir(dir => {
-        fs.writeFileSync('manifest.yml', yaml.dump({
-          packages: {
-            __APP_PACKAGE__: {
-              actions: {
-                example: { function: 'fake.js' }
+        fs.writeFileSync('ext.config.yaml', yaml.dump({
+          runtimeManifest: {
+            packages: {
+              somepackagename: {
+                actions: {
+                  worker: { function: 'fake.js' }
+                }
               }
             }
           }
+
         }))
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
       })
 
+    const actionName = 'worker-1'
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)
-    assertManifestContent(actionName)
+    assertManifestContent(actionName, 'somepackagename')
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, { '@adobe/asset-compute-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String), '@adobe/aio-cli-plugin-asset-compute': expect.any(String) })
     assertNodeEngines(fs, '^10 || ^12 || ^14')
   })
 
   test('asset-compute: --skip-prompt, and action already has package.json with scripts', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = true
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     const actionName = 'worker'
 
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true })
+      .withOptions(options)
       .inTmpDir(dir => {
         fs.writeFileSync('package.json', JSON.stringify({
           scripts: {}
@@ -172,11 +173,13 @@ describe('run', () => {
   })
 
   test('asset-compute: user input actionName=new-action', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = false
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     const actionName = 'new-asset-compute-action'
 
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': false })
+      .withOptions(options)
       .withPrompts({ actionName: 'new-asset-compute-action' })
       .inTmpDir(dir => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
@@ -191,10 +194,12 @@ describe('run', () => {
   })
 
   test('asset-compute: adding an action 2 times', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = false
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
 
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': false })
+      .withOptions(options)
       .withPrompts({ actionName: 'new-asset-compute-action' })
       .inTmpDir(dir => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
@@ -202,13 +207,13 @@ describe('run', () => {
 
     const actionName2 = 'new-asset-compute-action-second-of-its-name'
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': false })
-      .withPrompts({ actionName: 'new-asset-compute-action-second-of-its-name' })
-
-    assertScripts(actionName2)
+      .withOptions(options)
+      .withPrompts({ actionName: actionName2 })
   })
 
   test('asset-compute: verifying scripts are not overridden', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = false
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     const dummyPackageJson = JSON.stringify({
       name: 'dummy-app',
@@ -226,7 +231,7 @@ describe('run', () => {
     })
 
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': false })
+      .withOptions(options)
       .withPrompts({ actionName: 'new-asset-compute-action' })
       .inTmpDir(dir => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
@@ -235,9 +240,7 @@ describe('run', () => {
 
     const actionName2 = 'new-asset-compute-action-second-of-its-name'
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': false })
-      .withPrompts({ actionName: 'new-asset-compute-action-second-of-its-name' })
-
-    assertScripts(actionName2)
+      .withOptions(options)
+      .withPrompts({ actionName: actionName2 })
   })
 })

@@ -1,4 +1,5 @@
 const utils = require('../../lib/utils')
+const eol = require('eol')
 
 describe('atLeastOne', () => {
   test('returns true if input.length > 0', () => {
@@ -7,83 +8,6 @@ describe('atLeastOne', () => {
   test('returns "please choose at least one option" if input.length === 0', () => {
     expect(utils.atLeastOne([])).toBe('please choose at least one option')
   })
-})
-
-describe('appendOrWrite', () => {
-  test('writes if file does not exist', () => {
-    const mockWrite = jest.fn()
-    const mockAppend = jest.fn()
-    const mockRead = jest.fn()
-    const generator = {
-      fs: {
-        read: mockRead,
-        exists: () => false,
-        write: mockWrite,
-        append: mockAppend
-      }
-    }
-    utils.appendOrWrite(generator, 'file', 'content')
-    expect(mockWrite).toHaveBeenCalledTimes(1)
-    expect(mockWrite).toHaveBeenCalledWith('file', 'content')
-    expect(mockAppend).toHaveBeenCalledTimes(0)
-    expect(mockRead).toBeCalledTimes(0)
-  })
-
-  test('appends if file exists', () => {
-    const mockWrite = jest.fn()
-    const mockAppend = jest.fn()
-    const mockRead = jest.fn()
-    const generator = {
-      fs: {
-        read: mockRead,
-        exists: () => true,
-        write: mockWrite,
-        append: mockAppend
-      }
-    }
-    utils.appendOrWrite(generator, 'file', 'content')
-    expect(mockAppend).toHaveBeenCalledTimes(1)
-    expect(mockAppend).toHaveBeenCalledWith('file', 'content')
-    expect(mockWrite).toHaveBeenCalledTimes(0)
-    expect(mockRead).toBeCalledTimes(0)
-  })
-
-  test('does not append if file contains filter', () => {
-    const mockWrite = jest.fn()
-    const mockAppend = jest.fn()
-    const mockRead = jest.fn().mockReturnValue('exists')
-    const generator = {
-      fs: {
-        read: mockRead,
-        exists: () => true,
-        write: mockWrite,
-        append: mockAppend
-      }
-    }
-    utils.appendOrWrite(generator, 'file', 'content exists', 'exists')
-    expect(mockRead).toHaveBeenCalledWith('file')
-    expect(mockAppend).toHaveBeenCalledTimes(0)
-    expect(mockWrite).toHaveBeenCalledTimes(0)
-  })
-})
-
-test('appends if file does not contain filter', () => {
-  const mockWrite = jest.fn()
-  const mockAppend = jest.fn()
-  const mockRead = jest.fn().mockReturnValue('exists')
-  const generator = {
-    fs: {
-      read: mockRead,
-      exists: () => true,
-      write: mockWrite,
-      append: mockAppend
-    }
-  }
-  utils.appendOrWrite(generator, 'file', 'content notexists', 'notexists')
-  expect(mockRead).toHaveBeenCalledWith('file')
-  expect(mockAppend).toHaveBeenCalledTimes(1)
-  expect(mockAppend).toHaveBeenCalledWith('file', 'content notexists')
-  expect(mockWrite).toHaveBeenCalledTimes(0)
 })
 
 describe('guessProjectName', () => {
@@ -325,5 +249,61 @@ describe('addDependencies', () => {
     expect(generator.destinationPath).toHaveBeenCalledWith('package.json')
     expect(mockWrite).toHaveBeenCalledTimes(1)
     expect(mockWrite).toHaveBeenCalledWith('some-path', { devDependencies: { a: 'b', c: 'd', e: 'f' }, dependencies: { g: 'h' } })
+  })
+
+  test('appendStubVarsToDotenv existing label', () => {
+    const mockRead = jest.fn(() => '# label')
+    const mockExists = jest.fn(() => {
+      return true
+    })
+    const generator = {
+      destinationPath: jest.fn(() => 'some-path'),
+      fs: {
+        read: mockRead,
+        append: jest.fn(),
+        exists: mockExists
+      }
+    }
+
+    utils.appendStubVarsToDotenv(generator, 'label', ['a', 'b', 'c'])
+    expect(generator.fs.append).not.toHaveBeenCalled()
+  })
+
+  test('appendStubVarsToDotenv', () => {
+    const mockRead = jest.fn(() => '')
+    const mockExists = jest.fn(() => {
+      return false
+    })
+    const generator = {
+      destinationPath: jest.fn(() => 'some-path'),
+      fs: {
+        read: mockRead,
+        append: jest.fn(),
+        exists: mockExists
+      }
+    }
+
+    utils.appendStubVarsToDotenv(generator, 'fake', ['a', 'b', 'c'])
+    expect(generator.fs.append).toHaveBeenCalledWith('some-path', eol.auto(`## fake
+#a=
+#b=
+#c=
+`))
+  })
+
+  test('writeMultiLayerKeyInObject', () => {
+    const obj = {
+      test: 'somevalue',
+      a: {
+        b: {
+          c: [{
+            test1: 'fakevalue',
+            test2: 'fakevalue'
+          }]
+        }
+      }
+    }
+    utils.writeMultiLayerKeyInObject(obj, 'a.b.c', [{ test: 'new value' }])
+    expect(obj.a.b.c[1]).toEqual({ test: 'new value' })
   })
 })

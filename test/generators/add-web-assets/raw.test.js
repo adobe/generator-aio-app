@@ -13,6 +13,7 @@ governing permissions and limitations under the License.
 
 const helpers = require('yeoman-test')
 const assert = require('yeoman-assert')
+const cloneDeep = require('lodash.clonedeep')
 
 const theGeneratorPath = require.resolve('../../../generators/add-web-assets/raw')
 const Generator = require('yeoman-generator')
@@ -27,8 +28,12 @@ describe('prototype', () => {
 
 describe('run', () => {
   test('--project-name abc --adobe-services analytics,target,campaign-standard', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['project-name'] = 'abc'
+    options['web-src-folder'] = 'web-src'
+    options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign}`
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'adobe-services': `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign}`, 'project-name': 'abc' })
+      .withOptions(options)
 
     // added files
     assert.file('web-src/index.html')
@@ -44,8 +49,12 @@ describe('run', () => {
   })
 
   test('--project-name abc --adobe-services analytics', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['project-name'] = 'abc'
+    options['web-src-folder'] = 'web-src'
+    options['adobe-services'] = `${sdkCodes.analytics}`
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'adobe-services': `${sdkCodes.analytics}`, 'project-name': 'abc' })
+      .withOptions(options)
 
     // added files
     assert.file('web-src/index.html')
@@ -60,5 +69,3 @@ describe('run', () => {
     assert.fileContent('web-src/index.html', '<script src="./src/index.js"></script>')
   })
 })
-
-// todo check with existing files in project

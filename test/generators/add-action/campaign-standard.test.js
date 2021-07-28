@@ -16,6 +16,7 @@ const fs = require('fs')
 const yaml = require('js-yaml')
 const path = require('path')
 const { EOL } = require('os')
+const cloneDeep = require('lodash.clonedeep')
 
 const theGeneratorPath = require.resolve('../../../generators/add-action/campaign-standard')
 const Generator = require('yeoman-generator')
@@ -42,20 +43,27 @@ describe('prototype', () => {
 
 function assertGeneratedFiles (actionName) {
   assert.file(`${constants.actionsDirname}/${actionName}/index.js`)
-  assert.file(`test/${constants.actionsDirname}/${actionName}.test.js`)
-  assert.file(`e2e/${constants.actionsDirname}/${actionName}.e2e.js`)
+
+  assert.file(`test/${actionName}.test.js`)
+  assert.file(`e2e/${actionName}.e2e.test.js`)
 
   assert.file(`${constants.actionsDirname}/utils.js`)
-  assert.file(`test/${constants.actionsDirname}/utils.test.js`)
+  assert.file('test/utils.test.js')
 
-  assert.file('manifest.yml')
+  assert.file('ext.config.yaml')
   assert.file('.env')
 }
 
-function assertManifestContent (actionName) {
-  const json = yaml.safeLoad(fs.readFileSync('manifest.yml').toString())
-  expect(json.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
-    function: path.normalize(`${constants.actionsDirname}/${actionName}/index.js`),
+// pkgName is optional
+function assertManifestContent (actionName, pkgName) {
+  const json = yaml.safeLoad(fs.readFileSync('ext.config.yaml').toString())
+  expect(json.runtimeManifest.packages).toBeDefined()
+
+  // default packageName is path.basename(path.dirname('ext.config.yaml'))
+  pkgName = pkgName || path.basename(process.cwd())
+
+  expect(json.runtimeManifest.packages[pkgName].actions[actionName]).toEqual({
+    function: `${constants.actionsDirname}/${actionName}/index.js`,
     web: 'yes',
     runtime: 'nodejs:14',
     inputs: {
@@ -102,9 +110,11 @@ function assertActionCodeContent (actionName) {
 
 describe('run', () => {
   test('--skip-prompt', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = true
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true })
+      .withOptions(options)
       .inTmpDir(dir => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
       })
@@ -121,15 +131,19 @@ describe('run', () => {
   })
 
   test('--skip-prompt, and action with default name already exists', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = true
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': true })
+      .withOptions(options)
       .inTmpDir(dir => {
-        fs.writeFileSync('manifest.yml', yaml.dump({
-          packages: {
-            __APP_PACKAGE__: {
-              actions: {
-                'campaign-standard': { function: 'fake.js' }
+        fs.writeFileSync('ext.config.yaml', yaml.dump({
+          runtimeManifest: {
+            packages: {
+              somepackage: {
+                actions: {
+                  'campaign-standard': { function: 'fake.js' }
+                }
               }
             }
           }
@@ -139,19 +153,20 @@ describe('run', () => {
 
     // default
     const actionName = 'campaign-standard-1'
-
     assertGeneratedFiles(actionName)
     assertActionCodeContent(actionName)
-    assertManifestContent(actionName)
+    assertManifestContent(actionName, 'somepackage')
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, { '@adobe/aio-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
     assertNodeEngines(fs, '^10 || ^12 || ^14')
   })
 
   test('user input actionName=fakeAction', async () => {
+    const options = cloneDeep(global.basicGeneratorOptions)
+    options['skip-prompt'] = false
     const prevDotEnvContent = `PREVIOUSCONTENT${EOL}`
     await helpers.run(theGeneratorPath)
-      .withOptions({ 'skip-prompt': false })
+      .withOptions(options)
       .withPrompts({ actionName: 'fakeAction' })
       .inTmpDir(dir => {
         fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
