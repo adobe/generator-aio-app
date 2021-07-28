@@ -143,9 +143,10 @@ describe('implementation', () => {
       actionGenerator = new ActionGenerator()
       actionGenerator.options = { 'skip-prompt': false }
       actionGenerator.fs = { copyTpl: jest.fn() }
+
       // mock path resolvers
       actionGenerator.templatePath = p => path.join('/fakeTplDir', p)
-      actionGenerator.destinationPath = (...args) => args[0].startsWith('/fakeDestRoot') ? path.join(...args) : path.join('/fakeDestRoot', ...args)
+      actionGenerator.destinationPath = (...args) => args[0].startsWith(n('/fakeDestRoot')) ? path.join(...args) : path.join('/fakeDestRoot', ...args)
     })
 
     test('with no options and manifest does not exist', () => {
@@ -160,10 +161,10 @@ describe('implementation', () => {
       // 2. test manifest creation with action information
       expect(utils.writeKeyYAMLConfig).toHaveBeenCalledWith(
         actionGenerator,
-        '/fakeDestRoot/ext.config.yaml',
+        n('/fakeDestRoot/ext.config.yaml'),
         'runtimeManifest',
         // function path should be checked to be relative to config file
-        { packages: { fakeDestRoot: { actions: { myAction: { annotations: { 'require-adobe-auth': true }, function: expect.stringContaining(n('myAction/index.js')), runtime: 'nodejs:14', web: 'yes' } }, license: 'Apache-2.0' } } })
+        { packages: { fakeDestRoot: { actions: { myAction: { annotations: { 'require-adobe-auth': true }, function: expect.stringContaining('myAction/index.js'), runtime: 'nodejs:14', web: 'yes' } }, license: 'Apache-2.0' } } })
 
       // 3. make sure wskdebug dev dependency was added to package.json
       expect(utils.addDependencies).toHaveBeenCalledWith(actionGenerator, { '@openwhisk/wskdebug': expect.any(String) }, true)
@@ -192,10 +193,10 @@ describe('implementation', () => {
       // 2. test manifest creation with action information, and preserving previous content
       expect(utils.writeKeyYAMLConfig).toHaveBeenCalledWith(
         actionGenerator,
-        '/fakeDestRoot/ext.config.yaml',
+        n('/fakeDestRoot/ext.config.yaml'),
         'runtimeManifest',
         // function path should be checked to be relative to config file
-        { packages: { somepackage: { actions: { actionxyz: { function: 'fake.js' }, myAction: { annotations: { 'require-adobe-auth': true }, function: expect.stringContaining(n('myAction/index.js')), runtime: 'nodejs:14', web: 'yes' } } } } })
+        { packages: { somepackage: { actions: { actionxyz: { function: 'fake.js' }, myAction: { annotations: { 'require-adobe-auth': true }, function: expect.stringContaining('myAction/index.js'), runtime: 'nodejs:14', web: 'yes' } } } } })
       // 3. make sure wskdebug dev dependency was added to package.json
       // prod
       expect(utils.addDependencies).toHaveBeenCalledWith(actionGenerator, {
@@ -240,10 +241,10 @@ describe('implementation', () => {
       // test manifest creation with action information
       expect(utils.writeKeyYAMLConfig).toHaveBeenCalledWith(
         actionGenerator,
-        '/fakeDestRoot/ext.config.yaml',
+        n('/fakeDestRoot/ext.config.yaml'),
         'runtimeManifest',
         // function path should be checked to be relative to config file
-        { packages: { fakeDestRoot: { actions: { myAction: { runtime: 'fake:42', inputs: { fake: 'value' }, annotations: { 'require-adobe-auth': true }, function: expect.stringContaining(n('myAction/index.js')), web: 'yes' } }, license: 'Apache-2.0' } } })
+        { packages: { fakeDestRoot: { actions: { myAction: { runtime: 'fake:42', inputs: { fake: 'value' }, annotations: { 'require-adobe-auth': true }, function: expect.stringContaining('myAction/index.js'), web: 'yes' } }, license: 'Apache-2.0' } } })
     })
 
     test('with dotenvStub option', () => {

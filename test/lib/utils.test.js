@@ -1,4 +1,5 @@
 const utils = require('../../lib/utils')
+const eol = require('eol')
 
 describe('atLeastOne', () => {
   test('returns true if input.length > 0', () => {
@@ -283,11 +284,11 @@ describe('addDependencies', () => {
     }
 
     utils.appendStubVarsToDotenv(generator, 'fake', ['a', 'b', 'c'])
-    expect(generator.fs.append).toHaveBeenCalledWith('some-path', `## fake
+    expect(generator.fs.append).toHaveBeenCalledWith('some-path', eol.auto(`## fake
 #a=
 #b=
 #c=
-`)
+`))
   })
 
   test('writeMultiLayerKeyInObject', () => {
