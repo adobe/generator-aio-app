@@ -137,10 +137,16 @@ class AddVsCodeConfig extends Generator {
     const remoteRoot = this.options[Option.REMOTE_ROOT]
     const envFile = this.options[Option.ENV_FILE]
 
+    // make sure the action path is a relative path, using appConfig.root
+    let actionFileRelativePath = action.function
+    if (path.isAbsolute(actionFileRelativePath)) {
+      actionFileRelativePath = path.relative(appConfig.root, actionFileRelativePath)
+    }
+
     const launchConfig = createPwaNodeLaunchConfiguration({
       packageName,
       actionName,
-      actionFileRelativePath: action.function,
+      actionFileRelativePath,
       envFileRelativePath: envFile,
       remoteRoot,
       nodeVersion
