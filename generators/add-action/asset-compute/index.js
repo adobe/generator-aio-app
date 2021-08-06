@@ -50,7 +50,7 @@ class AssetComputeGenerator extends ActionGenerator {
     const extFolder = path.dirname(this.configPath)
 
     // TODO add support in ActionGenerator for copying test folders instead of files
-    const destTestFolder = this.destinationPath(extFolder, 'test')
+    const destTestFolder = this.destinationPath(extFolder, 'test', 'asset-compute', this.props.actionName)
     const workerTemplateTestFiles = `${this.templatePath()}/test/` // copy the rest of the worker template files
     this.fs.copyTpl(
       workerTemplateTestFiles,
