@@ -18,7 +18,13 @@ jest.mock('fs-extra')
 const theGeneratorPath = require.resolve('../../../generators/add-vscode-config')
 const Generator = require('yeoman-generator')
 
-const createOptions = () => {
+const createOptions = ({ actionPathIsAbsolute = false } = {}) => {
+  const root = '/root'
+  let actionPath = path.join('src', 'actions', 'action-1')
+  if (actionPathIsAbsolute) {
+    actionPath = path.join(root, actionPath)
+  }
+
   return {
     'app-config': {
       app: {
@@ -36,7 +42,7 @@ const createOptions = () => {
             __APP_PACKAGE__: {
               actions: {
                 'action-1': {
-                  function: path.join('src', 'actions', 'action-1')
+                  function: actionPath
                 }
               }
             }
@@ -47,7 +53,7 @@ const createOptions = () => {
         src: 'html',
         distDev: 'dist-dev'
       },
-      root: 'root'
+      root
     },
     'frontend-url': 'https://localhost:9080',
     'env-file': 'my/.env'
@@ -272,6 +278,28 @@ test('no missing options (coverage: action has annotations)', async () => {
 
 test('output check', async () => {
   const options = createOptions()
+  const pkg = options['app-config'].manifest.full.packages.__APP_PACKAGE__
+  pkg.actions['action-1'].runtime = 'nodejs:14'
+  pkg.actions['action-1'].annotations = {
+    'require-adobe-auth': true
+  }
+  options['app-config'].ow.apihost = 'https://adobeioruntime.net'
+  options['destination-file'] = 'foo/bar.json'
+
+  fs.lstatSync.mockReturnValue({
+    isDirectory: () => false
+  })
+
+  const result = helpers.run(theGeneratorPath).withOptions(options)
+  await expect(result).resolves.not.toThrow()
+
+  const destFile = options['destination-file']
+  assert.file(destFile) // destination file is written
+  assert.JSONFileContent(destFile, createTestLaunchConfiguration(options['app-config'].ow.package, true))
+})
+
+test('output check (action path is absolute)', async () => {
+  const options = createOptions({ actionPathIsAbsolute: true })
   const pkg = options['app-config'].manifest.full.packages.__APP_PACKAGE__
   pkg.actions['action-1'].runtime = 'nodejs:14'
   pkg.actions['action-1'].annotations = {
