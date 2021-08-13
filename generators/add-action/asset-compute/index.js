@@ -32,10 +32,10 @@ class AssetComputeGenerator extends ActionGenerator {
     this.addAction(this.props.actionName, './_worker.js', {
       tplContext: this.props,
       dependencies: {
-        '@adobe/asset-compute-sdk': '^2.2.1'
+        '@adobe/asset-compute-sdk': '^2.11.1'
       },
       devDependencies: {
-        '@adobe/aio-cli-plugin-asset-compute': '^1.4.1'
+        '@adobe/aio-cli-plugin-asset-compute': '^2.0.0'
       },
       actionManifestConfig: {
         limits: {
