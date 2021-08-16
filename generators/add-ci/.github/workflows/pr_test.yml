@@ -23,15 +23,26 @@ jobs:
         with:
           os: ${{ matrix.os }}
           version: 8.x.x
+      - name: Auth
+        uses: adobe/aio-apps-action@2.0.1
+        with:
+          os: ${{ matrix.os }}
+          command: auth
+          CLIENTID: ${{ secrets.CLIENTID_STAGE }}
+          CLIENTSECRET: ${{ secrets.CLIENTSECRET_STAGE }}
+          TECHNICALACCOUNTID: ${{ secrets.TECHNICALACCID_STAGE }}
+          IMSORGID: ${{ secrets.IMSORGID_STAGE }}
+          SCOPES: ${{ secrets.SCOPES_STAGE }}
+          KEY: ${{ secrets.KEY_STAGE }}
       - name: Build
         env:
           AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE_STAGE }}
-        uses: adobe/aio-apps-action@2.0.0
+        uses: adobe/aio-apps-action@2.0.1
         with:
           os: ${{ matrix.os }}
           command: build
       - name: Test
-        uses: adobe/aio-apps-action@2.0.0
+        uses: adobe/aio-apps-action@2.0.1
         with:
           os: ${{ matrix.os }}
           command: test
