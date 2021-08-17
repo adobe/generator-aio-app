@@ -32,10 +32,10 @@ class AssetComputeGenerator extends ActionGenerator {
     this.addAction(this.props.actionName, './_worker.js', {
       tplContext: this.props,
       dependencies: {
-        '@adobe/asset-compute-sdk': '^2.2.1'
+        '@adobe/asset-compute-sdk': '^2.11.1'
       },
       devDependencies: {
-        '@adobe/aio-cli-plugin-asset-compute': '^1.4.1'
+        '@adobe/aio-cli-plugin-asset-compute': '^2.0.0'
       },
       actionManifestConfig: {
         limits: {
@@ -50,7 +50,7 @@ class AssetComputeGenerator extends ActionGenerator {
     const extFolder = path.dirname(this.configPath)
 
     // TODO add support in ActionGenerator for copying test folders instead of files
-    const destTestFolder = this.destinationPath(extFolder, 'test')
+    const destTestFolder = this.destinationPath(extFolder, 'test', 'asset-compute', this.props.actionName)
     const workerTemplateTestFiles = `${this.templatePath()}/test/` // copy the rest of the worker template files
     this.fs.copyTpl(
       workerTemplateTestFiles,
