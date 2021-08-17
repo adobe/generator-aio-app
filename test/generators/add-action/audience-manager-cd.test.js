@@ -21,16 +21,16 @@ const Generator = require('yeoman-generator')
 
 const constants = require('../../../lib/constants')
 
-const installDependencies = jest.spyOn(Generator.prototype, 'installDependencies')
+const addDependencies = jest.spyOn(Generator.prototype, 'addDependencies')
 beforeAll(() => {
   // mock implementations
-  installDependencies.mockReturnValue(undefined)
+  addDependencies.mockReturnValue(undefined)
 })
 beforeEach(() => {
-  installDependencies.mockClear()
+  addDependencies.mockClear()
 })
 afterAll(() => {
-  installDependencies.mockRestore()
+  addDependencies.mockRestore()
 })
 
 describe('prototype', () => {
