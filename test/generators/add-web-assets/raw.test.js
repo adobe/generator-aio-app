@@ -45,7 +45,7 @@ describe('run', () => {
     assert.fileContent('web-src/index.html', '<h1>Welcome to abc!</h1>')
 
     // make sure calls index.js to get the list of actions
-    assert.fileContent('web-src/index.html', '<script src="./src/index.js"></script>')
+    assert.fileContent('web-src/index.html', '<script src="./src/index.js" type="module"></script>')
   })
 
   test('--project-name abc --adobe-services analytics', async () => {
@@ -66,6 +66,6 @@ describe('run', () => {
     assert.fileContent('web-src/index.html', '<h1>Welcome to abc!</h1>')
 
     // make sure calls index.js to get the list of actions
-    assert.fileContent('web-src/index.html', '<script src="./src/index.js"></script>')
+    assert.fileContent('web-src/index.html', '<script src="./src/index.js" type="module"></script>')
   })
 })
