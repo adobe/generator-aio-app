@@ -21,18 +21,6 @@ const cloneDeep = require('lodash.clonedeep')
 const theGeneratorPath = require.resolve('../../../generators/add-action/asset-compute')
 const Generator = require('yeoman-generator')
 
-const addDependencies = jest.spyOn(Generator.prototype, 'addDependencies')
-beforeAll(() => {
-  // mock implementations
-  addDependencies.mockReturnValue(undefined)
-})
-beforeEach(() => {
-  addDependencies.mockClear()
-})
-afterAll(() => {
-  addDependencies.mockRestore()
-})
-
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
     expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
