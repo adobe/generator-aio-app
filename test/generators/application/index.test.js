@@ -18,18 +18,14 @@ const Generator = require('yeoman-generator')
 
 // spies
 const composeWith = jest.spyOn(Generator.prototype, 'composeWith')
-const installDependencies = jest.spyOn(Generator.prototype, 'installDependencies')
 beforeAll(() => {
   composeWith.mockReturnValue(undefined)
-  installDependencies.mockReturnValue(undefined)
 })
 beforeEach(() => {
   composeWith.mockClear()
-  installDependencies.mockClear()
 })
 afterAll(() => {
   composeWith.mockRestore()
-  installDependencies.mockRestore()
 })
 
 jest.mock('../../../lib/utils')
@@ -116,6 +112,5 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-action/index.js')), expect.any(Object))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-events/index.js')), expect.any(Object))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-web-assets/index.js')), expect.any(Object))
-    expect(installDependencies).toHaveBeenCalledTimes(0)
   })
 })

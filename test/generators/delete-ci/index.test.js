@@ -42,35 +42,40 @@ describe('run', () => {
   })
 
   test('prompts yes to delete confirmation', async () => {
-    const dir = await helpers.run(theGeneratorPath)
+    let tmpDir
+    await helpers.run(theGeneratorPath)
       .inTmpDir(dir => {
+        tmpDir = dir
         writeFakeCIFiles(dir)
       })
       .withPrompts({ deleteCI: true })
-
     assert.noFile('.github/workflows/deploy_prod.yml')
-    expect(fs.existsSync(path.join(dir, '.github/workflows/deploy_prod.yml'))).toEqual(false)
+    expect(fs.existsSync(path.join(tmpDir, '.github/workflows/deploy_prod.yml'))).toEqual(false)
   })
 
   test('prompts false to delete confirmation', async () => {
-    const dir = await helpers.run(theGeneratorPath)
+    let tmpDir
+    await helpers.run(theGeneratorPath)
       .inTmpDir(dir => {
+        tmpDir = dir
         writeFakeCIFiles(dir)
       })
       .withPrompts({ deleteCI: false })
 
     assert.file('.github/workflows/deploy_prod.yml')
-    expect(fs.existsSync(path.join(dir, '.github/workflows/deploy_prod.yml'))).toEqual(true)
+    expect(fs.existsSync(path.join(tmpDir, '.github/workflows/deploy_prod.yml'))).toEqual(true)
   })
 
   test('--skip-prompt', async () => {
-    const dir = await helpers.run(theGeneratorPath)
+    let tmpDir
+    await helpers.run(theGeneratorPath)
       .inTmpDir(dir => {
+        tmpDir = dir
         writeFakeCIFiles(dir)
       })
       .withOptions({ 'skip-prompt': true })
 
     assert.noFile('.github/workflows/deploy_prod.yml')
-    expect(fs.existsSync(path.join(dir, '.github/workflows/deploy_prod.yml'))).toEqual(false)
+    expect(fs.existsSync(path.join(tmpDir, '.github/workflows/deploy_prod.yml'))).toEqual(false)
   })
 })

@@ -21,18 +21,6 @@ const Generator = require('yeoman-generator')
 
 const constants = require('../../../lib/constants')
 
-const installDependencies = jest.spyOn(Generator.prototype, 'installDependencies')
-beforeAll(() => {
-  // mock implementations
-  installDependencies.mockReturnValue(undefined)
-})
-beforeEach(() => {
-  installDependencies.mockClear()
-})
-afterAll(() => {
-  installDependencies.mockRestore()
-})
-
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
     expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)

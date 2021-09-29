@@ -67,10 +67,14 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     options['web-src-folder'] = 'web-src'
-    const dir = await helpers.run(theGeneratorPath)
+    let tmpDir
+    await helpers.run(theGeneratorPath)
       .withOptions(options)
+      .inTmpDir(dir => {
+        tmpDir = dir
+      })
 
-    const expectProjectName = path.basename(dir)
+    const expectProjectName = path.basename(tmpDir)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
     // calls default generator
@@ -86,10 +90,14 @@ describe('run', () => {
     options['skip-prompt'] = true
     options['web-src-folder'] = 'web-src'
     options['has-backend'] = false
-    const dir = await helpers.run(theGeneratorPath)
+    let tmpDir
+    await helpers.run(theGeneratorPath)
       .withOptions(options)
+      .inTmpDir(dir => {
+        tmpDir = dir
+      })
 
-    const expectProjectName = path.basename(dir)
+    const expectProjectName = path.basename(tmpDir)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
     // calls default generator
