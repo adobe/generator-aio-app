@@ -71,7 +71,8 @@ class DxExcshell1 extends Generator {
       'extensions.' + this.configName,
       // value
       {
-        $include: this.extConfigPath
+        // posix separator
+        $include: this.extConfigPath.split(path.sep).join(path.posix.sep)
       }
     )
 

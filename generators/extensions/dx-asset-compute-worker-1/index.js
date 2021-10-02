@@ -60,7 +60,7 @@ class DxAssetComputeWorker1 extends Generator {
       'extensions.' + this.configName,
       // value
       {
-        $include: this.extConfigPath
+        $include: this.extConfigPath.split(path.sep).join(path.posix.sep)
       }
     )
 
