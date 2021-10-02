@@ -119,7 +119,7 @@ describe('implementation', () => {
     test('rejects invalid name with a message`', async () => {
       const invalidName = 'a'
       const invalidNameMessage = `'${invalidName}' is not a valid action name, please make sure that:
-The name has at least 3 characters or less then 33 characters.            
+The name has at least 3 characters or less than 33 characters.            
 The first character is an alphanumeric character.
 The subsequent characters are alphanumeric.
 The last character isn't a space.
