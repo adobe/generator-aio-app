@@ -21,7 +21,7 @@ export const About = () => (
         <li>
           <Link>
             <a href='https://github.com/AdobeDocs/project-firefly/blob/master/README.md#project-firefly-developer-guide' target='_blank'>
-              Firefly Apps
+              App Builder
             </a>
           </Link>
         </li>
