@@ -12,6 +12,7 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 const { runtimeManifestKey } = require('../../../lib/constants')
+const upath = require('upath')
 
 const utils = require('../../../lib/utils')
 
@@ -64,6 +65,7 @@ class DxExcshell1 extends Generator {
   }
 
   async writing () {
+    const unixExtConfigPath = upath.toUnix(this.extConfigPath)
     // add the extension point config in root
     utils.writeKeyAppConfig(
       this,
@@ -71,7 +73,9 @@ class DxExcshell1 extends Generator {
       'extensions.' + this.configName,
       // value
       {
-        $include: this.extConfigPath
+        // posix separator
+
+        $include: unixExtConfigPath
       }
     )
 

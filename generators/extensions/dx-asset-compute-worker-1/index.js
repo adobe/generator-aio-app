@@ -14,6 +14,7 @@ const Generator = require('yeoman-generator')
 
 const utils = require('../../../lib/utils')
 const { runtimeManifestKey } = require('../../../lib/constants')
+const upath = require('upath')
 
 const assetComputeActionGenerator = path.join(__dirname, '../../add-action/asset-compute/index.js')
 
@@ -53,6 +54,7 @@ class DxAssetComputeWorker1 extends Generator {
   }
 
   async writing () {
+    const unixExtConfigPath = upath.toUnix(this.extConfigPath)
     // add the extension point config in root
     utils.writeKeyAppConfig(
       this,
@@ -60,7 +62,7 @@ class DxAssetComputeWorker1 extends Generator {
       'extensions.' + this.configName,
       // value
       {
-        $include: this.extConfigPath
+        $include: unixExtConfigPath
       }
     )
 
