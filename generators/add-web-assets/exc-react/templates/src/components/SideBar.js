@@ -24,7 +24,7 @@ function SideBar () {
         <NavLink className="SideNav-itemLink" activeClassName="is-selected" aria-current="page" to="/actions">Your App Actions</NavLink>
       </li>
       <li className="SideNav-item">
-        <NavLink className="SideNav-itemLink" activeClassName="is-selected" aria-current="page" to="/about">About Project Firefly Apps</NavLink>
+        <NavLink className="SideNav-itemLink" activeClassName="is-selected" aria-current="page" to="/about">About App Builder</NavLink>
       </li>
     </ul>
   )

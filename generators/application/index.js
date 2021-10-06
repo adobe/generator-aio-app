@@ -76,11 +76,6 @@ class Application extends Generator {
               name: 'Web Assets: Deploy hosted static assets',
               value: 'webAssets',
               checked: true
-            },
-            {
-              name: 'CI/CD: Include GitHub Actions based workflows for Build, Test and Deploy',
-              value: 'ci',
-              checked: true
             }
           ],
           validate: utils.atLeastOne
@@ -91,7 +86,6 @@ class Application extends Generator {
     const addActions = components.includes('actions')
     const addEvents = components.includes('events')
     const addWebAssets = components.includes('webAssets')
-    const addCI = components.includes('ci')
 
     // TODO cleanup unecessary params in all generators
     // run add action and add ui generators when applicable
@@ -121,11 +115,6 @@ class Application extends Generator {
         'project-name': this.options['project-name'],
         'web-src-folder': this.webSrcFolder,
         'config-path': this.configPath
-      })
-    }
-    if (addCI) {
-      this.composeWith(path.join(__dirname, '../add-ci/index.js'), {
-        'skip-prompt': true
       })
     }
   }

@@ -92,14 +92,13 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-action/index.js')), expect.any(Object))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-web-assets/index.js')), expect.any(Object))
   })
-  test('--adobe-services some,string --supported-adobe-service=some,other,string and prompt selection "web-assets, actions, CI, events"', async () => {
+  test('--adobe-services some,string --supported-adobe-service=some,other,string and prompt selection "web-assets, actions, events"', async () => {
     await helpers.run(theGeneratorPath)
       .withOptions({ 'adobe-services': 'some,string', 'supported-adobe-services': 'some,other,string', 'skip-install': false })
-      .withPrompts({ components: ['webAssets', 'actions', 'ci', 'events'] })
+      .withPrompts({ components: ['webAssets', 'actions', 'events'] })
 
-    expect(composeWith).toHaveBeenCalledTimes(4)
+    expect(composeWith).toHaveBeenCalledTimes(3)
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-action/index.js')), expect.any(Object))
-    expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-ci/index.js')), expect.any(Object))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-web-assets/index.js')), expect.any(Object))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-events/index.js')), expect.any(Object))
   })
