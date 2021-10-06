@@ -62,7 +62,7 @@ function assertWithDoc () {
     'web-src/src/components/About.js',
     'Useful documentation for your app'
   )
-  assert.fileContent('web-src/src/components/About.js', 'Firefly Apps')
+  assert.fileContent('web-src/src/components/About.js', 'App Builder')
   assert.fileContent('web-src/src/components/About.js', 'Adobe I/O SDK')
   assert.fileContent('web-src/src/components/About.js', 'React Spectrum')
 }
