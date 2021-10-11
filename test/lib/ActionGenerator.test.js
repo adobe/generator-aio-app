@@ -116,6 +116,22 @@ describe('implementation', () => {
       expect(validate('abc123456789012345678901234567890')).not.toEqual(true)
     })
 
+    test('rejects invalid name with a message`', async () => {
+      const invalidName = 'a'
+      const invalidNameMessage = `'${invalidName}' is not a valid action name, please make sure that:
+The name has at least 3 characters or less than 33 characters.            
+The first character is an alphanumeric character.
+The subsequent characters are alphanumeric.
+The last character isn't a space.
+Note: characters can only be split by '-'.
+`
+      promptSpy.mockReturnValue({ actionName: 'fake' })
+      await actionGenerator.promptForActionName()
+      expect(promptSpy.mock.calls[0][0][0].validate).toBeInstanceOf(Function)
+      const validate = promptSpy.mock.calls[0][0][0].validate
+      expect(validate(invalidName)).toEqual(invalidNameMessage)
+    })
+
     test('returns new default name in case of conflict', async () => {
       utils.readYAMLConfig.mockReturnValue({
         runtimeManifest: {
