@@ -30,8 +30,16 @@ import {
 } from '@adobe/react-spectrum'
 import Function from '@spectrum-icons/workflow/Function'
 
-import actions from '../config.json'
+import allActions from '../config.json'
 import actionWebInvoke from '../utils'
+
+// remove the deprecated key
+const actions = Object.keys(allActions).reduce((obj, key) => {
+  if (key.lastIndexOf("/") > -1) {
+    obj[key] = allActions[key];
+  }
+  return obj;
+}, {});
 
 const ActionsForm = (props) => {
   const [state, setState] = useState({
