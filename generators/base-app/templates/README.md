@@ -28,8 +28,10 @@ local serverless stack and also run your actions locally use the `aio app run --
 
 ### `.env`
 
+You can generate this file using the command `aio app use`. 
+
 ```bash
-# This file must not be committed to source control
+# This file must **not** be committed to source control
 
 ## please provide your Adobe I/O Runtime credentials
 # AIO_RUNTIME_AUTH=
