@@ -17,7 +17,7 @@ local serverless stack and also run your actions locally use the `aio app run --
 ## Test & Coverage
 
 - Run `aio app test` to run unit tests for ui and actions
-- Run `aio app test -e` to run e2e tests
+- Run `aio app test --e2e` to run e2e tests
 
 ## Deploy & Cleanup
 
