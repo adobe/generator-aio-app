@@ -25,7 +25,8 @@ const sdkCodeToActionGenerator = {
   [sdkCodes.campaign]: path.join(__dirname, 'campaign-standard/index.js'),
   [sdkCodes.assetCompute]: path.join(__dirname, 'asset-compute/index.js'),
   [sdkCodes.customerProfile]: path.join(__dirname, 'customer-profile/index.js'),
-  [sdkCodes.audienceManagerCD]: path.join(__dirname, 'audience-manager-cd/index.js')
+  [sdkCodes.audienceManagerCD]: path.join(__dirname, 'audience-manager-cd/index.js'),
+  [sdkCodes.AEMHeadlessClient]: path.join(__dirname, 'aem-headless-client/index.js')
 }
 
 const sdkCodeToTitle = {
@@ -34,7 +35,8 @@ const sdkCodeToTitle = {
   [sdkCodes.campaign]: 'Adobe Campaign Standard',
   [sdkCodes.assetCompute]: 'Adobe Asset Compute Worker',
   [sdkCodes.customerProfile]: 'Adobe Experience Platform: Realtime Customer Profile',
-  [sdkCodes.audienceManagerCD]: 'Adobe Audience Manager: Customer Data'
+  [sdkCodes.audienceManagerCD]: 'Adobe Audience Manager: Customer Data',
+  [sdkCodes.AEMHeadlessClient]: 'AEM Headless Client'
 }
 
 const genericActionGenerator = path.join(__dirname, 'generic/index.js')
