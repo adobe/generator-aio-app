@@ -18,31 +18,30 @@ class AemHeadlessClientGenerator extends ActionGenerator {
     this.props = {
       description: 'This is a sample action showcasing how to use AEM GraphQL capabilities',
       // eslint-disable-next-line quotes
-      requiredParams: `[]`,
+      requiredParams: `['serviceURL', 'endpoint', 'AEM_AUTH']`,
       // eslint-disable-next-line quotes
-      requiredHeaders: `['Authorization', 'x-gw-ims-org-id']`,
+      requiredHeaders: `['Authorization']`,
       // eslint-disable-next-line quotes
-      importCode: `const { AEMHeadless } = require('@adobe/aem-headless-client-nodejs')`,
+      importCode: `const { Core } = require('@adobe/aio-sdk')
+      const { AEMHeadless } = require('@adobe/aem-headless-client-nodejs')`,
       responseCode: `// initialize sdk
-    const aemHeadlessClient = new AEMHeadless({
-      serviceURL: 'http://localhost:4502',
-      endpoint: 'content/graphql/endpoint.gql',
-      auth: ['admin', 'admin']
-    })
-    const queryString = \`{
-      adventureList {
-        items {
-          _path
-        }
+      const auth = params.AEM_AUTH && params.AEM_AUTH[0] === '[' ? JSON.parse(params.AEM_AUTH) : params.AEM_AUTH
+      const aemHeadlessClient = new AEMHeadless({
+        serviceURL: params.serviceURL,
+        endpoint: params.endpoint,
+        auth
+      })
+      // call methods, eg listPersistedQueries
+      let body;
+      try {
+          body = await aemHeadlessClient.listPersistedQueries()
+      } catch (e) {
+          throw new Error(e)
       }
-    }\`
-    // call methods, eg runQuery
-    let response;
-    try {
-        response = await aemHeadlessClient.runQuery(queryString)
-    } catch (e) {
-        console.error(e.toJSON())
-    }`
+      const response = {
+        statusCode: 200,
+        body
+      }`
     }
   }
 
@@ -62,8 +61,17 @@ class AemHeadlessClientGenerator extends ActionGenerator {
       dependencies: {
         '@adobe/aem-headless-client-nodejs': '1.1.0'
       },
+      dotenvStub: {
+        label: 'please provide your AEM Auth: service token path, dev token, or [user,pass]',
+        vars: [
+          'AEM_AUTH'
+        ]
+      },
       actionManifestConfig: {
-        inputs: { LOG_LEVEL: 'debug' },
+        inputs: {
+          LOG_LEVEL: 'debug',
+          AEM_AUTH: '$AEM_AUTH'
+        },
         annotations: { final: true } // makes sure loglevel cannot be overwritten by request param
       }
     })
