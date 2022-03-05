@@ -14,12 +14,13 @@ governing permissions and limitations under the License.
 jest.mock('@adobe/aio-sdk', () => ({
   Core: {
     Logger: jest.fn()
-  },
-  AEMHeadlessClient: {
+  }
+}))
+jest.mock('@adobe/aem-headless-client-nodejs', () => ({
+  AEMHeadless: {
     constructor: jest.fn()
   }
 }))
-
 const { Core } = require('@adobe/aio-sdk')
 const { AEMHeadless } = require('@adobe/aem-headless-client-nodejs')
 const mockRunQueryInstance = { runQuery: jest.fn() }
@@ -37,7 +38,7 @@ beforeEach(() => {
   mockLoggerInstance.debug.mockReset()
   mockLoggerInstance.error.mockReset()
 })
-const fakeRequestParams = { tenant: 'fakeId', apiKey: 'fakeKey', __ow_headers: { authorization: 'Bearer fakeToken', 'x-gw-ims-org-id': 'fakeOrgId' } }
+const fakeRequestParams = { serviceURL: 'fakeServiceURL', endpoint: 'fakEndpoint', __ow_headers: { authorization: 'Bearer fakeToken', 'x-gw-ims-org-id': 'fakeOrgId' } }
 describe('<%= actionName %>', () => {
   test('main should be defined', () => {
     expect(action.main).toBeInstanceOf(Function)
@@ -46,7 +47,7 @@ describe('<%= actionName %>', () => {
     await action.main({ ...fakeRequestParams, LOG_LEVEL: 'fakeLevel' })
     expect(Core.Logger).toHaveBeenCalledWith(expect.any(String), { level: 'fakeLevel' })
   })
-  test('should return an http response with CustomerProfile API profile', async () => {
+  test('should return an http response with AEMHeadless results', async () => {
     const fakeResponse = { fakeHash: {} }
     sdk.runQuery.mockResolvedValue(fakeResponse)
     const response = await action.main(fakeRequestParams)
