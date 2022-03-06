@@ -18,7 +18,7 @@ class AemHeadlessClientGenerator extends ActionGenerator {
     this.props = {
       description: 'This is a sample action showcasing how to use AEM GraphQL capabilities',
       // eslint-disable-next-line quotes
-      requiredParams: `['serviceURL', 'endpoint', 'AEM_AUTH']`,
+      requiredParams: `['serviceURL', 'endpoint']`,
       // eslint-disable-next-line quotes
       requiredHeaders: `['Authorization']`,
       // eslint-disable-next-line quotes

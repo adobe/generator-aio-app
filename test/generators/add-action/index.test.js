@@ -49,6 +49,10 @@ const expectedChoices = {
   [sdkCodes.audienceManagerCD]: {
     name: 'Adobe Audience Manager: Customer Data',
     value: expect.stringContaining(path.normalize('audience-manager-cd/index.js'))
+  },
+  [sdkCodes.AEMHeadlessClient]: {
+    name: 'AEM Headless Client',
+    value: expect.stringContaining(path.normalize('aem-headless-client/index.js'))
   }
 }
 
@@ -76,10 +80,10 @@ describe('prototype', () => {
 })
 
 describe('run', () => {
-  test('--skip-prompt --adobe-services="analytics,target,campaign-standard,customer-profile"', async () => {
+  test('--skip-prompt --adobe-services="analytics,target,campaign-standard,customer-profile,aem-headless-client"', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
-    options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign},${sdkCodes.customerProfile}`
+    options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign},${sdkCodes.customerProfile},${sdkCodes.AEMHeadlessClient}`
     await helpers.run(theGeneratorPath)
       .withOptions(options)
     // with skip prompt defaults to generic action
@@ -108,7 +112,8 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.campaign], checked: false },
           { ...expectedChoices[sdkCodes.customerProfile], checked: false },
           { ...expectedChoices[sdkCodes.target], checked: false },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false }
+          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false },
+          { ...expectedChoices[sdkCodes.AEMHeadlessClient], checked: false }
         ]
       })
     ])
@@ -135,7 +140,8 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.campaign], checked: false },
           { ...expectedChoices[sdkCodes.customerProfile], checked: false },
           { ...expectedChoices[sdkCodes.target], checked: false },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false }
+          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false },
+          { ...expectedChoices[sdkCodes.AEMHeadlessClient], checked: false }
         ]
       })
     ])
@@ -166,7 +172,8 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.campaign], checked: false },
           { ...expectedChoices[sdkCodes.customerProfile], checked: false },
           { ...expectedChoices[sdkCodes.target], checked: false },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false }
+          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false },
+          { ...expectedChoices[sdkCodes.AEMHeadlessClient], checked: false }
         ]
       })
     ])
@@ -197,7 +204,8 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.assetCompute], checked: false },
           { ...expectedChoices[sdkCodes.campaign], checked: false },
           { ...expectedChoices[sdkCodes.target], checked: false },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false }
+          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false },
+          { ...expectedChoices[sdkCodes.AEMHeadlessClient], checked: false }
         ]
       })
     ])
@@ -230,7 +238,8 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.target], checked: false },
           expectedSeparator,
           { ...expectedChoices[sdkCodes.campaign], checked: false },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false }
+          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false },
+          { ...expectedChoices[sdkCodes.AEMHeadlessClient], checked: false }
         ]
       })
     ])
@@ -243,7 +252,7 @@ describe('run', () => {
   test('--adobe-services="analytics,customerProfile", supported-adobe-services=ALL', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.customerProfile}`
-    options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
+    options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD},${sdkCodes.AEMHeadlessClient}`
     await helpers.run(theGeneratorPath)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
@@ -263,7 +272,8 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.assetCompute], checked: false },
           { ...expectedChoices[sdkCodes.campaign], checked: false },
           { ...expectedChoices[sdkCodes.target], checked: false },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false }
+          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false },
+          { ...expectedChoices[sdkCodes.AEMHeadlessClient], checked: false }
         ]
       })
     ])
@@ -275,8 +285,8 @@ describe('run', () => {
 
   test('--adobe-services=ALL, supported-adobe-services=ALL', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
-    options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
-    options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
+    options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD},${sdkCodes.AEMHeadlessClient}`
+    options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD},${sdkCodes.AEMHeadlessClient}`
     await helpers.run(theGeneratorPath)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
@@ -295,7 +305,8 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.customerProfile], checked: true },
           { ...expectedChoices[sdkCodes.campaign], checked: true },
           { ...expectedChoices[sdkCodes.target], checked: true },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: true }
+          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: true },
+          { ...expectedChoices[sdkCodes.AEMHeadlessClient], checked: true }
         ]
       })
     ])
@@ -307,10 +318,10 @@ describe('run', () => {
 
   test('--adobe-services=ALL', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
-    options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
+    options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD},${sdkCodes.AEMHeadlessClient}`
     await helpers.run(theGeneratorPath)
       .withOptions({
-        'adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
+        'adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD},${sdkCodes.AEMHeadlessClient}`
       })
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -328,7 +339,8 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.customerProfile], checked: true },
           { ...expectedChoices[sdkCodes.campaign], checked: true },
           { ...expectedChoices[sdkCodes.target], checked: true },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: true }
+          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: true },
+          { ...expectedChoices[sdkCodes.AEMHeadlessClient], checked: true }
         ]
       })
     ])
@@ -362,7 +374,8 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.target], checked: false },
           expectedSeparator,
           { ...expectedChoices[sdkCodes.campaign], checked: false },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false }
+          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false },
+          { ...expectedChoices[sdkCodes.AEMHeadlessClient], checked: false }
         ]
       })
     ])
@@ -375,7 +388,7 @@ describe('run', () => {
   test('--adobe-services="", supported-adobe-services=ALL', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = ''
-    options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
+    options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD},${sdkCodes.AEMHeadlessClient}`
     await helpers.run(theGeneratorPath)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
@@ -395,7 +408,8 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.customerProfile], checked: false },
           { ...expectedChoices[sdkCodes.campaign], checked: false },
           { ...expectedChoices[sdkCodes.target], checked: false },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false }
+          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false },
+          { ...expectedChoices[sdkCodes.AEMHeadlessClient], checked: false }
         ]
       })
     ])

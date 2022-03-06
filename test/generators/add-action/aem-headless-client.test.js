@@ -75,8 +75,11 @@ function assertActionCodeContent (actionName) {
   // a few checks to make sure the action calls the sdk
   assert.fileContent(
     theFile,
-    `const { Core } = require('@adobe/aio-sdk')
-    const { AEMHeadless } = require('@adobe/aem-headless-client-nodejs')`
+    'const { Core } = require(\'@adobe/aio-sdk\')'
+  )
+  assert.fileContent(
+    theFile,
+    'const { AEMHeadless } = require(\'@adobe/aem-headless-client-nodejs\')'
   )
   assert.fileContent(
     theFile,
@@ -88,16 +91,15 @@ function assertActionCodeContent (actionName) {
   )
   assert.fileContent(
     theFile,
-    `const auth = params.AEM_AUTH && params.AEM_AUTH[0] === '[' ? JSON.parse(params.AEM_AUTH) : params.AEM_AUTH
-    const aemHeadlessClient = new AEMHeadless({
-      serviceURL: params.serviceURL,
-      endpoint: params.endpoint,
-      auth
-    })`
+    'const aemHeadlessClient = new AEMHeadless({\n' +
+    '        serviceURL: params.serviceURL,\n' +
+    '        endpoint: params.endpoint,\n' +
+    '        auth\n' +
+    '      })'
   )
   assert.fileContent(
     theFile,
-    'const body = await aemHeadlessClient.listPersistedQueries()'
+    'body = await aemHeadlessClient.listPersistedQueries()'
   )
 }
 
@@ -119,7 +121,7 @@ describe('run', () => {
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies(fs, { '@adobe/aio-sdk': expect.any(String), '@adobe/aem-headless-client-nodejs': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
+    assertDependencies(fs, { '@adobe/aem-headless-client-nodejs': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
     assertNodeEngines(fs, '^10 || ^12 || ^14')
   })
 
@@ -150,7 +152,7 @@ describe('run', () => {
     assertActionCodeContent(actionName)
     assertManifestContent(actionName, 'somepackage')
     assertEnvContent(prevDotEnvContent)
-    assertDependencies(fs, { '@adobe/aio-sdk': expect.any(String), '@adobe/aem-headless-client-nodejs': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
+    assertDependencies(fs, { '@adobe/aem-headless-client-nodejs': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
     assertNodeEngines(fs, '^10 || ^12 || ^14')
   })
 
@@ -171,7 +173,7 @@ describe('run', () => {
     assertActionCodeContent(actionName)
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
-    assertDependencies(fs, { '@adobe/aio-sdk': expect.any(String), '@adobe/aem-headless-client-nodejs': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
+    assertDependencies(fs, { '@adobe/aem-headless-client-nodejs': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
     assertNodeEngines(fs, '^10 || ^12 || ^14')
   })
 })
