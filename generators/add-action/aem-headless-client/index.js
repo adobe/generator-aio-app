@@ -53,7 +53,7 @@ class AemHeadlessClientGenerator extends ActionGenerator {
     this.sourceRoot(path.join(__dirname, '.'))
 
     this.addAction(this.props.actionName, '../../common-templates/stub-action.js', {
-      testFile: './templates/runQuery.test.js',
+      testFile: './templates/listPersistedQueries.test.js',
       sharedLibFile: '../../common-templates/utils.js',
       sharedLibTestFile: '../../common-templates/utils.test.js',
       e2eTestFile: '../../common-templates/stub-action.e2e.js',

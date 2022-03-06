@@ -23,15 +23,15 @@ jest.mock('@adobe/aem-headless-client-nodejs', () => ({
 }))
 const { Core } = require('@adobe/aio-sdk')
 const { AEMHeadless } = require('@adobe/aem-headless-client-nodejs')
-const mockRunQueryInstance = { runQuery: jest.fn() }
+const mockListPersistedQueriesInstance = { listPersistedQueries: jest.fn() }
 const mockLoggerInstance = { info: jest.fn(), debug: jest.fn(), error: jest.fn() }
 Core.Logger.mockReturnValue(mockLoggerInstance)
-const sdk = new AEMHeadless.mockResolvedValue(mockRunQueryInstance)
+const sdk = new AEMHeadless.mockResolvedValue(mockListPersistedQueriesInstance)
 
 const action = require('./<%= actionRelPath %>')
 
 beforeEach(() => {
-  sdk.runQuery.mockReset() // clears calls + mock implementation
+  sdk.listPersistedQueries.mockReset() // clears calls + mock implementation
 
   Core.Logger.mockClear()
   mockLoggerInstance.info.mockReset()
@@ -49,7 +49,7 @@ describe('<%= actionName %>', () => {
   })
   test('should return an http response with AEMHeadless results', async () => {
     const fakeResponse = { fakeHash: {} }
-    sdk.runQuery.mockResolvedValue(fakeResponse)
+    sdk.listPersistedQueries.mockResolvedValue(fakeResponse)
     const response = await action.main(fakeRequestParams)
     expect(response).toEqual({
       statusCode: 200,
@@ -58,7 +58,7 @@ describe('<%= actionName %>', () => {
   })
   test('if there is an error should return a 500 and log the error', async () => {
     const fakeError = new Error('fake')
-    sdk.runQuery.mockRejectedValue(fakeError)
+    sdk.listPersistedQueries.mockRejectedValue(fakeError)
     const response = await action.main(fakeRequestParams)
     expect(response).toEqual({
       error: {
