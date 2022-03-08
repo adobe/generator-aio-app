@@ -10,10 +10,11 @@ governing permissions and limitations under the License.
 */
 const helpers = require('yeoman-test')
 
-const utils = require('../../../lib/utils')
+const { utils } = require('@adobe/generator-app-common-lib')
 const theGeneratorPath = require.resolve('../../../generators/add-action')
 const Generator = require('yeoman-generator')
-const { sdkCodes } = require('../../../lib/constants')
+const { constants } = require('@adobe/generator-app-common-lib')
+const { sdkCodes } = constants
 const path = require('path')
 const cloneDeep = require('lodash.clonedeep')
 
@@ -67,7 +68,7 @@ afterAll(() => {
   composeWith.mockRestore()
 })
 
-jest.mock('../../../lib/utils')
+jest.mock('@adobe/generator-app-common-lib')
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {

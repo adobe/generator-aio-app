@@ -14,7 +14,7 @@ governing permissions and limitations under the License.
 // #########################################################################################
 
 const path = require('path')
-const ActionGenerator = require('../../../lib/ActionGenerator')
+const { ActionGenerator } = require('@adobe/generator-app-common-lib')
 
 class AssetComputeGenerator extends ActionGenerator {
   constructor (args, opts) {

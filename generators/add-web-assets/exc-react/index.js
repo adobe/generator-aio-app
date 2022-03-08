@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const utils = require('../../../lib/utils')
+const { utils } = require('@adobe/generator-app-common-lib')
 
 class ExcReactGenerator extends Generator {
   constructor (args, opts) {

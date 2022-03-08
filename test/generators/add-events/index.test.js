@@ -31,7 +31,7 @@ afterAll(() => {
 
 const expectedDefaultEventsGenerator = expect.stringContaining(n('publish-events/index.js'))
 
-jest.mock('../../../lib/utils')
+jest.mock('@adobe/generator-app-common-lib')
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {

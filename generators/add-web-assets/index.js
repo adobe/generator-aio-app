@@ -13,7 +13,7 @@ const path = require('path')
 const Generator = require('yeoman-generator')
 const fs = require('fs-extra')
 
-const utils = require('../../lib/utils')
+const { utils } = require('@adobe/generator-app-common-lib')
 
 const rawWebAssetsGenerator = path.join(__dirname, 'raw/index.js')
 const excReactWebAssetsGenerator = path.join(__dirname, 'exc-react/index.js')

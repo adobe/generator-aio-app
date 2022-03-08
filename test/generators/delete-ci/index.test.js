@@ -17,7 +17,7 @@ const assert = require('yeoman-assert')
 const theGeneratorPath = require.resolve('../../../generators/delete-ci')
 const Generator = require('yeoman-generator')
 
-jest.mock('../../../lib/utils')
+jest.mock('@adobe/generator-app-common-lib')
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {

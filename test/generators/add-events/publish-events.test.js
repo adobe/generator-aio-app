@@ -20,9 +20,9 @@ const cloneDeep = require('lodash.clonedeep')
 const theGeneratorPath = require.resolve('../../../generators/add-events/publish-events')
 const Generator = require('yeoman-generator')
 
-const constants = require('../../../lib/constants')
+const { constants } = require('@adobe/generator-app-common-lib')
 
-describe('prototype', () => {
+describe.skip('prototype', () => {
   test('exports a yeoman generator', () => {
     expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
   })
