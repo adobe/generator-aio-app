@@ -14,9 +14,10 @@ const Generator = require('yeoman-generator')
 const fs = require('fs-extra')
 
 const { utils } = require('@adobe/generator-app-common-lib')
+const { addWebAssets: { excReact } } = require('@adobe/generator-app-excshell')
 
 const rawWebAssetsGenerator = path.join(__dirname, 'raw/index.js')
-const excReactWebAssetsGenerator = path.join(__dirname, 'exc-react/index.js')
+const excReactWebAssetsGenerator = excReact
 
 /*
       'initializing',
