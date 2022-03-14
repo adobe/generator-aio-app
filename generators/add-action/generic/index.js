@@ -10,8 +10,8 @@ governing permissions and limitations under the License.
 */
 
 const path = require('path')
-const { ActionGenerator, constants } = require('@adobe/generator-app-common-lib')
-const { commonDependencyVersions } = constants
+const ActionGenerator = require('../../../lib/ActionGenerator')
+const { commonDependencyVersions } = require('../../../lib/constants')
 
 class GenericGenerator extends ActionGenerator {
   constructor (args, opts) {

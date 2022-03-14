@@ -28,13 +28,7 @@ afterAll(() => {
   composeWith.mockRestore()
 })
 
-jest.mock('@adobe/generator-app-common-lib', () => ({
-  utils: {
-    guessProjectName: jest.fn(),
-    writeKeyAppConfig: jest.fn()
-  },
-  constants: {}
-}))
+jest.mock('../../../lib/utils')
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {

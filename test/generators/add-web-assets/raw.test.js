@@ -18,8 +18,7 @@ const cloneDeep = require('lodash.clonedeep')
 const theGeneratorPath = require.resolve('../../../generators/add-web-assets/raw')
 const Generator = require('yeoman-generator')
 
-const { constants } = require('@adobe/generator-app-common-lib')
-const { sdkCodes } = constants
+const { sdkCodes } = require('../../../lib/constants')
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {

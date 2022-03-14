@@ -19,9 +19,9 @@ const path = require('path')
 const theGeneratorPath = require.resolve('../../../generators/add-action/audience-manager-cd')
 const Generator = require('yeoman-generator')
 
-const { constants } = require('@adobe/generator-app-common-lib')
+const constants = require('../../../lib/constants')
 
-describe.skip('prototype', () => {
+describe('prototype', () => {
   test('exports a yeoman generator', () => {
     expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
   })

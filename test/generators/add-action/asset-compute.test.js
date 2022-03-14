@@ -17,7 +17,15 @@ const yaml = require('js-yaml')
 const path = require('path')
 const { EOL } = require('os')
 const cloneDeep = require('lodash.clonedeep')
+
 const theGeneratorPath = require.resolve('../../../generators/add-action/asset-compute')
+const Generator = require('yeoman-generator')
+
+describe('prototype', () => {
+  test('exports a yeoman generator', () => {
+    expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
+  })
+})
 
 function assertGeneratedFiles (actionName) {
   const actionPath = `actions/${actionName}`

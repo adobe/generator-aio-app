@@ -19,8 +19,15 @@ const { EOL } = require('os')
 const cloneDeep = require('lodash.clonedeep')
 
 const theGeneratorPath = require.resolve('../../../generators/add-action/campaign-standard')
+const Generator = require('yeoman-generator')
 
-const { constants } = require('@adobe/generator-app-common-lib')
+const constants = require('../../../lib/constants')
+
+describe('prototype', () => {
+  test('exports a yeoman generator', () => {
+    expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
+  })
+})
 
 function assertGeneratedFiles (actionName) {
   assert.file(`${constants.actionsDirname}/${actionName}/index.js`)

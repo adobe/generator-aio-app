@@ -12,9 +12,9 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const { constants, utils } = require('@adobe/generator-app-common-lib')
-const { sdkCodes, isLoopingPrompts } = constants
-const { atLeastOne } = utils
+const { atLeastOne } = require('../../lib/utils')
+
+const { sdkCodes, isLoopingPrompts } = require('../../lib/constants')
 
 const inquirer = require('inquirer')
 

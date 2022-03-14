@@ -12,8 +12,7 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const { constants } = require('@adobe/generator-app-common-lib')
-const { dotenvFilename } = constants
+const { dotenvFilename } = require('../../lib/constants')
 /*
       'initializing',
       'prompting',

@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 const helpers = require('yeoman-test')
 const path = require('path')
 const fs = require('fs-extra')
-const { utils } = require('@adobe/generator-app-common-lib')
+const utils = require('../../../lib/utils')
 const cloneDeep = require('lodash.clonedeep')
 
 const theGeneratorPath = require.resolve('../../../generators/add-web-assets')
