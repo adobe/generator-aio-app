@@ -12,8 +12,8 @@ governing permissions and limitations under the License.
 const path = require('path')
 const Generator = require('yeoman-generator')
 
-const { isLoopingPrompts, runtimeManifestKey } = require('../../lib/constants')
-const utils = require('../../lib/utils')
+const { utils, constants } = require('@adobe/generator-app-common-lib')
+const { isLoopingPrompts, runtimeManifestKey } = constants
 
 /*
       'initializing',

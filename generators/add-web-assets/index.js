@@ -9,14 +9,14 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const path = require('path')
 const Generator = require('yeoman-generator')
 const fs = require('fs-extra')
 
-const utils = require('../../lib/utils')
+const { utils } = require('@adobe/generator-app-common-lib')
+const { addWebAssets: { excReact } } = require('@adobe/generator-app-excshell')
 
-const rawWebAssetsGenerator = path.join(__dirname, 'raw/index.js')
-const excReactWebAssetsGenerator = path.join(__dirname, 'exc-react/index.js')
+const rawWebAssetsGenerator = require('./raw')
+const excReactWebAssetsGenerator = excReact
 
 /*
       'initializing',

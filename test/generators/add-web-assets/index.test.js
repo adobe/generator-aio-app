@@ -11,10 +11,12 @@ governing permissions and limitations under the License.
 const helpers = require('yeoman-test')
 const path = require('path')
 const fs = require('fs-extra')
-const utils = require('../../../lib/utils')
+const { utils } = require('@adobe/generator-app-common-lib')
 const cloneDeep = require('lodash.clonedeep')
 
-const theGeneratorPath = require.resolve('../../../generators/add-web-assets')
+const AddWebAssets = require('../../../generators/add-web-assets')
+const RawGenerator = require('../../../generators/add-web-assets/raw')
+const { addWebAssets: { excReact } } = require('@adobe/generator-app-excshell')
 const Generator = require('yeoman-generator')
 
 // spies
@@ -32,20 +34,20 @@ afterAll(() => {
   composeWith.mockRestore()
 })
 
-const expectedDefaultGenerator = expect.stringContaining(n('exc-react/index.js'))
+const expectedDefaultGenerator = excReact
 const expectedPromptChoices = [expect.objectContaining({
   type: 'list',
   name: 'webAssetsGenerator',
   choices: [
-    { name: 'React Spectrum 3', value: expect.stringContaining(n('exc-react/index.js')) },
-    { name: 'Pure HTML/JS', value: expect.stringContaining(n('raw/index.js')) }
+    { name: 'React Spectrum 3', value: excReact },
+    { name: 'Pure HTML/JS', value: RawGenerator }
   ],
   validate: utils.atLeastOne
 })]
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
-    expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
+    expect(AddWebAssets.prototype).toBeInstanceOf(Generator)
   })
 })
 
@@ -56,7 +58,7 @@ describe('run', () => {
     options['project-name'] = 'fake'
     options['adobe-services'] = 'some,string'
     options['web-src-folder'] = 'web-src'
-    await expect(helpers.run(theGeneratorPath)
+    await expect(helpers.run(AddWebAssets)
       .withOptions(options)
       .inTmpDir(dir => {
         fs.mkdirSync(path.join(dir, 'web-src'))
@@ -68,7 +70,7 @@ describe('run', () => {
     options['skip-prompt'] = true
     options['web-src-folder'] = 'web-src'
     let tmpDir
-    await helpers.run(theGeneratorPath)
+    await helpers.run(AddWebAssets)
       .withOptions(options)
       .inTmpDir(dir => {
         tmpDir = dir
@@ -91,7 +93,7 @@ describe('run', () => {
     options['web-src-folder'] = 'web-src'
     options['has-backend'] = false
     let tmpDir
-    await helpers.run(theGeneratorPath)
+    await helpers.run(AddWebAssets)
       .withOptions(options)
       .inTmpDir(dir => {
         tmpDir = dir
@@ -114,7 +116,7 @@ describe('run', () => {
     options['skip-prompt'] = true
     options['web-src-folder'] = 'web-src'
     options['project-name'] = 'fake'
-    await helpers.run(theGeneratorPath)
+    await helpers.run(AddWebAssets)
       .withOptions(options)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
@@ -131,7 +133,7 @@ describe('run', () => {
     options['web-src-folder'] = 'web-src'
     options['project-name'] = 'fake'
     options['adobe-services'] = 'some,string'
-    await helpers.run(theGeneratorPath)
+    await helpers.run(AddWebAssets)
       .withOptions(options)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
@@ -146,7 +148,7 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['web-src-folder'] = 'web-src'
     options['project-name'] = 'fake'
-    await helpers.run(theGeneratorPath)
+    await helpers.run(AddWebAssets)
       .withOptions(options)
       .withPrompts({ webAssetsGenerator: 'a' })
 

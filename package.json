@@ -1,6 +1,6 @@
 {
   "name": "@adobe/generator-aio-app",
-  "version": "3.0.3",
+  "version": "3.1.0",
   "description": "Adobe I/O application yeoman code generator",
   "main": "generators/index.js",
   "scripts": {
@@ -29,7 +29,6 @@
   "homepage": "https://github.com/adobe/generator-aio-app#readme",
   "devDependencies": {
     "@types/jest": "^25.1.0",
-    "codecov": "^3.6.5",
     "eol": "^0.9.1",
     "eslint": "^7.1.0",
     "eslint-config-standard": "^14.1.0",
@@ -38,15 +37,19 @@
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "jest": "^26.6.3",
+    "jest": "^27",
     "stdout-stderr": "^0.1.13",
     "yeoman-assert": "^3.1.1",
-    "yeoman-test": "^6.0.0",
-    "yeoman-environment": "^3.2.0"
+    "yeoman-environment": "^3.2.0",
+    "yeoman-test": "^6.0.0"
   },
   "dependencies": {
     "@adobe/aio-lib-env": "^1.1.0",
+    "@adobe/generator-app-asset-compute": "file:/Users/ensembleflorin/Desktop/adobe/generator-app-asset-compute",
+    "@adobe/generator-app-common-lib": "file:/Users/ensembleflorin/Desktop/adobe/generator-app-common-lib",
+    "@adobe/generator-app-excshell": "file:/Users/ensembleflorin/Desktop/adobe/generator-app-excshell",
     "fs-extra": "^9.0.0",
+    "inquirer": "^8.2.0",
     "js-yaml": "^3.14.0",
     "lodash.clonedeep": "^4.5.0",
     "upath": "^1.2.0",

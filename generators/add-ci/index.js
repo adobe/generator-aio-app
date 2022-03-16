@@ -11,7 +11,8 @@ governing permissions and limitations under the License.
 
 const path = require('path')
 const Generator = require('yeoman-generator')
-const { ciDirName } = require('../../lib/constants')
+const { constants } = require('@adobe/generator-app-common-lib')
+const { ciDirName } = constants
 
 class CIGenerator extends Generator {
   constructor (args, opts) {
