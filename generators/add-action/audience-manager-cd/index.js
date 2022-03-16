@@ -12,6 +12,7 @@ governing permissions and limitations under the License.
 const path = require('path')
 const { ActionGenerator, constants } = require('@adobe/generator-app-common-lib')
 const { commonDependencyVersions } = constants
+
 class AudienceManagerCDGenerator extends ActionGenerator {
   constructor (args, opts) {
     super(args, opts)
