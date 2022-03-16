@@ -15,7 +15,6 @@ const AddActions = require('../../../generators/add-action')
 const Generator = require('yeoman-generator')
 const { constants } = require('@adobe/generator-app-common-lib')
 const { sdkCodes } = constants
-const path = require('path')
 const cloneDeep = require('lodash.clonedeep')
 const { addAction: { generic } } = require('@adobe/generator-app-excshell')
 const { addAction: { assetCompute } } = require('@adobe/generator-app-asset-compute')
@@ -31,15 +30,15 @@ const expectedChoices = {
   },
   [sdkCodes.analytics]: {
     name: 'Adobe Analytics',
-    value: expect.stringContaining(path.normalize('analytics/index.js'))
+    value: require('../../../generators/add-action/analytics')
   },
   [sdkCodes.target]: {
     name: 'Adobe Target',
-    value: expect.stringContaining(path.normalize('target/index.js'))
+    value: require('../../../generators/add-action/target')
   },
   [sdkCodes.campaign]: {
     name: 'Adobe Campaign Standard',
-    value: expect.stringContaining(path.normalize('campaign-standard/index.js'))
+    value: require('../../../generators/add-action/campaign-standard')
   },
   [sdkCodes.assetCompute]: {
     name: 'Adobe Asset Compute Worker',
@@ -47,11 +46,11 @@ const expectedChoices = {
   },
   [sdkCodes.customerProfile]: {
     name: 'Adobe Experience Platform: Realtime Customer Profile',
-    value: expect.stringContaining(path.normalize('customer-profile/index.js'))
+    value: require('../../../generators/add-action/customer-profile')
   },
   [sdkCodes.audienceManagerCD]: {
     name: 'Adobe Audience Manager: Customer Data',
-    value: expect.stringContaining(path.normalize('audience-manager-cd/index.js'))
+    value: require('../../../generators/add-action/audience-manager-cd')
   }
 }
 
@@ -88,7 +87,7 @@ describe('run', () => {
     // with skip prompt defaults to generic action
     // make sure sub generators have been called
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(generic, expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith({ Generator: generic, path: 'unknown' }, expect.objectContaining({
       'skip-prompt': true
     }))
   })
@@ -116,7 +115,7 @@ describe('run', () => {
       })
     ])
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'a', path: 'unknown' }, expect.objectContaining({
       'skip-prompt': false
     }))
   })
@@ -143,9 +142,9 @@ describe('run', () => {
       })
     ])
     expect(composeWith).toHaveBeenCalledTimes(3)
-    expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'a', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'b', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'c', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
   })
   test('--adobe-services="NOTEXISTING" --adobe-supported-services="notexistting" and selects multiple generators', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
@@ -174,9 +173,9 @@ describe('run', () => {
       })
     ])
     expect(composeWith).toHaveBeenCalledTimes(3)
-    expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'a', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'b', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'c', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
   })
   test('--adobe-services="analytics,customerProfile"', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
@@ -205,9 +204,9 @@ describe('run', () => {
       })
     ])
     expect(composeWith).toHaveBeenCalledTimes(3)
-    expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'a', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'b', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'c', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
   })
   test('--adobe-services="analytics,customerProfile", supported-adobe-services="analytics,assetCompute,customerProfile,target"', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
@@ -238,9 +237,9 @@ describe('run', () => {
       })
     ])
     expect(composeWith).toHaveBeenCalledTimes(3)
-    expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'a', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'b', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'c', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
   })
 
   test('--adobe-services="analytics,customerProfile", supported-adobe-services=ALL', async () => {
@@ -271,9 +270,9 @@ describe('run', () => {
       })
     ])
     expect(composeWith).toHaveBeenCalledTimes(3)
-    expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'a', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'b', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'c', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
   })
 
   test('--adobe-services=ALL, supported-adobe-services=ALL', async () => {
@@ -303,9 +302,9 @@ describe('run', () => {
       })
     ])
     expect(composeWith).toHaveBeenCalledTimes(3)
-    expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'a', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'b', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'c', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
   })
 
   test('--adobe-services=ALL', async () => {
@@ -336,9 +335,9 @@ describe('run', () => {
       })
     ])
     expect(composeWith).toHaveBeenCalledTimes(3)
-    expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'a', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'b', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'c', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
   })
 
   test('--adobe-services="", supported-adobe-services=analytics,assetCompute,customerProfile,target', async () => {
@@ -370,9 +369,9 @@ describe('run', () => {
       })
     ])
     expect(composeWith).toHaveBeenCalledTimes(3)
-    expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'a', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'b', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'c', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
   })
 
   test('--adobe-services="", supported-adobe-services=ALL', async () => {
@@ -403,8 +402,8 @@ describe('run', () => {
       })
     ])
     expect(composeWith).toHaveBeenCalledTimes(3)
-    expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('b', expect.objectContaining({ 'skip-prompt': false }))
-    expect(composeWith).toHaveBeenCalledWith('c', expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'a', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'b', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'c', path: 'unknown' }, expect.objectContaining({ 'skip-prompt': false }))
   })
 })
