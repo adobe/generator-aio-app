@@ -10,7 +10,7 @@ governing permissions and limitations under the License.
 */
 
 const path = require('path')
-const { ActionGenerator, constants } = require('@adobe/generator-app-common-lib')
+const { ActionGenerator, constants, commonTemplates } = require('@adobe/generator-app-common-lib')
 const { commonDependencyVersions } = constants
 
 class CustomerProfileGenerator extends ActionGenerator {
@@ -46,11 +46,11 @@ class CustomerProfileGenerator extends ActionGenerator {
   writing () {
     this.sourceRoot(path.join(__dirname, '.'))
 
-    this.addAction(this.props.actionName, '../../common-templates/stub-action.js', {
+    this.addAction(this.props.actionName, commonTemplates['stub-action'], {
       testFile: './templates/getProfile.test.js',
-      sharedLibFile: '../../common-templates/utils.js',
-      sharedLibTestFile: '../../common-templates/utils.test.js',
-      e2eTestFile: '../../common-templates/stub-action.e2e.js',
+      sharedLibFile: commonTemplates.utils,
+      sharedLibTestFile: commonTemplates['utils.test'],
+      e2eTestFile: commonTemplates['stub-action.e2e'],
       tplContext: this.props,
       dotenvStub: {
         label: 'please provide your Adobe Experience Platform Realtime Customer Profile tenant',
