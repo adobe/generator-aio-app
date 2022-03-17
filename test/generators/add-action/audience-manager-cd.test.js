@@ -21,7 +21,7 @@ const Generator = require('yeoman-generator')
 
 const { constants } = require('@adobe/generator-app-common-lib')
 
-describe.skip('prototype', () => {
+describe('prototype', () => {
   test('exports a yeoman generator', () => {
     expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
   })
