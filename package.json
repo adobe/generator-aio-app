@@ -45,9 +45,9 @@
   },
   "dependencies": {
     "@adobe/aio-lib-env": "^1.1.0",
-    "@adobe/generator-app-asset-compute": "https://github.com/adobe/generator-app-asset-compute.git#task/asset-compute-discovery",
-    "@adobe/generator-app-common-lib": "https://github.com/adobe/generator-app-common-lib.git#task/extract-common-templates",
-    "@adobe/generator-app-excshell": "https://github.com/adobe/generator-app-excshell.git#task/asset-compute-discovery",
+    "@adobe/generator-app-asset-compute": "^0.2.0",
+    "@adobe/generator-app-common-lib": "^0.3.0",
+    "@adobe/generator-app-excshell": "^0.2.0",
     "fs-extra": "^9.0.0",
     "inquirer": "^8.2.0",
     "js-yaml": "^3.14.0",
