@@ -80,11 +80,12 @@ describe('run', () => {
 
     expect(composeWith).toHaveBeenCalledTimes(1)
     // calls default generator
-    expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
-      'skip-prompt': true,
-      'adobe-services': '',
-      'project-name': expectProjectName
-    }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: expectedDefaultGenerator, path: 'unknown' },
+      expect.objectContaining({
+        'skip-prompt': true,
+        'adobe-services': '',
+        'project-name': expectProjectName
+      }))
   })
 
   test('--skip-prompt --has-backend false', async () => {
@@ -103,7 +104,7 @@ describe('run', () => {
 
     expect(composeWith).toHaveBeenCalledTimes(1)
     // calls default generator
-    expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith({ Generator: expectedDefaultGenerator, path: 'unknown' }, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
       'project-name': expectProjectName,
@@ -120,7 +121,7 @@ describe('run', () => {
       .withOptions(options)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith({ Generator: expectedDefaultGenerator, path: 'unknown' }, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
       'project-name': 'fake'
@@ -137,7 +138,7 @@ describe('run', () => {
       .withOptions(options)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith({ Generator: expectedDefaultGenerator, path: 'unknown' }, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': 'some,string',
       'project-name': 'fake'
@@ -156,7 +157,7 @@ describe('run', () => {
     expect(prompt).toHaveBeenCalledWith(expectedPromptChoices)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'a', path: 'unknown' }, expect.objectContaining({
       'skip-prompt': false,
       'adobe-services': '',
       'project-name': 'fake'
