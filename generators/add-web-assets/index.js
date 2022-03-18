@@ -72,10 +72,16 @@ class AddWebAssets extends Generator {
           validate: utils.atLeastOne
         }
       ])
-      this.composeWith(promptProps.webAssetsGenerator, this.options)
+      this.composeWith({
+        Generator: promptProps.webAssetsGenerator,
+        path: 'unknown'
+      }, this.options)
     } else {
       // default template
-      this.composeWith(excReactWebAssetsGenerator, this.options)
+      this.composeWith({
+        Generator: excReactWebAssetsGenerator,
+        path: 'unknown'
+      }, this.options)
     }
   }
 }
