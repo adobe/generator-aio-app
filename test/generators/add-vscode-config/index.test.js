@@ -85,7 +85,7 @@ const createTestLaunchConfiguration = (
         request: 'launch',
         killBehavior: 'polite',
         runtimeExecutable: '${workspaceFolder}/node_modules/.bin/wskdebug', // eslint-disable-line no-template-curly-in-string
-        envFile: '${workspaceFolder}/my/.env', // eslint-disable-line no-template-curly-in-string
+        envFile: path.join('${workspaceFolder}', 'my', '.env'), // eslint-disable-line no-template-curly-in-string
         timeout: 30000,
         localRoot: '${workspaceFolder}', // eslint-disable-line no-template-curly-in-string
         remoteRoot: '/code',
