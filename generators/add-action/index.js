@@ -15,8 +15,8 @@ const { constants, utils } = require('@adobe/generator-app-common-lib')
 const { atLeastOne } = utils
 const { sdkCodes, isLoopingPrompts } = constants
 
-const { addAction: { generic } } = require('@adobe/generator-app-excshell')
-const { addAction: { assetCompute } } = require('@adobe/generator-app-asset-compute')
+const generic = require('@adobe/generator-add-action-generic')
+const assetCompute = require('@adobe/generator-add-action-asset-compute')
 
 const inquirer = require('inquirer')
 

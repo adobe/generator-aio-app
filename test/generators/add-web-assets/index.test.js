@@ -15,8 +15,8 @@ const { utils } = require('@adobe/generator-app-common-lib')
 const cloneDeep = require('lodash.clonedeep')
 
 const AddWebAssets = require('../../../generators/add-web-assets')
-const RawGenerator = require('../../../generators/add-web-assets/raw')
-const { addWebAssets: { excReact } } = require('@adobe/generator-app-excshell')
+const excReact = require('@adobe/generator-add-web-assets-exc-react')
+const RawGenerator = require('@adobe/generator-add-web-assets-exc-raw-html')
 const Generator = require('yeoman-generator')
 
 // spies

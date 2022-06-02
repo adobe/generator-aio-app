@@ -16,8 +16,8 @@ const Generator = require('yeoman-generator')
 const { constants } = require('@adobe/generator-app-common-lib')
 const { sdkCodes } = constants
 const cloneDeep = require('lodash.clonedeep')
-const { addAction: { generic } } = require('@adobe/generator-app-excshell')
-const { addAction: { assetCompute } } = require('@adobe/generator-app-asset-compute')
+const generic = require('@adobe/generator-add-action-generic')
+const assetCompute = require('@adobe/generator-add-action-asset-compute')
 
 const expectedSeparator = expect.objectContaining({
   type: 'separator',

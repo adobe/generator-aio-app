@@ -9,8 +9,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const { extension: { excshell } } = require('@adobe/generator-app-excshell')
-const { extension: { assetComputeWorker } } = require('@adobe/generator-app-asset-compute')
+const excshell = require('@adobe/generator-app-excshell')
+const assetComputeWorker = require('@adobe/generator-app-asset-compute')
 
 module.exports = {
   'add-action': require('./add-action'),
