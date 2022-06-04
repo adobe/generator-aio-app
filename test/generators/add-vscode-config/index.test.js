@@ -18,11 +18,17 @@ jest.mock('fs-extra')
 const theGeneratorPath = require.resolve('../../../generators/add-vscode-config')
 const Generator = require('yeoman-generator')
 
-const createOptions = ({ actionPathIsAbsolute = false } = {}) => {
+const createOptions = ({ actionPathIsAbsolute = false, envFilePathIsAbsolute = false } = {}) => {
   const root = '/root'
   let actionPath = path.join('src', 'actions', 'action-1')
+  let envFilePath = path.join('my', '.env')
+
   if (actionPathIsAbsolute) {
     actionPath = path.join(root, actionPath)
+  }
+
+  if (envFilePathIsAbsolute) {
+    envFilePath = path.join(root, envFilePath)
   }
 
   return {
@@ -56,7 +62,7 @@ const createOptions = ({ actionPathIsAbsolute = false } = {}) => {
       root
     },
     'frontend-url': 'https://localhost:9080',
-    'env-file': 'my/.env'
+    'env-file': envFilePath
   }
 }
 
@@ -79,7 +85,7 @@ const createTestLaunchConfiguration = (
         request: 'launch',
         killBehavior: 'polite',
         runtimeExecutable: '${workspaceFolder}/node_modules/.bin/wskdebug', // eslint-disable-line no-template-curly-in-string
-        envFile: '${workspaceFolder}/my/.env', // eslint-disable-line no-template-curly-in-string
+        envFile: path.join('${workspaceFolder}', 'my', '.env'), // eslint-disable-line no-template-curly-in-string
         timeout: 30000,
         localRoot: '${workspaceFolder}', // eslint-disable-line no-template-curly-in-string
         remoteRoot: '/code',
@@ -300,6 +306,28 @@ test('output check', async () => {
 
 test('output check (action path is absolute)', async () => {
   const options = createOptions({ actionPathIsAbsolute: true })
+  const pkg = options['app-config'].manifest.full.packages.__APP_PACKAGE__
+  pkg.actions['action-1'].runtime = 'nodejs:14'
+  pkg.actions['action-1'].annotations = {
+    'require-adobe-auth': true
+  }
+  options['app-config'].ow.apihost = 'https://adobeioruntime.net'
+  options['destination-file'] = 'foo/bar.json'
+
+  fs.lstatSync.mockReturnValue({
+    isDirectory: () => false
+  })
+
+  const result = helpers.run(theGeneratorPath).withOptions(options)
+  await expect(result).resolves.not.toThrow()
+
+  const destFile = options['destination-file']
+  assert.file(destFile) // destination file is written
+  assert.JSONFileContent(destFile, createTestLaunchConfiguration(options['app-config'].ow.package, true))
+})
+
+test('output check (envFile path is absolute)', async () => {
+  const options = createOptions({ envFilePathIsAbsolute: true })
   const pkg = options['app-config'].manifest.full.packages.__APP_PACKAGE__
   pkg.actions['action-1'].runtime = 'nodejs:14'
   pkg.actions['action-1'].annotations = {
