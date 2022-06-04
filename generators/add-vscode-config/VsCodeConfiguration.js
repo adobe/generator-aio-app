@@ -83,7 +83,7 @@ function createPwaNodeLaunchConfiguration (params) {
   return {
     ...createLaunchConfiguration({ type: 'pwa-node', name: configurationName, request: 'launch' }),
     runtimeExecutable: '${workspaceFolder}/node_modules/.bin/wskdebug', // eslint-disable-line no-template-curly-in-string
-    envFile: `\${workspaceFolder}/${envFileRelativePath}`,
+    envFile: path.join('${workspaceFolder}', envFileRelativePath), // eslint-disable-line no-template-curly-in-string
     timeout: 30000,
     killBehavior: 'polite',
     localRoot: '${workspaceFolder}', // eslint-disable-line no-template-curly-in-string
