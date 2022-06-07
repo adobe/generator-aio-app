@@ -10,8 +10,8 @@ governing permissions and limitations under the License.
 */
 
 const path = require('path')
-const ActionGenerator = require('../../../lib/ActionGenerator')
-const { commonDependencyVersions } = require('../../../lib/constants')
+const { ActionGenerator, constants, commonTemplates } = require('@adobe/generator-app-common-lib')
+const { commonDependencyVersions } = constants
 
 class CloudEventsGenerator extends ActionGenerator {
   constructor (args, opts) {
@@ -71,11 +71,11 @@ function createCloudEvent(providerId, eventCode, payload) {
     // this.registerTransformStream(beautify({ indent_size: 2 }))
     this.sourceRoot(path.join(__dirname, '.'))
 
-    this.addAction(this.props.actionName, '../../common-templates/stub-action.js', {
+    this.addAction(this.props.actionName, commonTemplates['stub-action'], {
       testFile: './templates/publishEvents.test.js',
-      sharedLibFile: '../../common-templates/utils.js',
-      sharedLibTestFile: '../../common-templates/utils.test.js',
-      e2eTestFile: '../../common-templates/stub-action.e2e.js',
+      sharedLibFile: commonTemplates.utils,
+      sharedLibTestFile: commonTemplates['utils.test'],
+      e2eTestFile: commonTemplates['stub-action.e2e'],
       tplContext: this.props,
       dependencies: {
         '@adobe/aio-sdk': commonDependencyVersions['@adobe/aio-sdk'],

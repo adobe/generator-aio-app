@@ -9,14 +9,12 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const path = require('path')
 const Generator = require('yeoman-generator')
 const fs = require('fs-extra')
 
-const utils = require('../../lib/utils')
-
-const rawWebAssetsGenerator = path.join(__dirname, 'raw/index.js')
-const excReactWebAssetsGenerator = path.join(__dirname, 'exc-react/index.js')
+const { utils } = require('@adobe/generator-app-common-lib')
+const excReactWebAssetsGenerator = require('@adobe/generator-add-web-assets-exc-react')
+const rawWebAssetsGenerator = require('@adobe/generator-add-web-assets-exc-raw-html')
 
 /*
       'initializing',
@@ -72,10 +70,16 @@ class AddWebAssets extends Generator {
           validate: utils.atLeastOne
         }
       ])
-      this.composeWith(promptProps.webAssetsGenerator, this.options)
+      this.composeWith({
+        Generator: promptProps.webAssetsGenerator,
+        path: 'unknown'
+      }, this.options)
     } else {
       // default template
-      this.composeWith(excReactWebAssetsGenerator, this.options)
+      this.composeWith({
+        Generator: excReactWebAssetsGenerator,
+        path: 'unknown'
+      }, this.options)
     }
   }
 }

@@ -11,10 +11,12 @@ governing permissions and limitations under the License.
 const helpers = require('yeoman-test')
 const path = require('path')
 const fs = require('fs-extra')
-const utils = require('../../../lib/utils')
+const { utils } = require('@adobe/generator-app-common-lib')
 const cloneDeep = require('lodash.clonedeep')
 
-const theGeneratorPath = require.resolve('../../../generators/add-web-assets')
+const AddWebAssets = require('../../../generators/add-web-assets')
+const excReact = require('@adobe/generator-add-web-assets-exc-react')
+const RawGenerator = require('@adobe/generator-add-web-assets-exc-raw-html')
 const Generator = require('yeoman-generator')
 
 // spies
@@ -32,20 +34,20 @@ afterAll(() => {
   composeWith.mockRestore()
 })
 
-const expectedDefaultGenerator = expect.stringContaining(n('exc-react/index.js'))
+const expectedDefaultGenerator = excReact
 const expectedPromptChoices = [expect.objectContaining({
   type: 'list',
   name: 'webAssetsGenerator',
   choices: [
-    { name: 'React Spectrum 3', value: expect.stringContaining(n('exc-react/index.js')) },
-    { name: 'Pure HTML/JS', value: expect.stringContaining(n('raw/index.js')) }
+    { name: 'React Spectrum 3', value: excReact },
+    { name: 'Pure HTML/JS', value: RawGenerator }
   ],
   validate: utils.atLeastOne
 })]
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
-    expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
+    expect(AddWebAssets.prototype).toBeInstanceOf(Generator)
   })
 })
 
@@ -56,7 +58,7 @@ describe('run', () => {
     options['project-name'] = 'fake'
     options['adobe-services'] = 'some,string'
     options['web-src-folder'] = 'web-src'
-    await expect(helpers.run(theGeneratorPath)
+    await expect(helpers.run(AddWebAssets)
       .withOptions(options)
       .inTmpDir(dir => {
         fs.mkdirSync(path.join(dir, 'web-src'))
@@ -68,7 +70,7 @@ describe('run', () => {
     options['skip-prompt'] = true
     options['web-src-folder'] = 'web-src'
     let tmpDir
-    await helpers.run(theGeneratorPath)
+    await helpers.run(AddWebAssets)
       .withOptions(options)
       .inTmpDir(dir => {
         tmpDir = dir
@@ -78,11 +80,12 @@ describe('run', () => {
 
     expect(composeWith).toHaveBeenCalledTimes(1)
     // calls default generator
-    expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
-      'skip-prompt': true,
-      'adobe-services': '',
-      'project-name': expectProjectName
-    }))
+    expect(composeWith).toHaveBeenCalledWith({ Generator: expectedDefaultGenerator, path: 'unknown' },
+      expect.objectContaining({
+        'skip-prompt': true,
+        'adobe-services': '',
+        'project-name': expectProjectName
+      }))
   })
 
   test('--skip-prompt --has-backend false', async () => {
@@ -91,7 +94,7 @@ describe('run', () => {
     options['web-src-folder'] = 'web-src'
     options['has-backend'] = false
     let tmpDir
-    await helpers.run(theGeneratorPath)
+    await helpers.run(AddWebAssets)
       .withOptions(options)
       .inTmpDir(dir => {
         tmpDir = dir
@@ -101,7 +104,7 @@ describe('run', () => {
 
     expect(composeWith).toHaveBeenCalledTimes(1)
     // calls default generator
-    expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith({ Generator: expectedDefaultGenerator, path: 'unknown' }, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
       'project-name': expectProjectName,
@@ -114,11 +117,11 @@ describe('run', () => {
     options['skip-prompt'] = true
     options['web-src-folder'] = 'web-src'
     options['project-name'] = 'fake'
-    await helpers.run(theGeneratorPath)
+    await helpers.run(AddWebAssets)
       .withOptions(options)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith({ Generator: expectedDefaultGenerator, path: 'unknown' }, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': '',
       'project-name': 'fake'
@@ -131,11 +134,11 @@ describe('run', () => {
     options['web-src-folder'] = 'web-src'
     options['project-name'] = 'fake'
     options['adobe-services'] = 'some,string'
-    await helpers.run(theGeneratorPath)
+    await helpers.run(AddWebAssets)
       .withOptions(options)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith(expectedDefaultGenerator, expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith({ Generator: expectedDefaultGenerator, path: 'unknown' }, expect.objectContaining({
       'skip-prompt': true,
       'adobe-services': 'some,string',
       'project-name': 'fake'
@@ -146,7 +149,7 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['web-src-folder'] = 'web-src'
     options['project-name'] = 'fake'
-    await helpers.run(theGeneratorPath)
+    await helpers.run(AddWebAssets)
       .withOptions(options)
       .withPrompts({ webAssetsGenerator: 'a' })
 
@@ -154,7 +157,7 @@ describe('run', () => {
     expect(prompt).toHaveBeenCalledWith(expectedPromptChoices)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
-    expect(composeWith).toHaveBeenCalledWith('a', expect.objectContaining({
+    expect(composeWith).toHaveBeenCalledWith({ Generator: 'a', path: 'unknown' }, expect.objectContaining({
       'skip-prompt': false,
       'adobe-services': '',
       'project-name': 'fake'

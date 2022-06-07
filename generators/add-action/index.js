@@ -9,23 +9,25 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const path = require('path')
 const Generator = require('yeoman-generator')
 
-const { atLeastOne } = require('../../lib/utils')
+const { constants, utils } = require('@adobe/generator-app-common-lib')
+const { atLeastOne } = utils
+const { sdkCodes, isLoopingPrompts } = constants
 
-const { sdkCodes, isLoopingPrompts } = require('../../lib/constants')
+const generic = require('@adobe/generator-add-action-generic')
+const assetCompute = require('@adobe/generator-add-action-asset-compute')
 
 const inquirer = require('inquirer')
 
 // we have one actions generator per service, an action generator could generate different types of actions
 const sdkCodeToActionGenerator = {
-  [sdkCodes.target]: path.join(__dirname, 'target/index.js'),
-  [sdkCodes.analytics]: path.join(__dirname, 'analytics/index.js'),
-  [sdkCodes.campaign]: path.join(__dirname, 'campaign-standard/index.js'),
-  [sdkCodes.assetCompute]: path.join(__dirname, 'asset-compute/index.js'),
-  [sdkCodes.customerProfile]: path.join(__dirname, 'customer-profile/index.js'),
-  [sdkCodes.audienceManagerCD]: path.join(__dirname, 'audience-manager-cd/index.js')
+  [sdkCodes.target]: require('./target'),
+  [sdkCodes.analytics]: require('./analytics'),
+  [sdkCodes.campaign]: require('./campaign-standard'),
+  [sdkCodes.assetCompute]: assetCompute,
+  [sdkCodes.customerProfile]: require('./customer-profile'),
+  [sdkCodes.audienceManagerCD]: require('./audience-manager-cd')
 }
 
 const sdkCodeToTitle = {
@@ -37,7 +39,7 @@ const sdkCodeToTitle = {
   [sdkCodes.audienceManagerCD]: 'Adobe Audience Manager: Customer Data'
 }
 
-const genericActionGenerator = path.join(__dirname, 'generic/index.js')
+const genericActionGenerator = generic
 
 /*
       'initializing',
@@ -91,7 +93,7 @@ class AddActions extends Generator {
     }
 
     // run selected generators
-    actionGenerators.forEach(gen => this.composeWith(gen, {
+    actionGenerators.forEach(gen => this.composeWith({ Generator: gen, path: 'unknown' }, {
       // forward needed args
       'skip-prompt': this.options['skip-prompt'],
       'action-folder': this.options['action-folder'],

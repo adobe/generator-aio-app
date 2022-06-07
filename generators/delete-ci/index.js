@@ -12,7 +12,8 @@ governing permissions and limitations under the License.
 const Generator = require('yeoman-generator')
 const fs = require('fs-extra')
 
-const { ciDirName } = require('../../lib/constants')
+const { constants } = require('@adobe/generator-app-common-lib')
+const { ciDirName } = constants
 const DEPLOY_PROD_FILENAME = '/workflows/deploy_prod.yml'
 const DEPLOY_STAGE_FILENAME = '/workflows/deploy_stage.yml'
 const TEST_PR_FILENAME = '/workflows/pr_test.yml'
