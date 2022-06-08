@@ -66,6 +66,14 @@ class CodeGenerator extends Generator {
       this.props
     )
     // let actions and ui generator create subfolders + manifest
+
+    // npm pack leaves the unused `_dot.ignore and _dot.env` files on the system
+    // so we need to remove these unused files
+    // see https://github.com/adobe/generator-aio-app/issues/184
+    this.fs.delete(
+      [this.destinationPath('_dot.env'), this.destinationPath('_dot.gitignore')],
+      this.props
+    )
   }
 }
 

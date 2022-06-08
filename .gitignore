@@ -21,3 +21,4 @@ dist
 
 # no package lock for libs
 package-lock.json
+yarn.lock
