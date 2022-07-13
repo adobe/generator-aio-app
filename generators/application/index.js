@@ -89,13 +89,10 @@ class Application extends Generator {
       ])
       this.components = res.components
     }
-    const addActions = this.components.includes('actions')
-    const addEvents = this.components.includes('events')
-    const addWebAssets = this.components.includes('webAssets')
 
     // TODO cleanup unecessary params in all generators
     // run add action and add ui generators when applicable
-    if (addActions) {
+    if (this.components.includes('actions')) {
       this.composeWith(path.join(__dirname, '../add-action/index.js'), {
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
@@ -105,7 +102,7 @@ class Application extends Generator {
         'full-key-to-manifest': this.keyToManifest
       })
     }
-    if (addEvents) {
+    if (this.components.includes('events')) {
       this.composeWith(path.join(__dirname, '../add-events/index.js'), {
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
@@ -114,7 +111,7 @@ class Application extends Generator {
         'full-key-to-manifest': this.keyToManifest
       })
     }
-    if (addWebAssets) {
+    if (this.components.includes('webAssets')) {
       this.composeWith(path.join(__dirname, '../add-web-assets/index.js'), {
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
