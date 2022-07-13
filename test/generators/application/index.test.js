@@ -15,17 +15,22 @@ const helpers = require('yeoman-test')
 
 const theGeneratorPath = require.resolve('../../../generators/application')
 const Generator = require('yeoman-generator')
+const { utils } = require('@adobe/generator-app-common-lib')
 
 // spies
 const composeWith = jest.spyOn(Generator.prototype, 'composeWith')
+const writeKeyAppConfig = jest.spyOn(utils, 'writeKeyAppConfig')
 beforeAll(() => {
   composeWith.mockReturnValue(undefined)
+  writeKeyAppConfig.mockReturnValue(undefined)
 })
 beforeEach(() => {
   composeWith.mockClear()
+  writeKeyAppConfig.mockClear()
 })
 afterAll(() => {
   composeWith.mockRestore()
+  writeKeyAppConfig.mockRestore()
 })
 
 jest.mock('@adobe/generator-app-common-lib', () => ({
@@ -51,6 +56,10 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-action/index.js')), expect.any(Object))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-events/index.js')), expect.any(Object))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-web-assets/index.js')), expect.any(Object))
+
+    expect(writeKeyAppConfig).toHaveBeenCalledTimes(2)
+    expect(writeKeyAppConfig).toHaveBeenCalledWith(expect.any(Generator), expect.stringContaining('application.actions'), 'actions')
+    expect(writeKeyAppConfig).toHaveBeenCalledWith(expect.any(Generator), expect.stringContaining('application.web'), 'web-src')
   })
 
   test('--skip-prompt --adobe-services some,string', async () => {
@@ -61,6 +70,10 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-web-assets/index.js')), expect.any(Object))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-action/index.js')), expect.any(Object))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-events/index.js')), expect.any(Object))
+
+    expect(writeKeyAppConfig).toHaveBeenCalledTimes(2)
+    expect(writeKeyAppConfig).toHaveBeenCalledWith(expect.any(Generator), expect.stringContaining('application.actions'), 'actions')
+    expect(writeKeyAppConfig).toHaveBeenCalledWith(expect.any(Generator), expect.stringContaining('application.web'), 'web-src')
   })
 
   test('--adobe-services some,string --supported-adobe-services="" and prompt selection "actions"', async () => {
@@ -70,6 +83,9 @@ describe('run', () => {
 
     expect(composeWith).toHaveBeenCalledTimes(1)
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-action/index.js')), expect.any(Object))
+
+    expect(writeKeyAppConfig).toHaveBeenCalledTimes(1)
+    expect(writeKeyAppConfig).toHaveBeenCalledWith(expect.any(Generator), expect.stringContaining('application.actions'), 'actions')
   })
 
   test('--adobe-services some,string and prompt selection "events"', async () => {
@@ -79,6 +95,8 @@ describe('run', () => {
 
     expect(composeWith).toHaveBeenCalledTimes(1)
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-events/index.js')), expect.any(Object))
+
+    expect(writeKeyAppConfig).toHaveBeenCalledTimes(0)
   })
 
   test('--adobe-services some,string and prompt selection "web-assets"', async () => {
@@ -88,6 +106,9 @@ describe('run', () => {
 
     expect(composeWith).toHaveBeenCalledTimes(1)
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-web-assets/index.js')), expect.any(Object))
+
+    expect(writeKeyAppConfig).toHaveBeenCalledTimes(1)
+    expect(writeKeyAppConfig).toHaveBeenCalledWith(expect.any(Generator), expect.stringContaining('application.web'), 'web-src')
   })
   test('--adobe-services some,string --supported-adobe-service=some,other,string and prompt selection "web-assets, actions"', async () => {
     await helpers.run(theGeneratorPath)
@@ -97,6 +118,10 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledTimes(2)
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-action/index.js')), expect.any(Object))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-web-assets/index.js')), expect.any(Object))
+
+    expect(writeKeyAppConfig).toHaveBeenCalledTimes(2)
+    expect(writeKeyAppConfig).toHaveBeenCalledWith(expect.any(Generator), expect.stringContaining('application.actions'), 'actions')
+    expect(writeKeyAppConfig).toHaveBeenCalledWith(expect.any(Generator), expect.stringContaining('application.web'), 'web-src')
   })
   test('--adobe-services some,string --supported-adobe-service=some,other,string and prompt selection "web-assets, actions, events"', async () => {
     await helpers.run(theGeneratorPath)
@@ -107,6 +132,10 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-action/index.js')), expect.any(Object))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-web-assets/index.js')), expect.any(Object))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-events/index.js')), expect.any(Object))
+
+    expect(writeKeyAppConfig).toHaveBeenCalledTimes(2)
+    expect(writeKeyAppConfig).toHaveBeenCalledWith(expect.any(Generator), expect.stringContaining('application.actions'), 'actions')
+    expect(writeKeyAppConfig).toHaveBeenCalledWith(expect.any(Generator), expect.stringContaining('application.web'), 'web-src')
   })
   test('--skip-prompt --skip-install', async () => {
     await helpers.run(theGeneratorPath)
@@ -117,5 +146,9 @@ describe('run', () => {
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-action/index.js')), expect.any(Object))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-events/index.js')), expect.any(Object))
     expect(composeWith).toHaveBeenCalledWith(expect.stringContaining(path.normalize('add-web-assets/index.js')), expect.any(Object))
+
+    expect(writeKeyAppConfig).toHaveBeenCalledTimes(2)
+    expect(writeKeyAppConfig).toHaveBeenCalledWith(expect.any(Generator), expect.stringContaining('application.actions'), 'actions')
+    expect(writeKeyAppConfig).toHaveBeenCalledWith(expect.any(Generator), expect.stringContaining('application.web'), 'web-src')
   })
 })
