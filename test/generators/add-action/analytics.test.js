@@ -44,7 +44,7 @@ function assertGeneratedFiles (actionName) {
 
 // pkgName is optional
 function assertManifestContent (actionName, pkgName) {
-  const json = yaml.safeLoad(fs.readFileSync('ext.config.yaml').toString())
+  const json = yaml.load(fs.readFileSync('ext.config.yaml').toString())
   expect(json.runtimeManifest.packages).toBeDefined()
 
   // default packageName is path.basename(path.dirname('ext.config.yaml'))

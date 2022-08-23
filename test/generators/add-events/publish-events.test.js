@@ -42,7 +42,7 @@ function assertGeneratedFiles (actionName) {
 
 /* eslint no-unused-vars: 0 */
 function assertManifestContent (actionName) {
-  const json = yaml.safeLoad(fs.readFileSync('manifest.yml').toString())
+  const json = yaml.load(fs.readFileSync('manifest.yml').toString())
   expect(json.packages[constants.manifestPackagePlaceholder].actions[actionName]).toEqual({
     function: path.normalize(`${constants.actionsDirname}/${actionName}/index.js`),
     web: 'yes',
