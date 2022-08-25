@@ -53,7 +53,7 @@ function assertManifestContent (actionName, pkgName) {
   expect(json.runtimeManifest.packages[pkgName].actions[actionName]).toEqual({
     function: `${constants.actionsDirname}/${actionName}/index.js`,
     web: 'yes',
-    runtime: 'nodejs:14',
+    runtime: constants.defaultRuntimeKind,
     inputs: {
       LOG_LEVEL: 'debug',
       tenant: '$CUSTOMER_PROFILE_TENANT',
@@ -122,7 +122,7 @@ describe('run', () => {
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, { '@adobe/aio-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
-    assertNodeEngines(fs, '^10 || ^12 || ^14')
+    assertNodeEngines(fs, constants.nodeEngines)
   })
 
   test('--skip-prompt, and action with default name already exists', async () => {
@@ -153,7 +153,7 @@ describe('run', () => {
     assertManifestContent(actionName, 'somepackage')
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, { '@adobe/aio-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
-    assertNodeEngines(fs, '^10 || ^12 || ^14')
+    assertNodeEngines(fs, constants.nodeEngines)
   })
 
   test('user input actionName=fakeAction', async () => {
@@ -174,6 +174,6 @@ describe('run', () => {
     assertManifestContent(actionName)
     assertEnvContent(prevDotEnvContent)
     assertDependencies(fs, { '@adobe/aio-sdk': expect.any(String) }, { '@openwhisk/wskdebug': expect.any(String) })
-    assertNodeEngines(fs, '^10 || ^12 || ^14')
+    assertNodeEngines(fs, constants.nodeEngines)
   })
 })
