@@ -23,7 +23,7 @@ describe('prototype', () => {
 })
 
 describe('run', () => {
-  test('test basic ext generator', async () => {
+  test('basic ext generator', async () => {
     const options = { 'skip-prompt': true }
 
     const ret = await helpers.run(theGeneratorPath)

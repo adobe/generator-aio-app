@@ -44,16 +44,22 @@ class Application extends Generator {
     this.webSrcFolder = path.join(this.appFolder, 'web-src')
     this.configPath = path.join(this.appFolder, 'app.config.yaml')
     this.keyToManifest = 'application.' + runtimeManifestKey
+    this.components = ['actions', 'events', 'webAssets'] // defaults when skip prompt
   }
 
   async writing () {
-    // add basic config to point to path, relative to config file
-    utils.writeKeyAppConfig(this, 'application.actions', path.relative(this.appFolder, this.actionFolder))
-    utils.writeKeyAppConfig(this, 'application.web', path.relative(this.appFolder, this.webSrcFolder))
+    // add path to actions in app.config.yaml
+    if (this.components.includes('actions')) {
+      utils.writeKeyAppConfig(this, 'application.actions', path.relative(this.appFolder, this.actionFolder))
+    }
+
+    // add path to web assets in app.config.yaml
+    if (this.components.includes('webAssets')) {
+      utils.writeKeyAppConfig(this, 'application.web', path.relative(this.appFolder, this.webSrcFolder))
+    }
   }
 
   async composeWithAddGenerators () {
-    let components = ['actions', 'events', 'webAssets'] // defaults when skip prompt
     if (!this.options['skip-prompt']) {
       const res = await this.prompt([
         {
@@ -81,15 +87,12 @@ class Application extends Generator {
           validate: utils.atLeastOne
         }
       ])
-      components = res.components
+      this.components = res.components
     }
-    const addActions = components.includes('actions')
-    const addEvents = components.includes('events')
-    const addWebAssets = components.includes('webAssets')
 
     // TODO cleanup unecessary params in all generators
     // run add action and add ui generators when applicable
-    if (addActions) {
+    if (this.components.includes('actions')) {
       this.composeWith(path.join(__dirname, '../add-action/index.js'), {
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
@@ -99,7 +102,7 @@ class Application extends Generator {
         'full-key-to-manifest': this.keyToManifest
       })
     }
-    if (addEvents) {
+    if (this.components.includes('events')) {
       this.composeWith(path.join(__dirname, '../add-events/index.js'), {
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],
@@ -108,7 +111,7 @@ class Application extends Generator {
         'full-key-to-manifest': this.keyToManifest
       })
     }
-    if (addWebAssets) {
+    if (this.components.includes('webAssets')) {
       this.composeWith(path.join(__dirname, '../add-web-assets/index.js'), {
         'skip-prompt': this.options['skip-prompt'],
         'adobe-services': this.options['adobe-services'],

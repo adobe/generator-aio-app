@@ -1,6 +1,6 @@
 {
   "name": "@adobe/generator-aio-app",
-  "version": "3.1.1",
+  "version": "4.0.1",
   "description": "Adobe I/O application yeoman code generator",
   "main": "generators/index.js",
   "scripts": {
@@ -28,35 +28,35 @@
   },
   "homepage": "https://github.com/adobe/generator-aio-app#readme",
   "devDependencies": {
-    "@types/jest": "^25.1.0",
+    "@types/jest": "^28",
     "eol": "^0.9.1",
-    "eslint": "^7.1.0",
-    "eslint-config-standard": "^14.1.0",
+    "eslint": "^8",
+    "eslint-config-standard": "^17",
     "eslint-plugin-import": "^2.19.1",
-    "eslint-plugin-jest": "^23.1.1",
+    "eslint-plugin-jest": "^26",
+    "eslint-plugin-n": "^15.2.5",
     "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "jest": "^27",
+    "eslint-plugin-promise": "^6",
+    "jest": "^28",
     "stdout-stderr": "^0.1.13",
     "yeoman-assert": "^3.1.1",
     "yeoman-environment": "^3.2.0",
     "yeoman-test": "^6.0.0"
   },
   "dependencies": {
-    "@adobe/aio-lib-env": "^1.1.0",
+    "@adobe/aio-lib-env": "^2.0.0",
     "@adobe/generator-add-action-asset-compute": "^0.2.1",
     "@adobe/generator-add-action-generic": "^0.2.2",
     "@adobe/generator-add-web-assets-exc-raw-html": "^0.2.1",
     "@adobe/generator-add-web-assets-exc-react": "^0.2.1",
     "@adobe/generator-app-asset-compute": "^0.2.0",
-    "@adobe/generator-app-common-lib": "^0.3.0",
+    "@adobe/generator-app-common-lib": "^0.3.3",
     "@adobe/generator-app-excshell": "^0.2.0",
-    "fs-extra": "^9.0.0",
-    "inquirer": "^8.2.0",
-    "js-yaml": "^3.14.0",
+    "fs-extra": "^10.0.0",
+    "inquirer": "^8",
+    "js-yaml": "^4",
     "lodash.clonedeep": "^4.5.0",
-    "upath": "^1.2.0",
-    "yeoman-generator": "^5.4.0"
+    "upath": "^2.0.1",
+    "yeoman-generator": "^5.7.0"
   }
 }

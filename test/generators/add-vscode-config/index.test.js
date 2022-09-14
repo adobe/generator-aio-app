@@ -17,6 +17,7 @@ jest.mock('fs-extra')
 
 const theGeneratorPath = require.resolve('../../../generators/add-vscode-config')
 const Generator = require('yeoman-generator')
+const { constants } = require('@adobe/generator-app-common-lib')
 
 const createOptions = ({ actionPathIsAbsolute = false, envFilePathIsAbsolute = false } = {}) => {
   const root = '/root'
@@ -97,7 +98,7 @@ const createTestLaunchConfiguration = (
           '-v',
           '--disable-concurrency',
           '--kind',
-          'nodejs:14'
+          constants.defaultRuntimeKind
         ]
       },
       {
@@ -201,7 +202,7 @@ test('no missing options (action is a file)', async () => {
   const options = createOptions()
   options['destination-file'] = 'foo/bar.json'
   const pkg = options['app-config'].manifest.full.packages.__APP_PACKAGE__
-  pkg.actions['action-1'].runtime = 'nodejs:14'
+  pkg.actions['action-1'].runtime = constants.defaultRuntimeKind
 
   fs.lstatSync.mockReturnValue({
     isDirectory: () => false
@@ -220,7 +221,7 @@ test('no missing options (action is a folder)', async () => {
   const options = createOptions()
   options['destination-file'] = destFile
   const pkg = options['app-config'].manifest.full.packages.__APP_PACKAGE__
-  pkg.actions['action-1'].runtime = 'nodejs:14'
+  pkg.actions['action-1'].runtime = constants.defaultRuntimeKind
 
   let result
 
@@ -258,7 +259,7 @@ test('no missing options (action is a folder)', async () => {
 test('no missing options (coverage: action has a runtime specifier)', async () => {
   const options = createOptions()
   const pkg = options['app-config'].manifest.full.packages.__APP_PACKAGE__
-  pkg.actions['action-1'].runtime = 'nodejs:14'
+  pkg.actions['action-1'].runtime = constants.defaultRuntimeKind
 
   fs.lstatSync.mockReturnValue({
     isDirectory: () => false
@@ -285,7 +286,7 @@ test('no missing options (coverage: action has annotations)', async () => {
 test('output check', async () => {
   const options = createOptions()
   const pkg = options['app-config'].manifest.full.packages.__APP_PACKAGE__
-  pkg.actions['action-1'].runtime = 'nodejs:14'
+  pkg.actions['action-1'].runtime = constants.defaultRuntimeKind
   pkg.actions['action-1'].annotations = {
     'require-adobe-auth': true
   }
@@ -307,7 +308,7 @@ test('output check', async () => {
 test('output check (action path is absolute)', async () => {
   const options = createOptions({ actionPathIsAbsolute: true })
   const pkg = options['app-config'].manifest.full.packages.__APP_PACKAGE__
-  pkg.actions['action-1'].runtime = 'nodejs:14'
+  pkg.actions['action-1'].runtime = constants.defaultRuntimeKind
   pkg.actions['action-1'].annotations = {
     'require-adobe-auth': true
   }
@@ -329,7 +330,7 @@ test('output check (action path is absolute)', async () => {
 test('output check (envFile path is absolute)', async () => {
   const options = createOptions({ envFilePathIsAbsolute: true })
   const pkg = options['app-config'].manifest.full.packages.__APP_PACKAGE__
-  pkg.actions['action-1'].runtime = 'nodejs:14'
+  pkg.actions['action-1'].runtime = constants.defaultRuntimeKind
   pkg.actions['action-1'].annotations = {
     'require-adobe-auth': true
   }
@@ -354,7 +355,7 @@ test('output check (custom package)', async () => {
   const packages = options['app-config'].manifest.full.packages
   packages[customPackage] = Object.assign({}, packages.__APP_PACKAGE__)
   delete packages.__APP_PACKAGE__
-  packages[customPackage].actions['action-1'].runtime = 'nodejs:14'
+  packages[customPackage].actions['action-1'].runtime = constants.defaultRuntimeKind
   packages[customPackage].actions['action-1'].annotations = {
     'require-adobe-auth': true
   }
