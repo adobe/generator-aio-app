@@ -20,7 +20,6 @@ module.exports = {
   'add-web-assets': require('./add-web-assets'),
   application: require('./application'),
   'base-app': require('./base-app'),
-  'delete-ci': require('./delete-ci'),
   extensions: {
     'dx/excshell/1': excshell,
     'dx/asset-compute/worker/1': assetComputeWorker
