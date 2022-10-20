@@ -17,17 +17,22 @@ const { sdkCodes, isLoopingPrompts } = constants
 
 const generic = require('@adobe/generator-add-action-generic')
 const assetCompute = require('@adobe/generator-add-action-asset-compute')
+const target = require('@adobe/generator-add-action-target')
+const analytics = require('@adobe/generator-add-action-analytics')
+const campaign = require('@adobe/generator-add-action-campaign-standard')
+const customerProfile = require('@adobe/generator-add-action-customer-profile')
+const audienceManagerCD = require('@adobe/generator-add-action-audience-manager-cd')
 
 const inquirer = require('inquirer')
 
 // we have one actions generator per service, an action generator could generate different types of actions
 const sdkCodeToActionGenerator = {
-  [sdkCodes.target]: require('./target'),
-  [sdkCodes.analytics]: require('./analytics'),
-  [sdkCodes.campaign]: require('./campaign-standard'),
+  [sdkCodes.target]: target,
+  [sdkCodes.analytics]: analytics,
+  [sdkCodes.campaign]: campaign,
   [sdkCodes.assetCompute]: assetCompute,
-  [sdkCodes.customerProfile]: require('./customer-profile'),
-  [sdkCodes.audienceManagerCD]: require('./audience-manager-cd')
+  [sdkCodes.customerProfile]: customerProfile,
+  [sdkCodes.audienceManagerCD]: audienceManagerCD
 }
 
 const sdkCodeToTitle = {
@@ -38,8 +43,6 @@ const sdkCodeToTitle = {
   [sdkCodes.customerProfile]: 'Adobe Experience Platform: Realtime Customer Profile',
   [sdkCodes.audienceManagerCD]: 'Adobe Audience Manager: Customer Data'
 }
-
-const genericActionGenerator = generic
 
 /*
       'initializing',
@@ -71,7 +74,7 @@ class AddActions extends Generator {
 
   async prompting () {
     // default if skip-prompt = true
-    let actionGenerators = [genericActionGenerator]
+    let actionGenerators = [generic]
 
     if (!this.options['skip-prompt']) {
       // get list of choices
@@ -137,7 +140,7 @@ function getPromptChoices (adobeServicesOption, supportedAdobeServicesOption) {
     const addedServicesChoices = toChoices(addedSet, true)
     const choices = [
       new inquirer.Separator('-- supported templates for services added to this Adobe Developer Console Workspace --'),
-      { name: 'Generic', value: genericActionGenerator, checked: addedServicesChoices.length <= 0 },
+      { name: 'Generic', value: generic, checked: addedServicesChoices.length <= 0 },
       ...addedServicesChoices
     ]
     if (supportedNotAddedSet.size > 0) {
@@ -162,7 +165,7 @@ function getPromptChoices (adobeServicesOption, supportedAdobeServicesOption) {
     const addedServicesChoices = toChoices(addedSet, true)
     const choices = [
       new inquirer.Separator('-- supported templates for services added to this Adobe Developer Console Workspace --'),
-      { name: 'Generic', value: genericActionGenerator, checked: addedServicesChoices.length <= 0 },
+      { name: 'Generic', value: generic, checked: addedServicesChoices.length <= 0 },
       ...addedServicesChoices
     ]
     if (remainingSet.size > 0) {
@@ -177,7 +180,7 @@ function getPromptChoices (adobeServicesOption, supportedAdobeServicesOption) {
   /// case c. no supported-adobe-services nor adobe-services
   ///         e.g. `aio app init --import` with no services in workspace or `aio app init --no-login`
   return [
-    { name: 'Generic', value: genericActionGenerator, checked: true },
+    { name: 'Generic', value: generic, checked: true },
     new inquirer.Separator('-- Adobe service specific templates, corresponding services may have to be added to this Workspace in https://console.adobe.io/ --'),
     ...toChoices(remainingSet)
   ]

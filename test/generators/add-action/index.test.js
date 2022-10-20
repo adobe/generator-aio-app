@@ -16,8 +16,14 @@ const Generator = require('yeoman-generator')
 const { constants } = require('@adobe/generator-app-common-lib')
 const { sdkCodes } = constants
 const cloneDeep = require('lodash.clonedeep')
+
 const generic = require('@adobe/generator-add-action-generic')
 const assetCompute = require('@adobe/generator-add-action-asset-compute')
+const target = require('@adobe/generator-add-action-target')
+const analytics = require('@adobe/generator-add-action-analytics')
+const campaign = require('@adobe/generator-add-action-campaign-standard')
+const customerProfile = require('@adobe/generator-add-action-customer-profile')
+const audienceManagerCD = require('@adobe/generator-add-action-audience-manager-cd')
 
 const expectedSeparator = expect.objectContaining({
   type: 'separator',
@@ -30,15 +36,15 @@ const expectedChoices = {
   },
   [sdkCodes.analytics]: {
     name: 'Adobe Analytics',
-    value: require('../../../generators/add-action/analytics')
+    value: analytics
   },
   [sdkCodes.target]: {
     name: 'Adobe Target',
-    value: require('../../../generators/add-action/target')
+    value: target
   },
   [sdkCodes.campaign]: {
     name: 'Adobe Campaign Standard',
-    value: require('../../../generators/add-action/campaign-standard')
+    value: campaign
   },
   [sdkCodes.assetCompute]: {
     name: 'Adobe Asset Compute Worker',
@@ -46,11 +52,11 @@ const expectedChoices = {
   },
   [sdkCodes.customerProfile]: {
     name: 'Adobe Experience Platform: Realtime Customer Profile',
-    value: require('../../../generators/add-action/customer-profile')
+    value: customerProfile
   },
   [sdkCodes.audienceManagerCD]: {
     name: 'Adobe Audience Manager: Customer Data',
-    value: require('../../../generators/add-action/audience-manager-cd')
+    value: audienceManagerCD
   }
 }
 

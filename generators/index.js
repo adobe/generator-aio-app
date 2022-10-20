@@ -9,9 +9,6 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const excshell = require('@adobe/generator-app-excshell')
-const assetComputeWorker = require('@adobe/generator-app-asset-compute')
-
 module.exports = {
   'add-action': require('./add-action'),
   'add-ci': require('./add-ci'),
@@ -19,9 +16,5 @@ module.exports = {
   'add-vscode-config': require('./add-vscode-config'),
   'add-web-assets': require('./add-web-assets'),
   application: require('./application'),
-  'base-app': require('./base-app'),
-  extensions: {
-    'dx/excshell/1': excshell,
-    'dx/asset-compute/worker/1': assetComputeWorker
-  }
+  'base-app': require('./base-app')
 }
