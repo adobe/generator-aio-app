@@ -19,5 +19,4 @@ test('all exports', () => {
   expect(generators['add-web-assets']).toBeDefined()
   expect(generators.application).toBeDefined()
   expect(generators['base-app']).toBeDefined()
-  expect(generators.extensions).toBeDefined()
 })
