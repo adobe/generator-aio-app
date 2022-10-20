@@ -45,8 +45,13 @@
   },
   "dependencies": {
     "@adobe/aio-lib-env": "^2.0.0",
+    "@adobe/generator-add-action-analytics": "^0.1.1",
     "@adobe/generator-add-action-asset-compute": "^0.2.1",
+    "@adobe/generator-add-action-audience-manager-cd": "^0.1.1",
+    "@adobe/generator-add-action-campaign-standard": "^0.1.1",
+    "@adobe/generator-add-action-customer-profile": "^0.1.1",
     "@adobe/generator-add-action-generic": "^0.2.2",
+    "@adobe/generator-add-action-target": "^0.1.1",
     "@adobe/generator-add-web-assets-exc-raw-html": "^0.2.1",
     "@adobe/generator-add-web-assets-exc-react": "^0.2.1",
     "@adobe/generator-app-asset-compute": "^0.2.0",
