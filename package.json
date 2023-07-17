@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/adobe/generator-aio-app#readme",
   "devDependencies": {
-    "@types/jest": "^28",
+    "@types/jest": "^29",
     "eol": "^0.9.1",
     "eslint": "^8",
     "eslint-config-standard": "^17",
