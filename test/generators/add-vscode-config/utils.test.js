@@ -22,9 +22,9 @@ test('exports', () => {
 
 test('absApp', () => {
   const root = '/foo'
-  expect(() => absApp(undefined, undefined)).toThrowError()
-  expect(() => absApp(undefined, 'bar')).toThrowError()
-  expect(() => absApp(root, undefined)).toThrowError()
+  expect(() => absApp(undefined, undefined)).toThrow()
+  expect(() => absApp(undefined, 'bar')).toThrow()
+  expect(() => absApp(root, undefined)).toThrow()
 
   expect(absApp(root, 'bar')).toEqual(path.join(root, 'bar'))
   expect(absApp(root, path.join(root, 'bar'))).toEqual(path.join(root, 'bar'))
