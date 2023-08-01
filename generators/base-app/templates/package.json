@@ -5,7 +5,7 @@
   "dependencies": {
   },
   "devDependencies": {
-      "jest": "^27.2.4"
+      "jest": "^29"
   },
   "scripts": {
       "test": "jest --passWithNoTests ./test",
