@@ -55,7 +55,7 @@
     "@adobe/generator-add-web-assets-exc-raw-html": "^0.2.1",
     "@adobe/generator-add-web-assets-exc-react": "^0.2.1",
     "@adobe/generator-app-asset-compute": "^1.0.0",
-    "@adobe/generator-app-common-lib": "^0.4.0",
+    "@adobe/generator-app-common-lib": "^1.0.0",
     "@adobe/generator-app-excshell": "^0.2.0",
     "fs-extra": "^11.1.1",
     "inquirer": "^8",
