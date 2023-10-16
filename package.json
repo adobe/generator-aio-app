@@ -41,7 +41,7 @@
     "stdout-stderr": "^0.1.13",
     "yeoman-assert": "^3.1.1",
     "yeoman-environment": "^3.2.0",
-    "yeoman-test": "^6.0.0"
+    "yeoman-test": "^8.1.0"
   },
   "dependencies": {
     "@adobe/aio-lib-env": "^2.0.0",
