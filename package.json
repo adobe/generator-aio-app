@@ -58,7 +58,7 @@
     "@adobe/generator-app-common-lib": "^1.0.0",
     "@adobe/generator-app-excshell": "^0.2.0",
     "fs-extra": "^11.1.1",
-    "inquirer": "^8",
+    "inquirer": "^9",
     "js-yaml": "^4",
     "lodash.clonedeep": "^4.5.0",
     "upath": "^2.0.1",
