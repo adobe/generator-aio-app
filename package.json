@@ -62,7 +62,7 @@
     "js-yaml": "^4",
     "lodash.clonedeep": "^4.5.0",
     "upath": "^2.0.1",
-    "yeoman-generator": "^5.7.0"
+    "yeoman-generator": "^7.1.1"
   },
   "engines": {
     "node": ">=18"
