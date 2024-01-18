@@ -11,10 +11,13 @@ governing permissions and limitations under the License.
 
 /* eslint-disable jest/expect-expect */ // => use assert
 
-const helpers = require('yeoman-test')
-
 const theGeneratorPath = require.resolve('../../../generators/base-app/')
 const Generator = require('yeoman-generator')
+
+let yeomanTestHelpers
+beforeAll(async () => {
+  yeomanTestHelpers = (await import('yeoman-test')).default
+})
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
@@ -26,7 +29,7 @@ describe('run', () => {
   test('basic ext generator', async () => {
     const options = { 'skip-prompt': true }
 
-    const ret = await helpers.run(theGeneratorPath)
+    const ret = await yeomanTestHelpers.run(theGeneratorPath)
       .withOptions(options)
     expect(ret).toBeDefined()
     ret.assertFile('.env')

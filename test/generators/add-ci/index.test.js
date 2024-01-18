@@ -11,13 +11,17 @@ governing permissions and limitations under the License.
 
 /* eslint-disable jest/expect-expect */ // => use assert
 
-const helpers = require('yeoman-test')
 const assert = require('yeoman-assert')
 const fs = require('fs')
 const path = require('path')
 
 const theGeneratorPath = require.resolve('../../../generators/add-ci')
 const Generator = require('yeoman-generator')
+
+let yeomanTestHelpers
+beforeAll(async () => {
+  yeomanTestHelpers = (await import('yeoman-test')).default
+})
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
@@ -27,7 +31,7 @@ describe('prototype', () => {
 
 describe('run', () => {
   test('should create files under .github', async () => {
-    await helpers.run(theGeneratorPath)
+    await yeomanTestHelpers.run(theGeneratorPath)
       .inTmpDir(dir => {
         fs.writeFileSync(path.join(dir, '.env'), 'FAKECONTENT')
       })

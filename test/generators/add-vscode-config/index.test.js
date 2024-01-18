@@ -8,12 +8,16 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const helpers = require('yeoman-test')
 const assert = require('yeoman-assert')
 const fs = require('fs-extra')
 const path = require('path')
 
 jest.mock('fs-extra')
+
+let yeomanTestHelpers
+beforeAll(async () => {
+  yeomanTestHelpers = (await import('yeoman-test')).default
+})
 
 const theGeneratorPath = require.resolve('../../../generators/add-vscode-config')
 const Generator = require('yeoman-generator')
@@ -147,7 +151,7 @@ test('option app-config incomplete', async () => {
       }
     }
   }
-  const result = helpers.run(theGeneratorPath).withOptions(options)
+  const result = yeomanTestHelpers.run(theGeneratorPath).withOptions(options)
 
   await expect(result).rejects.toEqual(new Error(
     'App config missing keys: app.hasFrontend, app.hasBackend, root'))
@@ -159,7 +163,7 @@ test('option backend keys missing', async () => {
   options['app-config'].app.hasFrontend = false
   delete options['app-config'].manifest
 
-  const result = helpers.run(theGeneratorPath).withOptions(options)
+  const result = yeomanTestHelpers.run(theGeneratorPath).withOptions(options)
   await expect(result).rejects.toEqual(new Error('App config missing keys: manifest.packagePlaceholder, manifest.full.packages'))
 })
 
@@ -170,7 +174,7 @@ test('option frontend-url missing', async () => {
   options['frontend-url'] = undefined
   options['env-file'] = 'env-file'
 
-  const result = helpers.run(theGeneratorPath).withOptions(options)
+  const result = yeomanTestHelpers.run(theGeneratorPath).withOptions(options)
   await expect(result).rejects.toEqual(new Error('Missing option for generator: frontend-url'))
 })
 
@@ -181,7 +185,7 @@ test('option env-file missing', async () => {
   options['frontend-url'] = 'https://localhost:9999'
   delete options['env-file']
 
-  const result = helpers.run(theGeneratorPath).withOptions(options)
+  const result = yeomanTestHelpers.run(theGeneratorPath).withOptions(options)
   await expect(result).rejects.toEqual(new Error('Missing option for generator: env-file'))
 })
 
@@ -194,7 +198,7 @@ test('no missing options -- coverage (no frontend or backend, runtime not specif
     isDirectory: () => false
   })
 
-  const result = helpers.run(theGeneratorPath).withOptions(options)
+  const result = yeomanTestHelpers.run(theGeneratorPath).withOptions(options)
   await expect(result).resolves.not.toThrow()
 })
 
@@ -208,7 +212,7 @@ test('no missing options (action is a file)', async () => {
     isDirectory: () => false
   })
 
-  const result = helpers.run(theGeneratorPath).withOptions(options)
+  const result = yeomanTestHelpers.run(theGeneratorPath).withOptions(options)
   await expect(result).resolves.not.toThrow()
 
   assert.file(options['destination-file']) // destination file is written
@@ -230,7 +234,7 @@ test('no missing options (action is a folder)', async () => {
   })
 
   fs.readJsonSync.mockReturnValue({}) // no main property in package.json
-  result = helpers.run(theGeneratorPath).withOptions(options)
+  result = yeomanTestHelpers.run(theGeneratorPath).withOptions(options)
   await expect(result).resolves.not.toThrow()
 
   assert.file(destFile) // destination file is written
@@ -243,7 +247,7 @@ test('no missing options (action is a folder)', async () => {
   )
 
   fs.readJsonSync.mockReturnValue({ main: 'main.js' }) // has main property in package.json
-  result = helpers.run(theGeneratorPath).withOptions(options)
+  result = yeomanTestHelpers.run(theGeneratorPath).withOptions(options)
   await expect(result).resolves.not.toThrow()
 
   assert.file(destFile) // destination file is written
@@ -265,7 +269,7 @@ test('no missing options (coverage: action has a runtime specifier)', async () =
     isDirectory: () => false
   })
 
-  const result = helpers.run(theGeneratorPath).withOptions(options)
+  const result = yeomanTestHelpers.run(theGeneratorPath).withOptions(options)
   await expect(result).resolves.not.toThrow()
 })
 
@@ -279,7 +283,7 @@ test('no missing options (coverage: action has annotations)', async () => {
     isDirectory: () => false
   })
 
-  const result = helpers.run(theGeneratorPath).withOptions(options)
+  const result = yeomanTestHelpers.run(theGeneratorPath).withOptions(options)
   await expect(result).resolves.not.toThrow()
 })
 
@@ -297,7 +301,7 @@ test('output check', async () => {
     isDirectory: () => false
   })
 
-  const result = helpers.run(theGeneratorPath).withOptions(options)
+  const result = yeomanTestHelpers.run(theGeneratorPath).withOptions(options)
   await expect(result).resolves.not.toThrow()
 
   const destFile = options['destination-file']
@@ -319,7 +323,7 @@ test('output check (action path is absolute)', async () => {
     isDirectory: () => false
   })
 
-  const result = helpers.run(theGeneratorPath).withOptions(options)
+  const result = yeomanTestHelpers.run(theGeneratorPath).withOptions(options)
   await expect(result).resolves.not.toThrow()
 
   const destFile = options['destination-file']
@@ -341,7 +345,7 @@ test('output check (envFile path is absolute)', async () => {
     isDirectory: () => false
   })
 
-  const result = helpers.run(theGeneratorPath).withOptions(options)
+  const result = yeomanTestHelpers.run(theGeneratorPath).withOptions(options)
   await expect(result).resolves.not.toThrow()
 
   const destFile = options['destination-file']
@@ -366,7 +370,7 @@ test('output check (custom package)', async () => {
     isDirectory: () => false
   })
 
-  const result = helpers.run(theGeneratorPath).withOptions(options)
+  const result = yeomanTestHelpers.run(theGeneratorPath).withOptions(options)
   await expect(result).resolves.not.toThrow()
 
   const destFile = options['destination-file']
@@ -384,7 +388,7 @@ test('vscode launch configuration exists', async () => {
 
   fs.existsSync.mockReturnValue(true) // destination file exists
 
-  const result = helpers
+  const result = yeomanTestHelpers
     .run(theGeneratorPath)
     .withOptions(options)
     .withPrompts({ overwriteVsCodeConfig: false })

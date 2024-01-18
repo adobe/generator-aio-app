@@ -8,8 +8,6 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const helpers = require('yeoman-test')
-
 const theGeneratorPath = require.resolve('../../../generators/add-events')
 const Generator = require('yeoman-generator')
 const cloneDeep = require('lodash.clonedeep')
@@ -17,7 +15,13 @@ const cloneDeep = require('lodash.clonedeep')
 // spies
 const prompt = jest.spyOn(Generator.prototype, 'prompt')
 const composeWith = jest.spyOn(Generator.prototype, 'composeWith')
-beforeAll(() => {
+
+let yeomanTestHelpers
+beforeAll(async () => {
+  yeomanTestHelpers = (await import('yeoman-test')).default
+})
+
+beforeAll(async () => {
   // mock implementations
   composeWith.mockReturnValue(undefined)
 })
@@ -43,7 +47,7 @@ describe('run', () => {
   test('--skip-prompt "', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
-    await helpers.run(theGeneratorPath)
+    await yeomanTestHelpers.run(theGeneratorPath)
       .withOptions(options)
     // with skip prompt defaults to generic action
     // make sure sub generators have been called

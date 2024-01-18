@@ -8,7 +8,6 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const helpers = require('yeoman-test')
 const path = require('path')
 const fs = require('fs-extra')
 const { utils } = require('@adobe/generator-app-common-lib')
@@ -22,7 +21,13 @@ const Generator = require('yeoman-generator')
 // spies
 const prompt = jest.spyOn(Generator.prototype, 'prompt')
 const composeWith = jest.spyOn(Generator.prototype, 'composeWith')
-beforeAll(() => {
+
+let yeomanTestHelpers
+beforeAll(async () => {
+  yeomanTestHelpers = (await import('yeoman-test')).default
+})
+
+beforeAll(async () => {
   // mock implementations
   composeWith.mockReturnValue(undefined)
 })
@@ -58,7 +63,7 @@ describe('run', () => {
     options['project-name'] = 'fake'
     options['adobe-services'] = 'some,string'
     options['web-src-folder'] = 'web-src'
-    await expect(helpers.run(AddWebAssets)
+    await expect(yeomanTestHelpers.run(AddWebAssets)
       .withOptions(options)
       .inTmpDir(dir => {
         fs.mkdirSync(path.join(dir, 'web-src'))
@@ -70,7 +75,7 @@ describe('run', () => {
     options['skip-prompt'] = true
     options['web-src-folder'] = 'web-src'
     let tmpDir
-    await helpers.run(AddWebAssets)
+    await yeomanTestHelpers.run(AddWebAssets)
       .withOptions(options)
       .inTmpDir(dir => {
         tmpDir = dir
@@ -94,7 +99,7 @@ describe('run', () => {
     options['web-src-folder'] = 'web-src'
     options['has-backend'] = false
     let tmpDir
-    await helpers.run(AddWebAssets)
+    await yeomanTestHelpers.run(AddWebAssets)
       .withOptions(options)
       .inTmpDir(dir => {
         tmpDir = dir
@@ -117,7 +122,7 @@ describe('run', () => {
     options['skip-prompt'] = true
     options['web-src-folder'] = 'web-src'
     options['project-name'] = 'fake'
-    await helpers.run(AddWebAssets)
+    await yeomanTestHelpers.run(AddWebAssets)
       .withOptions(options)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
@@ -134,7 +139,7 @@ describe('run', () => {
     options['web-src-folder'] = 'web-src'
     options['project-name'] = 'fake'
     options['adobe-services'] = 'some,string'
-    await helpers.run(AddWebAssets)
+    await yeomanTestHelpers.run(AddWebAssets)
       .withOptions(options)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
@@ -149,7 +154,7 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['web-src-folder'] = 'web-src'
     options['project-name'] = 'fake'
-    await helpers.run(AddWebAssets)
+    await yeomanTestHelpers.run(AddWebAssets)
       .withOptions(options)
       .withPrompts({ webAssetsGenerator: 'a' })
 
