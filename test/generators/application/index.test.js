@@ -11,8 +11,6 @@ governing permissions and limitations under the License.
 
 const path = require('path')
 
-const helpers = require('yeoman-test')
-
 const theGeneratorPath = require.resolve('../../../generators/application')
 const Generator = require('yeoman-generator')
 const { utils } = require('@adobe/generator-app-common-lib')
@@ -20,7 +18,13 @@ const { utils } = require('@adobe/generator-app-common-lib')
 // spies
 const composeWith = jest.spyOn(Generator.prototype, 'composeWith')
 const writeKeyAppConfig = jest.spyOn(utils, 'writeKeyAppConfig')
-beforeAll(() => {
+
+let yeomanTestHelpers
+beforeAll(async () => {
+  yeomanTestHelpers = (await import('yeoman-test')).default
+})
+
+beforeAll(async () => {
   composeWith.mockReturnValue(undefined)
   writeKeyAppConfig.mockReturnValue(undefined)
 })
@@ -49,7 +53,7 @@ describe('prototype', () => {
 
 describe('run', () => {
   test('--skip-prompt --project-name fake', async () => {
-    await helpers.run(theGeneratorPath)
+    await yeomanTestHelpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true, 'project-name': 'fake-name', 'skip-install': false })
 
     expect(composeWith).toHaveBeenCalledTimes(3)
@@ -63,7 +67,7 @@ describe('run', () => {
   })
 
   test('--skip-prompt --adobe-services some,string', async () => {
-    await helpers.run(theGeneratorPath)
+    await yeomanTestHelpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true, 'adobe-services': 'some,string', 'skip-install': false })
 
     expect(composeWith).toHaveBeenCalledTimes(3)
@@ -77,7 +81,7 @@ describe('run', () => {
   })
 
   test('--adobe-services some,string --supported-adobe-services="" and prompt selection "actions"', async () => {
-    await helpers.run(theGeneratorPath)
+    await yeomanTestHelpers.run(theGeneratorPath)
       .withOptions({ 'adobe-services': 'some,string', 'supported-adobe-services': '', 'skip-install': false })
       .withPrompts({ components: ['actions'] })
 
@@ -89,7 +93,7 @@ describe('run', () => {
   })
 
   test('--adobe-services some,string and prompt selection "events"', async () => {
-    await helpers.run(theGeneratorPath)
+    await yeomanTestHelpers.run(theGeneratorPath)
       .withOptions({ 'adobe-services': 'some,string', 'skip-install': false })
       .withPrompts({ components: ['events'] })
 
@@ -100,7 +104,7 @@ describe('run', () => {
   })
 
   test('--adobe-services some,string and prompt selection "web-assets"', async () => {
-    await helpers.run(theGeneratorPath)
+    await yeomanTestHelpers.run(theGeneratorPath)
       .withOptions({ 'adobe-services': 'some,string', 'skip-install': false })
       .withPrompts({ components: ['webAssets'] })
 
@@ -111,7 +115,7 @@ describe('run', () => {
     expect(writeKeyAppConfig).toHaveBeenCalledWith(expect.any(Generator), expect.stringContaining('application.web'), 'web-src')
   })
   test('--adobe-services some,string --supported-adobe-service=some,other,string and prompt selection "web-assets, actions"', async () => {
-    await helpers.run(theGeneratorPath)
+    await yeomanTestHelpers.run(theGeneratorPath)
       .withOptions({ 'adobe-services': 'some,string', 'supported-adobe-services': 'some,other,string', 'skip-install': false })
       .withPrompts({ components: ['webAssets', 'actions'] })
 
@@ -124,7 +128,7 @@ describe('run', () => {
     expect(writeKeyAppConfig).toHaveBeenCalledWith(expect.any(Generator), expect.stringContaining('application.web'), 'web-src')
   })
   test('--adobe-services some,string --supported-adobe-service=some,other,string and prompt selection "web-assets, actions, events"', async () => {
-    await helpers.run(theGeneratorPath)
+    await yeomanTestHelpers.run(theGeneratorPath)
       .withOptions({ 'adobe-services': 'some,string', 'supported-adobe-services': 'some,other,string', 'skip-install': false })
       .withPrompts({ components: ['webAssets', 'actions', 'events'] })
 
@@ -138,7 +142,7 @@ describe('run', () => {
     expect(writeKeyAppConfig).toHaveBeenCalledWith(expect.any(Generator), expect.stringContaining('application.web'), 'web-src')
   })
   test('--skip-prompt --skip-install', async () => {
-    await helpers.run(theGeneratorPath)
+    await yeomanTestHelpers.run(theGeneratorPath)
       .withOptions({ 'skip-prompt': true, 'skip-install': true })
 
     expect(composeWith).toHaveBeenCalledTimes(3)

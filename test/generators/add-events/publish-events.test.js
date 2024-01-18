@@ -10,7 +10,6 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const helpers = require('yeoman-test')
 const assert = require('yeoman-assert')
 const fs = require('fs')
 const yaml = require('js-yaml')
@@ -21,6 +20,11 @@ const theGeneratorPath = require.resolve('../../../generators/add-events/publish
 const Generator = require('yeoman-generator')
 
 const { constants } = require('@adobe/generator-app-common-lib')
+
+let yeomanTestHelpers
+beforeAll(async () => {
+  yeomanTestHelpers = (await import('yeoman-test')).default
+})
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
@@ -93,7 +97,7 @@ describe('run', () => {
     options['skip-prompt'] = true
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     try {
-      await helpers.run(theGeneratorPath)
+      await yeomanTestHelpers.run(theGeneratorPath)
         .withOptions(options)
         .inTmpDir(dir => {
           fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
@@ -121,7 +125,7 @@ describe('run', () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
-    await helpers.run(theGeneratorPath)
+    await yeomanTestHelpers.run(theGeneratorPath)
       .withOptions(options)
       .inTmpDir(dir => {
         fs.writeFileSync('ext.config.yaml', yaml.dump({
@@ -157,7 +161,7 @@ describe('run', () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = false
-    await helpers.run(theGeneratorPath)
+    await yeomanTestHelpers.run(theGeneratorPath)
       .withOptions(options)
       .withPrompts({ actionName: 'fakeAction' })
       .inTmpDir(dir => {
