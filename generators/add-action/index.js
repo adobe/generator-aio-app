@@ -21,7 +21,6 @@ const target = require('@adobe/generator-add-action-target')
 const analytics = require('@adobe/generator-add-action-analytics')
 const campaign = require('@adobe/generator-add-action-campaign-standard')
 const customerProfile = require('@adobe/generator-add-action-customer-profile')
-const audienceManagerCD = require('@adobe/generator-add-action-audience-manager-cd')
 
 const inquirer = require('inquirer')
 
@@ -31,8 +30,7 @@ const sdkCodeToActionGenerator = {
   [sdkCodes.analytics]: analytics,
   [sdkCodes.campaign]: campaign,
   [sdkCodes.assetCompute]: assetCompute,
-  [sdkCodes.customerProfile]: customerProfile,
-  [sdkCodes.audienceManagerCD]: audienceManagerCD
+  [sdkCodes.customerProfile]: customerProfile
 }
 
 const sdkCodeToTitle = {
@@ -40,8 +38,7 @@ const sdkCodeToTitle = {
   [sdkCodes.analytics]: 'Adobe Analytics',
   [sdkCodes.campaign]: 'Adobe Campaign Standard',
   [sdkCodes.assetCompute]: 'Adobe Asset Compute Worker',
-  [sdkCodes.customerProfile]: 'Adobe Experience Platform: Realtime Customer Profile',
-  [sdkCodes.audienceManagerCD]: 'Adobe Audience Manager: Customer Data'
+  [sdkCodes.customerProfile]: 'Adobe Experience Platform: Realtime Customer Profile'
 }
 
 /*
