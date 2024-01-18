@@ -27,20 +27,20 @@ jobs:
           os: ${{ matrix.os }}
           version: 9.x.x
       - name: Auth
-        uses: adobe/aio-apps-action@2.0.2
+        uses: adobe/aio-apps-action@3.0.0
         with:
           os: ${{ matrix.os }}
-          command: auth
+          command: oauth_sts
           CLIENTID: ${{ secrets.CLIENTID_PROD }}
           CLIENTSECRET: ${{ secrets.CLIENTSECRET_PROD }}
           TECHNICALACCOUNTID: ${{ secrets.TECHNICALACCID_PROD }}
+          TECHNICALACCOUNTEMAIL: ${{ secrets.TECHNICALACCEMAIL_PROD }}
           IMSORGID: ${{ secrets.IMSORGID_PROD }}
           SCOPES: ${{ secrets.SCOPES_PROD }}
-          KEY: ${{ secrets.KEY_PROD }}
       - name: Build
         env:
           AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE_PROD }}
-        uses: adobe/aio-apps-action@2.0.2
+        uses: adobe/aio-apps-action@3.0.0
         with:
           os: ${{ matrix.os }}
           command: build
@@ -54,7 +54,7 @@ jobs:
           AIO_PROJECT_WORKSPACE_ID: ${{ secrets.AIO_PROJECT_WORKSPACE_ID_PROD }}
           AIO_PROJECT_WORKSPACE_NAME: ${{ secrets.AIO_PROJECT_WORKSPACE_NAME_PROD }}
           AIO_PROJECT_WORKSPACE_DETAILS_SERVICES: ${{ secrets.AIO_PROJECT_WORKSPACE_DETAILS_SERVICES_PROD }}
-        uses: adobe/aio-apps-action@2.0.2
+        uses: adobe/aio-apps-action@3.0.0
         with:
           os: ${{ matrix.os }}
           command: deploy
