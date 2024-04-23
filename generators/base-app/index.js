@@ -25,6 +25,12 @@ const { dotenvFilename } = constants
       'end'
       */
 
+const linterOptions = {
+  none: 'none',
+  basic: 'basic',
+  'adobe-recommended': 'adobe-recommended'
+}
+
 class CodeGenerator extends Generator {
   constructor (args, opts) {
     super(args, opts)
@@ -32,6 +38,7 @@ class CodeGenerator extends Generator {
     // options are inputs from CLI or yeoman parent generator
     this.option('skip-prompt', { default: false })
     this.option('project-name', { type: String, default: path.basename(process.cwd()) })
+    this.option('linter', { type: String, default: linterOptions.basic })
 
     // props are passed to templates
     this.props = {}
@@ -65,13 +72,64 @@ class CodeGenerator extends Generator {
       this.destinationPath('.gitignore'),
       this.props
     )
+
+    // setup linter
+    switch (this.options.linter) {
+      case 'none':
+        // remove lint scripts from package.json if no linter
+        this.fs.extendJSON(this.destinationPath('package.json'), {
+          scripts: {
+            lint: undefined,
+            'lint:fix': undefined
+          }
+        })
+        break
+      case 'basic':
+        this.fs.copyTpl(
+          this.templatePath('_eslintrc.basic.json'),
+          this.destinationPath('.eslintrc.json'),
+          this.props
+        )
+        this.fs.extendJSON(this.destinationPath('package.json'), {
+          devDependencies: {
+            eslint: '^8',
+            'eslint-plugin-jest': '^27.2.3'
+          }
+        })
+        break
+      case 'adobe-recommended':
+        this.fs.copyTpl(
+          this.templatePath('_eslintrc.adobe.recommended.json'),
+          this.destinationPath('.eslintrc.json'),
+          this.props
+        )
+        this.fs.extendJSON(this.destinationPath('package.json'), {
+          devDependencies: {
+            '@adobe/eslint-config-aio-lib-config': '^3',
+            'eslint-config-standard': '^17.1.0',
+            'eslint-plugin-import': '^2.28.0',
+            'eslint-plugin-jest': '^27.2.3',
+            'eslint-plugin-jsdoc': '^42.0.0',
+            'eslint-plugin-n': '^15.7',
+            'eslint-plugin-node': '^11.1.0',
+            'eslint-plugin-promise': '^6.1.1'
+          }
+        })
+        break
+    }
+
     // let actions and ui generator create subfolders + manifest
 
     // npm pack leaves the unused `_dot.ignore and _dot.env` files on the system
     // so we need to remove these unused files
     // see https://github.com/adobe/generator-aio-app/issues/184
     this.fs.delete(
-      [this.destinationPath('_dot.env'), this.destinationPath('_dot.gitignore')],
+      [
+        this.destinationPath('_dot.env'),
+        this.destinationPath('_dot.gitignore'),
+        this.destinationPath('_eslintrc.basic.json'),
+        this.destinationPath('_eslintrc.adobe.recommended.json')
+      ],
       this.props
     )
   }

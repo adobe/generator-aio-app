@@ -15,6 +15,11 @@ const fs = require('fs-extra')
 
 jest.mock('fs-extra')
 
+let yeomanTestHelpers
+beforeAll(async () => {
+  yeomanTestHelpers = (await import('yeoman-test')).default
+})
+
 const theGeneratorPath = require.resolve('../../../generators/add-vscode-config')
 const Generator = require('yeoman-generator')
 
@@ -48,7 +53,7 @@ test('option destination-file is set', async () => {
     isDirectory: () => false
   })
 
-  const result = helpers.run(theGeneratorPath).withOptions(options)
+  const result = yeomanTestHelpers.run(theGeneratorPath).withOptions(options)
   await expect(result).resolves.not.toThrow()
 
   assert.file(options['destination-file']) // destination file is written
@@ -66,7 +71,7 @@ test('vscode launch configuration exists', async () => {
 
   fs.existsSync.mockReturnValue(true) // destination file exists
 
-  const result = helpers
+  const result = yeomanTestHelpers
     .run(theGeneratorPath)
     .withOptions(options)
     .withPrompts({ overwriteVsCodeConfig: false })

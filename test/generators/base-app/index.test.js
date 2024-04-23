@@ -11,10 +11,13 @@ governing permissions and limitations under the License.
 
 /* eslint-disable jest/expect-expect */ // => use assert
 
-const helpers = require('yeoman-test')
-
 const theGeneratorPath = require.resolve('../../../generators/base-app/')
 const Generator = require('yeoman-generator')
+
+let yeomanTestHelpers
+beforeAll(async () => {
+  yeomanTestHelpers = (await import('yeoman-test')).default
+})
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
@@ -26,12 +29,86 @@ describe('run', () => {
   test('basic ext generator', async () => {
     const options = { 'skip-prompt': true }
 
-    const ret = await helpers.run(theGeneratorPath)
+    const ret = await yeomanTestHelpers.run(theGeneratorPath)
       .withOptions(options)
     expect(ret).toBeDefined()
     ret.assertFile('.env')
     ret.assertFile('.gitignore')
+    ret.assertFile('.eslintrc.json')
+    ret.assertJsonFileContent('package.json',
+      {
+        devDependencies: {
+          eslint: '^8',
+          'eslint-plugin-jest': '^27.2.3'
+        },
+        scripts: { lint: 'eslint --ignore-pattern web-src --no-error-on-unmatched-pattern test src actions' }
+      }
+    )
     ret.assertNoFile('_dot.env')
     ret.assertNoFile('_dot.gitignore')
+    ret.assertNoFile('_eslint.basic.json')
+    ret.assertNoFile('_eslintrc.adobe.recommended.json')
+  })
+
+  test('basic ext generator, no linter', async () => {
+    const options = { 'skip-prompt': true, linter: 'none' }
+
+    const ret = await yeomanTestHelpers.run(theGeneratorPath)
+      .withOptions(options)
+    expect(ret).toBeDefined()
+    ret.assertFile('.env')
+    ret.assertFile('.gitignore')
+    ret.assertNoFile('.eslintrc.json')
+    ret.assertNoJsonFileContent('package.json', { scripts: { lint: 'eslint --ignore-pattern web-src --no-error-on-unmatched-pattern test src actions' } })
+    ret.assertNoFile('_dot.env')
+    ret.assertNoFile('_dot.gitignore')
+    ret.assertNoFile('_eslint.basic.json')
+    ret.assertNoFile('_eslintrc.adobe.recommended.json')
+  })
+
+  test('basic ext generator, adobe recommended linter', async () => {
+    const options = { 'skip-prompt': true, linter: 'adobe-recommended' }
+
+    const ret = await yeomanTestHelpers.run(theGeneratorPath)
+      .withOptions(options)
+    expect(ret).toBeDefined()
+    ret.assertFile('.env')
+    ret.assertFile('.gitignore')
+    ret.assertFile('.eslintrc.json')
+    ret.assertJsonFileContent('package.json',
+      {
+        devDependencies: {
+          '@adobe/eslint-config-aio-lib-config': '^3',
+          'eslint-config-standard': '^17.1.0',
+          'eslint-plugin-import': '^2.28.0',
+          'eslint-plugin-jest': '^27.2.3',
+          'eslint-plugin-jsdoc': '^42.0.0',
+          'eslint-plugin-n': '^15.7',
+          'eslint-plugin-node': '^11.1.0',
+          'eslint-plugin-promise': '^6.1.1'
+        },
+        scripts: { lint: 'eslint --ignore-pattern web-src --no-error-on-unmatched-pattern test src actions' }
+      }
+    )
+    ret.assertNoFile('_dot.env')
+    ret.assertNoFile('_dot.gitignore')
+    ret.assertNoFile('_eslint.basic.json')
+    ret.assertNoFile('_eslintrc.adobe.recommended.json')
+  })
+
+  test('basic ext generator, prompt returns None', async () => {
+    const options = { 'skip-prompt': false, linter: 'none' }
+
+    const ret = await yeomanTestHelpers.run(theGeneratorPath)
+      .withOptions(options)
+    expect(ret).toBeDefined()
+    ret.assertFile('.env')
+    ret.assertFile('.gitignore')
+    ret.assertNoFile('.eslintrc.json')
+    ret.assertNoJsonFileContent('package.json', { scripts: { lint: 'eslint --ignore-pattern web-src --no-error-on-unmatched-pattern test src actions' } })
+    ret.assertNoFile('_dot.env')
+    ret.assertNoFile('_dot.gitignore')
+    ret.assertNoFile('_eslint.basic.json')
+    ret.assertNoFile('_eslintrc.adobe.recommended.json')
   })
 })

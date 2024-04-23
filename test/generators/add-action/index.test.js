@@ -8,12 +8,10 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const helpers = require('yeoman-test')
 
-const { utils } = require('@adobe/generator-app-common-lib')
+const { utils, constants } = require('@adobe/generator-app-common-lib')
 const AddActions = require('../../../generators/add-action')
 const Generator = require('yeoman-generator')
-const { constants } = require('@adobe/generator-app-common-lib')
 const { sdkCodes } = constants
 const cloneDeep = require('lodash.clonedeep')
 
@@ -23,7 +21,6 @@ const target = require('@adobe/generator-add-action-target')
 const analytics = require('@adobe/generator-add-action-analytics')
 const campaign = require('@adobe/generator-add-action-campaign-standard')
 const customerProfile = require('@adobe/generator-add-action-customer-profile')
-const audienceManagerCD = require('@adobe/generator-add-action-audience-manager-cd')
 
 const expectedSeparator = expect.objectContaining({
   type: 'separator',
@@ -53,16 +50,18 @@ const expectedChoices = {
   [sdkCodes.customerProfile]: {
     name: 'Adobe Experience Platform: Realtime Customer Profile',
     value: customerProfile
-  },
-  [sdkCodes.audienceManagerCD]: {
-    name: 'Adobe Audience Manager: Customer Data',
-    value: audienceManagerCD
   }
 }
 
 // spies
 const prompt = jest.spyOn(Generator.prototype, 'prompt')
 const composeWith = jest.spyOn(Generator.prototype, 'composeWith')
+
+let yeomanTestHelpers
+beforeAll(async () => {
+  yeomanTestHelpers = (await import('yeoman-test')).default
+})
+
 beforeAll(() => {
   // mock implementations
   composeWith.mockReturnValue(undefined)
@@ -86,7 +85,7 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign},${sdkCodes.customerProfile}`
-    await helpers.run(AddActions)
+    await yeomanTestHelpers.run(AddActions)
       .withOptions(options)
     // with skip prompt defaults to generic action
     // make sure sub generators have been called
@@ -97,7 +96,7 @@ describe('run', () => {
   })
 
   test('no input, selects one generator', async () => {
-    await helpers.run(AddActions)
+    await yeomanTestHelpers.run(AddActions)
       .withPrompts({ actionGenerators: ['a'] })
 
     expect(prompt).toHaveBeenCalledTimes(1)
@@ -113,8 +112,7 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.assetCompute], checked: false },
           { ...expectedChoices[sdkCodes.campaign], checked: false },
           { ...expectedChoices[sdkCodes.customerProfile], checked: false },
-          { ...expectedChoices[sdkCodes.target], checked: false },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false }
+          { ...expectedChoices[sdkCodes.target], checked: false }
         ]
       })
     ])
@@ -124,7 +122,7 @@ describe('run', () => {
     }))
   })
   test('no input, selects multiple generators', async () => {
-    await helpers.run(AddActions)
+    await yeomanTestHelpers.run(AddActions)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
     expect(prompt).toHaveBeenCalledTimes(1)
@@ -140,8 +138,7 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.assetCompute], checked: false },
           { ...expectedChoices[sdkCodes.campaign], checked: false },
           { ...expectedChoices[sdkCodes.customerProfile], checked: false },
-          { ...expectedChoices[sdkCodes.target], checked: false },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false }
+          { ...expectedChoices[sdkCodes.target], checked: false }
         ]
       })
     ])
@@ -154,7 +151,7 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = 'NOTEXITING'
     options['--adobe-supported-services'] = 'notexistting'
-    await helpers.run(AddActions)
+    await yeomanTestHelpers.run(AddActions)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -171,8 +168,7 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.assetCompute], checked: false },
           { ...expectedChoices[sdkCodes.campaign], checked: false },
           { ...expectedChoices[sdkCodes.customerProfile], checked: false },
-          { ...expectedChoices[sdkCodes.target], checked: false },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false }
+          { ...expectedChoices[sdkCodes.target], checked: false }
         ]
       })
     ])
@@ -184,7 +180,7 @@ describe('run', () => {
   test('--adobe-services="analytics,customerProfile"', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.customerProfile}`
-    await helpers.run(AddActions)
+    await yeomanTestHelpers.run(AddActions)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -202,8 +198,7 @@ describe('run', () => {
           expectedSeparator,
           { ...expectedChoices[sdkCodes.assetCompute], checked: false },
           { ...expectedChoices[sdkCodes.campaign], checked: false },
-          { ...expectedChoices[sdkCodes.target], checked: false },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false }
+          { ...expectedChoices[sdkCodes.target], checked: false }
         ]
       })
     ])
@@ -216,7 +211,7 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.customerProfile}`
     options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.target}`
-    await helpers.run(AddActions)
+    await yeomanTestHelpers.run(AddActions)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -235,8 +230,7 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.assetCompute], checked: false },
           { ...expectedChoices[sdkCodes.target], checked: false },
           expectedSeparator,
-          { ...expectedChoices[sdkCodes.campaign], checked: false },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false }
+          { ...expectedChoices[sdkCodes.campaign], checked: false }
         ]
       })
     ])
@@ -249,8 +243,8 @@ describe('run', () => {
   test('--adobe-services="analytics,customerProfile", supported-adobe-services=ALL', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.customerProfile}`
-    options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
-    await helpers.run(AddActions)
+    options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target}`
+    await yeomanTestHelpers.run(AddActions)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -268,8 +262,7 @@ describe('run', () => {
           expectedSeparator,
           { ...expectedChoices[sdkCodes.assetCompute], checked: false },
           { ...expectedChoices[sdkCodes.campaign], checked: false },
-          { ...expectedChoices[sdkCodes.target], checked: false },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false }
+          { ...expectedChoices[sdkCodes.target], checked: false }
         ]
       })
     ])
@@ -281,9 +274,9 @@ describe('run', () => {
 
   test('--adobe-services=ALL, supported-adobe-services=ALL', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
-    options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
-    options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
-    await helpers.run(AddActions)
+    options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target}`
+    options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target}`
+    await yeomanTestHelpers.run(AddActions)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -300,8 +293,7 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.assetCompute], checked: true },
           { ...expectedChoices[sdkCodes.customerProfile], checked: true },
           { ...expectedChoices[sdkCodes.campaign], checked: true },
-          { ...expectedChoices[sdkCodes.target], checked: true },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: true }
+          { ...expectedChoices[sdkCodes.target], checked: true }
         ]
       })
     ])
@@ -313,10 +305,10 @@ describe('run', () => {
 
   test('--adobe-services=ALL', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
-    options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
-    await helpers.run(AddActions)
+    options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target}`
+    await yeomanTestHelpers.run(AddActions)
       .withOptions({
-        'adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
+        'adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target}`
       })
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -333,8 +325,7 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.assetCompute], checked: true },
           { ...expectedChoices[sdkCodes.customerProfile], checked: true },
           { ...expectedChoices[sdkCodes.campaign], checked: true },
-          { ...expectedChoices[sdkCodes.target], checked: true },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: true }
+          { ...expectedChoices[sdkCodes.target], checked: true }
         ]
       })
     ])
@@ -348,7 +339,7 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = ''
     options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.target}`
-    await helpers.run(AddActions)
+    await yeomanTestHelpers.run(AddActions)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -367,8 +358,7 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.customerProfile], checked: false },
           { ...expectedChoices[sdkCodes.target], checked: false },
           expectedSeparator,
-          { ...expectedChoices[sdkCodes.campaign], checked: false },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false }
+          { ...expectedChoices[sdkCodes.campaign], checked: false }
         ]
       })
     ])
@@ -381,8 +371,8 @@ describe('run', () => {
   test('--adobe-services="", supported-adobe-services=ALL', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = ''
-    options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target},${sdkCodes.audienceManagerCD}`
-    await helpers.run(AddActions)
+    options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target}`
+    await yeomanTestHelpers.run(AddActions)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -400,8 +390,7 @@ describe('run', () => {
           { ...expectedChoices[sdkCodes.assetCompute], checked: false },
           { ...expectedChoices[sdkCodes.customerProfile], checked: false },
           { ...expectedChoices[sdkCodes.campaign], checked: false },
-          { ...expectedChoices[sdkCodes.target], checked: false },
-          { ...expectedChoices[sdkCodes.audienceManagerCD], checked: false }
+          { ...expectedChoices[sdkCodes.target], checked: false }
         ]
       })
     ])

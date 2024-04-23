@@ -5,10 +5,12 @@
   "dependencies": {
   },
   "devDependencies": {
-      "jest": "^27.2.4"
+      "jest": "^29"
   },
   "scripts": {
       "test": "jest --passWithNoTests ./test",
-      "e2e": "jest --collectCoverage=false --testRegex ./e2e"
+      "e2e": "jest --collectCoverage=false --testRegex ./e2e",
+      "lint": "eslint --ignore-pattern web-src --no-error-on-unmatched-pattern test src actions",
+      "lint:fix": "npm run lint -- --fix"
   }
 }
