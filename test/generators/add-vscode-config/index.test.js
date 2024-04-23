@@ -9,7 +9,6 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const helpers = require('yeoman-test')
 const assert = require('yeoman-assert')
 const fs = require('fs-extra')
 
@@ -37,7 +36,7 @@ test('no missing options (defaults))', async () => {
     isDirectory: () => false
   })
 
-  const result = helpers.run(theGeneratorPath)
+  const result = yeomanTestHelpers.run(theGeneratorPath)
   await expect(result).resolves.not.toThrow()
 
   assert.file('.vscode/launch.json') // destination file is written
