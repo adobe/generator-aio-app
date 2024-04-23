@@ -5,6 +5,8 @@
     "n": "readonly",
     "r": "readonly",
     "assertDependencies": "readonly",
-    "assertNodeEngines": "readonly"
+    "assertNodeEngines": "readonly",
+    "fixtureFile": "readonly",
+    "fixtureJson": "readonly"
   }
 }
