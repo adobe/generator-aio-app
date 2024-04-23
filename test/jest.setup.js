@@ -9,7 +9,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const path = require('path')
+const path = require('node:path')
+const fs = require('node:fs')
 const { stdout, stderr } = require('stdout-stderr')
 
 jest.setTimeout(30000)
@@ -42,4 +43,19 @@ global.basicGeneratorOptions = {
   'action-folder': 'actions',
   'config-path': 'ext.config.yaml',
   'full-key-to-manifest': 'runtimeManifest'
+}
+
+const fixturesFolder = path.join(__dirname, '__fixtures__')
+
+global.fixturePath = (file) => {
+  return `${fixturesFolder}/${file}`
+}
+// helper for fixtures
+global.fixtureFile = (output) => {
+  return fs.readFileSync(global.fixturePath(output)).toString()
+}
+
+// helper for fixtures
+global.fixtureJson = (output) => {
+  return JSON.parse(global.fixtureFile(output))
 }

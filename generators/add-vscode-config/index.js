@@ -1,5 +1,5 @@
 /*
-Copyright 2021 Adobe. All rights reserved.
+Copyright 2024 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -10,17 +10,7 @@ governing permissions and limitations under the License.
 */
 
 const Generator = require('yeoman-generator')
-const path = require('path')
 const fs = require('fs-extra')
-const { absApp, objGetValue } = require('./utils')
-const cloneDeep = require('lodash.clonedeep')
-
-const {
-  createVsCodeConfiguration,
-  createLaunchCompound,
-  createChromeLaunchConfiguration,
-  createPwaNodeLaunchConfiguration
-} = require('./VsCodeConfiguration')
 
 /*
     'initializing',
@@ -35,16 +25,11 @@ const {
 
 const Default = {
   DESTINATION_FILE: '.vscode/launch.json',
-  REMOTE_ROOT: '/code',
   SKIP_PROMPT: false
 }
 
 const Option = {
   DESTINATION_FILE: 'destination-file',
-  FRONTEND_URL: 'frontend-url',
-  REMOTE_ROOT: 'remote-root',
-  APP_CONFIG: 'app-config',
-  ENV_FILE: 'env-file',
   SKIP_PROMPT: 'skip-prompt'
 }
 
@@ -53,197 +38,38 @@ class AddVsCodeConfig extends Generator {
     super(args, opts)
 
     // options are inputs from CLI or yeoman parent generator
-    this.option(Option.APP_CONFIG, { type: Object })
-    this.option(Option.FRONTEND_URL, { type: String })
-    this.option(Option.REMOTE_ROOT, { type: String, default: Default.REMOTE_ROOT })
     this.option(Option.DESTINATION_FILE, { type: String, default: Default.DESTINATION_FILE })
-    this.option(Option.ENV_FILE, { type: String })
     this.option(Option.SKIP_PROMPT, { type: Boolean, default: Default.SKIP_PROMPT })
   }
 
-  _verifyConfig () {
-    function getMissingKeys (config, keys) {
-      const missingKeys = []
-      keys.forEach(key => {
-        if (objGetValue(appConfig, key) === undefined) {
-          missingKeys.push(key)
-        }
-      })
-      return missingKeys
-    }
-
-    const appConfig = this.options[Option.APP_CONFIG]
-    const verifyKeysCommon = [
-      'app.hasFrontend',
-      'app.hasBackend',
-      'root'
-    ]
-
-    const verifyKeysFrontend = [
-      'web.src',
-      'web.distDev'
-    ]
-
-    const verifyKeysBackend = [
-      'ow.package',
-      'ow.apihost',
-      'manifest.packagePlaceholder',
-      'manifest.full.packages'
-    ]
-
-    const missingKeys = getMissingKeys(appConfig, verifyKeysCommon)
-    if (appConfig.app.hasFrontend) {
-      missingKeys.push(...getMissingKeys(appConfig, verifyKeysFrontend))
-    }
-    if (appConfig.app.hasBackend) {
-      missingKeys.push(...getMissingKeys(appConfig, verifyKeysBackend))
-    }
-    if (missingKeys.length > 0) {
-      throw new Error(`App config missing keys: ${missingKeys.join(', ')}`)
-    }
-
-    const envFile = this.options[Option.ENV_FILE]
-    if (!envFile) {
-      throw new Error(`Missing option for generator: ${Option.ENV_FILE}`)
-    }
-  }
-
-  _getActionEntryFile (pkgJson) {
-    const pkgJsonContent = fs.readJsonSync(pkgJson)
-    if (pkgJsonContent.main) {
-      return pkgJsonContent.main
-    }
-    return 'index.js'
-  }
-
-  _processRuntimeArgsForActionEntryFile (action, runtimeArgs) {
-    const appConfig = this.options[Option.APP_CONFIG]
-    const actionPath = absApp(appConfig.root, action.function)
-
-    const actionFileStats = fs.lstatSync(actionPath)
-    if (actionFileStats.isDirectory()) {
-      // take package.json main or 'index.js'
-      const zipMain = this._getActionEntryFile(path.join(actionPath, 'package.json'))
-      // index 1 is the action file path
-      runtimeArgs[1] = path.join(runtimeArgs[1], zipMain)
-    }
-
-    return runtimeArgs
-  }
-
-  _processAction (packageName, actionName, action) {
-    const appConfig = this.options[Option.APP_CONFIG]
-    const nodeVersion = this.options[Option.NODE_VERSION]
-    const remoteRoot = this.options[Option.REMOTE_ROOT]
-    const envFile = this.options[Option.ENV_FILE]
-
-    // make sure the action path is a relative path, using appConfig.root
-    let actionFileRelativePath = action.function
-    if (path.isAbsolute(actionFileRelativePath)) {
-      actionFileRelativePath = path.relative(appConfig.root, actionFileRelativePath)
-    }
-
-    // make sure the envFile path is a relative path, using appConfig.root
-    let envFileRelativePath = envFile
-    if (path.isAbsolute(envFileRelativePath)) {
-      envFileRelativePath = path.relative(appConfig.root, envFileRelativePath)
-    }
-
-    const launchConfig = createPwaNodeLaunchConfiguration({
-      packageName,
-      actionName,
-      actionFileRelativePath,
-      envFileRelativePath,
-      remoteRoot,
-      nodeVersion
-    })
-
-    launchConfig.runtimeArgs = this._processRuntimeArgsForActionEntryFile(action, launchConfig.runtimeArgs)
-
-    if (
-      action.annotations &&
-      action.annotations['require-adobe-auth'] &&
-      appConfig.ow.apihost === 'https://adobeioruntime.net'
-    ) {
-      // NOTE: The require-adobe-auth annotation is a feature implemented in the
-      // runtime plugin. The current implementation replaces the action by a sequence
-      // and renames the action to __secured_<action>. The annotation will soon be
-      // natively supported in Adobe I/O Runtime, at which point this condition won't
-      // be needed anymore.
-      /* instanbul ignore next */
-      launchConfig.runtimeArgs[0] = `${packageName}/__secured_${actionName}`
-    }
-
-    if (action.runtime) {
-      launchConfig.runtimeArgs.push('--kind')
-      launchConfig.runtimeArgs.push(action.runtime)
-    }
-
-    return launchConfig
-  }
-
-  _processForBackend () {
-    const appConfig = this.options[Option.APP_CONFIG]
-
-    const modifiedConfig = cloneDeep(appConfig)
-    const packages = modifiedConfig.manifest.full.packages
-    const packagePlaceholder = modifiedConfig.manifest.packagePlaceholder
-    if (packages[packagePlaceholder]) {
-      packages[modifiedConfig.ow.package] = packages[packagePlaceholder]
-      delete packages[packagePlaceholder]
-    }
-
-    Object.keys(packages).forEach(packageName => {
-      const pkg = packages[packageName]
-
-      Object.keys(pkg.actions).forEach(actionName => {
-        const action = pkg.actions[actionName]
-        const launchConfig = this._processAction(packageName, actionName, action)
-        this.vsCodeConfig.configurations.push(launchConfig)
-      })
-    })
-
-    this.vsCodeConfig.compounds.push({
-      name: 'Actions',
-      configurations: this.vsCodeConfig.configurations.map(config => config.name)
-    })
-  }
-
-  _processForFrontend () {
-    const appConfig = this.options[Option.APP_CONFIG]
-    const frontEndUrl = this.options[Option.FRONTEND_URL]
-
-    if (!frontEndUrl) {
-      throw new Error(`Missing option for generator: ${Option.FRONTEND_URL}`)
-    }
-
-    const webConfig = createChromeLaunchConfiguration({
-      url: frontEndUrl,
-      webRoot: appConfig.web.src,
-      webDistDev: appConfig.web.distDev
-    })
-
-    this.vsCodeConfig.configurations.push(webConfig)
-
-    this.vsCodeConfig.compounds.push(createLaunchCompound({
-      name: 'WebAndActions',
-      configurations: this.vsCodeConfig.configurations.map(config => config.name)
-    }))
-  }
-
   initializing () {
-    this._verifyConfig()
-    this.vsCodeConfig = createVsCodeConfiguration()
-
-    const appConfig = this.options[Option.APP_CONFIG]
-
-    if (appConfig.app.hasBackend) {
-      this._processForBackend()
+    this.vsCodeConfig = {
+      version: '0.2.0',
+      configurations: []
     }
 
-    if (appConfig.app.hasFrontend) {
-      this._processForFrontend()
-    }
+    this.vsCodeConfig.configurations.push({
+      name: 'App Builder: debug actions',
+      type: 'node-terminal',
+      request: 'launch',
+      command: 'aio app dev'
+    })
+
+    this.vsCodeConfig.configurations.push({
+      name: 'App Builder: debug full stack',
+      type: 'node-terminal',
+      request: 'launch',
+      command: 'aio app dev',
+      sourceMapPathOverrides: {
+        '/__parcel_source_root/*': '${webRoot}/*' // eslint-disable-line no-template-curly-in-string
+      },
+      serverReadyAction: {
+        pattern: 'server running on port : ([0-9]+)',
+        uriFormat: 'https://localhost:%s',
+        action: 'debugWithChrome',
+        webRoot: '${workspaceFolder}' // eslint-disable-line no-template-curly-in-string
+      }
+    })
   }
 
   async writing () {
