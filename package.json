@@ -35,7 +35,7 @@
     "eslint-config-standard": "^17",
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-jest": "^27",
-    "eslint-plugin-n": "^15.7",
+    "eslint-plugin-n": "^17.7",
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^6",
     "jest": "^29",
