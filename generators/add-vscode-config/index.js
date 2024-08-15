@@ -44,7 +44,7 @@ class AddVsCodeConfig extends Generator {
 
   initializing () {
     this.vsCodeConfig = {
-      version: '0.2.0',
+      version: '0.3.0',
       configurations: []
     }
 
@@ -52,7 +52,12 @@ class AddVsCodeConfig extends Generator {
       name: 'App Builder: debug actions',
       type: 'node-terminal',
       request: 'launch',
-      command: 'aio app dev'
+      command: 'aio app dev',
+      skipFiles: [
+        '<node_internals>/**/*.js',
+        // eslint-disable-next-line no-template-curly-in-string
+        '${workspaceFolder}/node_modules/**/*.js'
+      ]
     })
 
     this.vsCodeConfig.configurations.push({
@@ -61,13 +66,20 @@ class AddVsCodeConfig extends Generator {
       request: 'launch',
       command: 'aio app dev',
       sourceMapPathOverrides: {
-        '/__parcel_source_root/*': '${webRoot}/*' // eslint-disable-line no-template-curly-in-string
+        // eslint-disable-next-line no-template-curly-in-string
+        '/__parcel_source_root/*': '${webRoot}/*'
       },
+      skipFiles: [
+        '<node_internals>/**/*.js',
+        // eslint-disable-next-line no-template-curly-in-string
+        '${workspaceFolder}/node_modules/**/*.js'
+      ],
       serverReadyAction: {
         pattern: 'server running on port : ([0-9]+)',
         uriFormat: 'https://localhost:%s',
         action: 'debugWithChrome',
-        webRoot: '${workspaceFolder}' // eslint-disable-line no-template-curly-in-string
+        // eslint-disable-next-line no-template-curly-in-string
+        webRoot: '${workspaceFolder}'
       }
     })
   }
