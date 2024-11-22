@@ -11,8 +11,9 @@ Welcome to my Adobe I/O Application!
 - `aio app run` to start your local Dev server
 - App will run on `localhost:9080` by default
 
-By default the UI will be served locally but actions will be deployed and served from Adobe I/O Runtime. To start a
-local serverless stack and also run your actions locally use the `aio app run --local` option.
+By default the UI will be served locally but actions will be deployed and served from Adobe I/O Runtime. To run your actions locally use the `aio app dev` option.
+
+For more information on the difference between `aio app run` and `aio app dev`, see [here](https://developer.adobe.com/app-builder/docs/guides/development/#aio-app-dev-vs-aio-app-run)
 
 ## Test & Coverage
 
@@ -64,9 +65,7 @@ You can generate this file using the command `aio app use`.
 
 ## Debugging in VS Code
 
-While running your local server (`aio app run`), both UI and actions can be debugged, to do so open the vscode debugger
-and select the debugging configuration called `WebAndActions`.
-Alternatively, there are also debug configs for only UI and each separate action.
+While running your local server (`aio app dev`), both UI and actions can be debugged. To do so follow the instructions [here](https://developer.adobe.com/app-builder/docs/guides/development/#debugging)
 
 ## Typescript support for UI
 
