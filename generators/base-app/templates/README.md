@@ -65,9 +65,7 @@ You can generate this file using the command `aio app use`.
 
 ## Debugging in VS Code
 
-While running your local server (`aio app run`), both UI and actions can be debugged, to do so open the vscode debugger
-and select the debugging configuration called `WebAndActions`.
-Alternatively, there are also debug configs for only UI and each separate action.
+While running your local server (`aio app dev`), both UI and actions can be debugged. To do so follow the instructions [here](https://developer.adobe.com/app-builder/docs/guides/development/#debugging)
 
 ## Typescript support for UI
 
