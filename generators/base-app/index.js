@@ -72,6 +72,18 @@ class CodeGenerator extends Generator {
       this.destinationPath('.gitignore'),
       this.props
     )
+    // add webpack-config.js
+    this.fs.copyTpl(
+      this.templatePath('webpack-config.js'),
+      this.destinationPath('webpack-config.js'),
+      this.props
+    )
+    // add typescript support
+    this.fs.copyTpl(
+      this.templatePath('tsconfig.json'),
+      this.destinationPath('tsconfig.json'),
+      this.props
+    )
 
     // setup linter
     switch (this.options.linter) {

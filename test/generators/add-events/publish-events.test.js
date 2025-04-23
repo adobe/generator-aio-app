@@ -117,7 +117,7 @@ describe('run', () => {
       '@adobe/aio-sdk': expect.any(String),
       cloudevents: expect.any(String),
       uuid: expect.any(String)
-    }, { '@openwhisk/wskdebug': expect.any(String) })
+    })
     assertNodeEngines(fs, constants.nodeEngines)
   })
 
@@ -153,7 +153,7 @@ describe('run', () => {
       '@adobe/aio-sdk': expect.any(String),
       cloudevents: expect.any(String),
       uuid: expect.any(String)
-    }, { '@openwhisk/wskdebug': expect.any(String) })
+    })
     assertNodeEngines(fs, constants.nodeEngines)
   })
 
@@ -178,7 +178,7 @@ describe('run', () => {
       '@adobe/aio-sdk': expect.any(String),
       cloudevents: expect.any(String),
       uuid: expect.any(String)
-    }, { '@openwhisk/wskdebug': expect.any(String) })
+    })
     assertNodeEngines(fs, constants.nodeEngines)
   })
 })
