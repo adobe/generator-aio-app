@@ -44,7 +44,7 @@ class AddVsCodeConfig extends Generator {
 
   initializing () {
     this.vsCodeConfig = {
-      version: '0.3.0',
+      version: '0.2.0',
       configurations: []
     }
 
@@ -55,22 +55,24 @@ class AddVsCodeConfig extends Generator {
       command: 'aio app dev',
       skipFiles: [
         '<node_internals>/**/*.js',
+        // this is a template string, not a literal
         // eslint-disable-next-line no-template-curly-in-string
         '${workspaceFolder}/node_modules/**/*.js'
       ]
     })
-
     this.vsCodeConfig.configurations.push({
       name: 'App Builder: debug full stack',
       type: 'node-terminal',
       request: 'launch',
       command: 'aio app dev',
       sourceMapPathOverrides: {
+        // this is a template string, not a literal
         // eslint-disable-next-line no-template-curly-in-string
         '/__parcel_source_root/*': '${webRoot}/*'
       },
       skipFiles: [
         '<node_internals>/**/*.js',
+        // this is a template string, not a literal
         // eslint-disable-next-line no-template-curly-in-string
         '${workspaceFolder}/node_modules/**/*.js'
       ],
@@ -78,6 +80,7 @@ class AddVsCodeConfig extends Generator {
         pattern: 'server running on port : ([0-9]+)',
         uriFormat: 'https://localhost:%s',
         action: 'debugWithChrome',
+        // this is a template string, not a literal
         // eslint-disable-next-line no-template-curly-in-string
         webRoot: '${workspaceFolder}'
       }

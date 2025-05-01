@@ -25,6 +25,9 @@ module.exports = {
     '<rootDir>/generators/',
     '<rootDir>/playground/'
   ],
+  testEnvironmentOptions: {
+    nodeOptions: ['--experimental-vm-modules']
+  },
   coverageThreshold: {
     global: {
       branches: 100,

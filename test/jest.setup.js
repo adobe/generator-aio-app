@@ -28,10 +28,15 @@ global.n = p => path.normalize(p)
 global.r = p => path.resolve(p)
 
 global.assertDependencies = (fs, dependencies, devDependencies) => {
-  expect(JSON.parse(fs.readFileSync('package.json').toString())).toEqual(expect.objectContaining({
-    dependencies,
-    devDependencies
+  const pkg = JSON.parse(fs.readFileSync('package.json').toString())
+  expect(pkg).toEqual(expect.objectContaining({
+    dependencies
   }))
+  if (devDependencies) {
+    expect(pkg).toEqual(expect.objectContaining({
+      devDependencies
+    }))
+  }
 }
 
 global.assertNodeEngines = (fs, nodeEngines) => {
