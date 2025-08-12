@@ -38,13 +38,13 @@ describe('run', () => {
 
     // added files
     assert.file('.github/workflows/pr_test.yml')
-    assert.fileContent('.github/workflows/pr_test.yml', 'version: 10.x.x')
+    assert.fileContent('.github/workflows/pr_test.yml', 'version: 11.x.x')
     assert.fileContent('.github/workflows/pr_test.yml', 'adobe/aio-apps-action@3.3.0')
     assert.file('.github/workflows/deploy_prod.yml')
-    assert.fileContent('.github/workflows/deploy_prod.yml', 'version: 10.x.x')
+    assert.fileContent('.github/workflows/deploy_prod.yml', 'version: 11.x.x')
     assert.fileContent('.github/workflows/deploy_prod.yml', 'adobe/aio-apps-action@3.3.0')
     assert.file('.github/workflows/deploy_stage.yml')
-    assert.fileContent('.github/workflows/deploy_stage.yml', 'version: 10.x.x')
+    assert.fileContent('.github/workflows/deploy_stage.yml', 'version: 11.x.x')
     assert.fileContent('.github/workflows/deploy_stage.yml', 'adobe/aio-apps-action@3.3.0')
   })
 })
