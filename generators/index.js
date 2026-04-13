@@ -9,12 +9,13 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-module.exports = {
-  'add-action': require('./add-action'),
-  'add-ci': require('./add-ci'),
-  'add-events': require('./add-events'),
-  'add-vscode-config': require('./add-vscode-config'),
-  'add-web-assets': require('./add-web-assets'),
-  application: require('./application'),
-  'base-app': require('./base-app')
-}
+var generators = {}
+generators['add-action'] = require('./add-action')
+generators['add-ci'] = require('./add-ci')
+generators['add-events'] = require('./add-events')
+generators['add-vscode-config'] = require('./add-vscode-config')
+generators['add-web-assets'] = require('./add-web-assets')
+generators['application'] = require('./application')
+generators['base-app'] = require('./base-app')
+
+module.exports = generators
