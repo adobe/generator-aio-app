@@ -7,11 +7,44 @@ on:
     types: [created]
 
 jobs:
-  review:
+  check:
     if: |
       (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false) ||
       (github.event_name == 'issue_comment' && github.event.issue.pull_request != null &&
        (github.event.comment.body == '/review' || github.event.comment.body == '/pr-reviewer'))
+    runs-on: ubuntu-latest
+    outputs:
+      allowed: ${{ steps.gate.outputs.allowed }}
+      pr_number: ${{ steps.gate.outputs.pr_number }}
+      head_sha: ${{ steps.gate.outputs.head_sha }}
+    steps:
+      - name: Gate check
+        id: gate
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "allowed=true" >> $GITHUB_OUTPUT
+            echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+            echo "head_sha=${{ github.event.pull_request.head.sha }}" >> $GITHUB_OUTPUT
+          else
+            PERM=$(gh api repos/${{ github.repository }}/collaborators/${{ github.event.comment.user.login }}/permission --jq '.permission')
+            if [ "$PERM" = "admin" ]; then
+              DATA=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.issue.number }})
+              echo "allowed=true" >> $GITHUB_OUTPUT
+              echo "pr_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+              echo "head_sha=$(echo "$DATA" | jq -r '.head.sha')" >> $GITHUB_OUTPUT
+            else
+              echo "allowed=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  review:
+    needs: check
+    if: needs.check.outputs.allowed == 'true'
     uses: adobe/aio-reusable-workflows/.github/workflows/pr-review.yml@reviewer-bot-poc
+    with:
+      pr_number: ${{ needs.check.outputs.pr_number }}
+      head_sha: ${{ needs.check.outputs.head_sha }}
     secrets:
       AWS_BEARER_TOKEN_BEDROCK: ${{ secrets.APP_BUILDER_AWS_BEARER_TOKEN_BEDROCK }}
