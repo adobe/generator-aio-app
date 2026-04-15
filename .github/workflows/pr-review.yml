@@ -11,7 +11,7 @@ jobs:
     if: |
       (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false) ||
       (github.event_name == 'issue_comment' && github.event.issue.pull_request != null &&
-       (github.event.comment.body == '/review' || github.event.comment.body == '/pr-reviewer'))
+       (github.event.comment.body == '/review' || github.event.comment.body == '/pr-reviewer'))  # exact match, there should be no trailing spaces, newlines, or mixed case
     runs-on: ubuntu-latest
     outputs:
       allowed: ${{ steps.gate.outputs.allowed }}
@@ -22,16 +22,16 @@ jobs:
         id: gate
         run: |
           set -euo pipefail
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
+          if [ "$EVENT_NAME" = "pull_request" ]; then
             echo "allowed=true" >> $GITHUB_OUTPUT
-            echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
-            echo "head_sha=${{ github.event.pull_request.head.sha }}" >> $GITHUB_OUTPUT
+            echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+            echo "head_sha=$HEAD_SHA" >> $GITHUB_OUTPUT
           else
             # Fall back to "none" if user is not a collaborator (gh api returns 404) so allowed=false is output cleanly
-            PERM=$(gh api repos/${{ github.repository }}/collaborators/$COMMENT_USER_LOGIN/permission --jq '.permission' 2>/dev/null || echo "none")
-            # Only admin and maintain roles can trigger reviews, write is intentionally excluded 
+            PERM=$(gh api repos/$GITHUB_REPOSITORY/collaborators/$COMMENT_USER_LOGIN/permission --jq '.permission' 2>/dev/null || echo "none")
+            # Only admin and maintain roles can trigger reviews,write is intentionally excluded.
             if [ "$PERM" = "admin" ] || [ "$PERM" = "maintain" ]; then
-              DATA=$(gh api repos/${{ github.repository }}/pulls/$ISSUE_NUMBER)
+              DATA=$(gh api repos/$GITHUB_REPOSITORY/pulls/$ISSUE_NUMBER)
               echo "allowed=true" >> $GITHUB_OUTPUT
               echo "pr_number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
               echo "head_sha=$(echo "$DATA" | jq -r '.head.sha')" >> $GITHUB_OUTPUT
@@ -41,8 +41,12 @@ jobs:
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
           COMMENT_USER_LOGIN: ${{ github.event.comment.user.login }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          # GITHUB_REPOSITORY is set automatically by GitHub Actions (owner/repo)
 
   review:
     needs: check
