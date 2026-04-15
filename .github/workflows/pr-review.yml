@@ -21,17 +21,19 @@ jobs:
       - name: Gate check
         id: gate
         run: |
+          set -euo pipefail
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "allowed=true" >> $GITHUB_OUTPUT
             echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
             echo "head_sha=${{ github.event.pull_request.head.sha }}" >> $GITHUB_OUTPUT
           else
-            PERM=$(gh api repos/${{ github.repository }}/collaborators/$COMMENT_USER_LOGIN/permission --jq '.permission')
-            # Only admin and maintain roles can trigger reviews — write is intentionally excluded (too broad for public repos)
+            # Fall back to "none" if user is not a collaborator (gh api returns 404) so allowed=false is output cleanly
+            PERM=$(gh api repos/${{ github.repository }}/collaborators/$COMMENT_USER_LOGIN/permission --jq '.permission' 2>/dev/null || echo "none")
+            # Only admin and maintain roles can trigger reviews, write is intentionally excluded 
             if [ "$PERM" = "admin" ] || [ "$PERM" = "maintain" ]; then
-              DATA=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.issue.number }})
+              DATA=$(gh api repos/${{ github.repository }}/pulls/$ISSUE_NUMBER)
               echo "allowed=true" >> $GITHUB_OUTPUT
-              echo "pr_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+              echo "pr_number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
               echo "head_sha=$(echo "$DATA" | jq -r '.head.sha')" >> $GITHUB_OUTPUT
             else
               echo "allowed=false" >> $GITHUB_OUTPUT
@@ -40,6 +42,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COMMENT_USER_LOGIN: ${{ github.event.comment.user.login }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
 
   review:
     needs: check
