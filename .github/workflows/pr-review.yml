@@ -29,7 +29,9 @@ jobs:
           else
             # Fall back to "none" if user is not a collaborator (gh api returns 404) so allowed=false is output cleanly
             PERM=$(gh api repos/$GITHUB_REPOSITORY/collaborators/$COMMENT_USER_LOGIN/permission --jq '.permission' 2>/dev/null || echo "none")
-            # Only admin and maintain roles can trigger reviews,write is intentionally excluded.
+            # Intentionally require admin or maintain; 'write' collaborators are excluded to
+            # limit who can trigger potentially expensive/sensitive review automation.
+            if [ "$PERM" = "admin" ] || [ "$PERM" = "maintain" ]; then
             if [ "$PERM" = "admin" ] || [ "$PERM" = "maintain" ]; then
               DATA=$(gh api repos/$GITHUB_REPOSITORY/pulls/$ISSUE_NUMBER)
               echo "allowed=true" >> $GITHUB_OUTPUT
