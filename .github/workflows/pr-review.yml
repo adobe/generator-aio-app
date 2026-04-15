@@ -26,8 +26,8 @@ jobs:
             echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
             echo "head_sha=${{ github.event.pull_request.head.sha }}" >> $GITHUB_OUTPUT
           else
-            PERM=$(gh api repos/${{ github.repository }}/collaborators/${{ github.event.comment.user.login }}/permission --jq '.permission')
-            if [ "$PERM" = "admin" ]; then
+            PERM=$(gh api repos/${{ github.repository }}/collaborators/$COMMENT_USER_LOGIN/permission --jq '.permission')
+            if [ "$PERM" = "admin" ] || [ "$PERM" = "maintain" ]; then
               DATA=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.issue.number }})
               echo "allowed=true" >> $GITHUB_OUTPUT
               echo "pr_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
@@ -38,6 +38,7 @@ jobs:
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMENT_USER_LOGIN: ${{ github.event.comment.user.login }}
 
   review:
     needs: check
