@@ -8,6 +8,7 @@ on:
 
 jobs:
   check:
+    # NOTE: comment body matching is exact — /review or /pr-reviewer with no trailing spaces, newlines, or mixed case
     if: |
       (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false) ||
       (github.event_name == 'issue_comment' && github.event.issue.pull_request != null &&
@@ -31,7 +32,6 @@ jobs:
             PERM=$(gh api repos/$GITHUB_REPOSITORY/collaborators/$COMMENT_USER_LOGIN/permission --jq '.permission' 2>/dev/null || echo "none")
             # Intentionally require admin or maintain; 'write' collaborators are excluded to
             # limit who can trigger potentially expensive/sensitive review automation.
-            if [ "$PERM" = "admin" ] || [ "$PERM" = "maintain" ]; then
             if [ "$PERM" = "admin" ] || [ "$PERM" = "maintain" ]; then
               DATA=$(gh api repos/$GITHUB_REPOSITORY/pulls/$ISSUE_NUMBER)
               echo "allowed=true" >> $GITHUB_OUTPUT
