@@ -53,7 +53,7 @@ jobs:
   review:
     needs: check
     if: needs.check.outputs.allowed == 'true'
-    uses: adobe/aio-reusable-workflows/.github/workflows/pr-review.yml@reviewer-bot-poc
+    uses: adobe/aio-reusable-workflows/.github/workflows/pr-review.yml@main
     with:
       pr_number: ${{ needs.check.outputs.pr_number }}
       head_sha: ${{ needs.check.outputs.head_sha }}
