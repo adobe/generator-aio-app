@@ -11,7 +11,7 @@ jobs:
     if: |
       (github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false) ||
       (github.event_name == 'issue_comment' && github.event.issue.pull_request != null &&
-       (github.event.comment.body == '/review' || github.event.comment.body == '/pr-reviewer'))  # exact match, there should be no trailing spaces, newlines, or mixed case
+       (github.event.comment.body == '/review' || github.event.comment.body == '/pr-reviewer'))
     runs-on: ubuntu-latest
     outputs:
       allowed: ${{ steps.gate.outputs.allowed }}
