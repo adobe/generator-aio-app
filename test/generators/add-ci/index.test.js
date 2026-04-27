@@ -40,6 +40,7 @@ describe('run', () => {
     assert.file('.github/workflows/pr_test.yml')
     assert.fileContent('.github/workflows/pr_test.yml', 'version: 11.x.x')
     assert.fileContent('.github/workflows/pr_test.yml', 'adobe/aio-apps-action@3.3.0')
+    assert.fileContent('.github/workflows/pr_test.yml', 'environment: stage')
     assert.fileContent('.github/workflows/pr_test.yml', 'secrets.CLIENTID')
     assert.noFileContent('.github/workflows/pr_test.yml', 'secrets.CLIENTID_STAGE')
     assert.file('.github/workflows/deploy_prod.yml')

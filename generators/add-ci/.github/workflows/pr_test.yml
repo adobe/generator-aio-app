@@ -5,6 +5,7 @@ jobs:
   test:
     name: Test PR
     runs-on: ${{ matrix.os }}
+    environment: stage
     strategy:
       matrix:
         node-version: ['20']
