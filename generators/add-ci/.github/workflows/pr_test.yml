@@ -28,15 +28,15 @@ jobs:
         with:
           os: ${{ matrix.os }}
           command: oauth_sts
-          CLIENTID: ${{ secrets.CLIENTID_STAGE }}
-          CLIENTSECRET: ${{ secrets.CLIENTSECRET_STAGE }}
-          TECHNICALACCOUNTID: ${{ secrets.TECHNICALACCID_STAGE }}
-          TECHNICALACCOUNTEMAIL: ${{ secrets.TECHNICALACCEMAIL_STAGE }}
-          IMSORGID: ${{ secrets.IMSORGID_STAGE }}
-          SCOPES: ${{ secrets.SCOPES_STAGE }}
+          CLIENTID: ${{ secrets.CLIENTID }}
+          CLIENTSECRET: ${{ secrets.CLIENTSECRET }}
+          TECHNICALACCOUNTID: ${{ secrets.TECHNICALACCID }}
+          TECHNICALACCOUNTEMAIL: ${{ secrets.TECHNICALACCEMAIL }}
+          IMSORGID: ${{ secrets.IMSORGID }}
+          SCOPES: ${{ secrets.SCOPES }}
       - name: Build
         env:
-          AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE_STAGE }}
+          AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE }}
         uses: adobe/aio-apps-action@3.3.0
         with:
           os: ${{ matrix.os }}

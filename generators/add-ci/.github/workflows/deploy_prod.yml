@@ -7,6 +7,7 @@ jobs:
   deploy:
     name: Deploy to Prod
     runs-on: ${{ matrix.os }}
+    environment: production
     strategy:
       max-parallel: 1
       matrix:
@@ -31,29 +32,29 @@ jobs:
         with:
           os: ${{ matrix.os }}
           command: oauth_sts
-          CLIENTID: ${{ secrets.CLIENTID_PROD }}
-          CLIENTSECRET: ${{ secrets.CLIENTSECRET_PROD }}
-          TECHNICALACCOUNTID: ${{ secrets.TECHNICALACCID_PROD }}
-          TECHNICALACCOUNTEMAIL: ${{ secrets.TECHNICALACCEMAIL_PROD }}
-          IMSORGID: ${{ secrets.IMSORGID_PROD }}
-          SCOPES: ${{ secrets.SCOPES_PROD }}
+          CLIENTID: ${{ secrets.CLIENTID }}
+          CLIENTSECRET: ${{ secrets.CLIENTSECRET }}
+          TECHNICALACCOUNTID: ${{ secrets.TECHNICALACCID }}
+          TECHNICALACCOUNTEMAIL: ${{ secrets.TECHNICALACCEMAIL }}
+          IMSORGID: ${{ secrets.IMSORGID }}
+          SCOPES: ${{ secrets.SCOPES }}
       - name: Build
         env:
-          AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE_PROD }}
+          AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE }}
         uses: adobe/aio-apps-action@3.3.0
         with:
           os: ${{ matrix.os }}
           command: build
       - name: Deploy
         env:
-          AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE_PROD }}
-          AIO_RUNTIME_AUTH: ${{ secrets.AIO_RUNTIME_AUTH_PROD }}
-          AIO_PROJECT_ID: ${{ secrets.AIO_PROJECT_ID_PROD }}
-          AIO_PROJECT_NAME: ${{ secrets.AIO_PROJECT_NAME_PROD }}
-          AIO_PROJECT_ORG_ID: ${{ secrets.AIO_PROJECT_ORG_ID_PROD }}
-          AIO_PROJECT_WORKSPACE_ID: ${{ secrets.AIO_PROJECT_WORKSPACE_ID_PROD }}
-          AIO_PROJECT_WORKSPACE_NAME: ${{ secrets.AIO_PROJECT_WORKSPACE_NAME_PROD }}
-          AIO_PROJECT_WORKSPACE_DETAILS_SERVICES: ${{ secrets.AIO_PROJECT_WORKSPACE_DETAILS_SERVICES_PROD }}
+          AIO_RUNTIME_NAMESPACE: ${{ secrets.AIO_RUNTIME_NAMESPACE }}
+          AIO_RUNTIME_AUTH: ${{ secrets.AIO_RUNTIME_AUTH }}
+          AIO_PROJECT_ID: ${{ secrets.AIO_PROJECT_ID }}
+          AIO_PROJECT_NAME: ${{ secrets.AIO_PROJECT_NAME }}
+          AIO_PROJECT_ORG_ID: ${{ secrets.AIO_PROJECT_ORG_ID }}
+          AIO_PROJECT_WORKSPACE_ID: ${{ secrets.AIO_PROJECT_WORKSPACE_ID }}
+          AIO_PROJECT_WORKSPACE_NAME: ${{ secrets.AIO_PROJECT_WORKSPACE_NAME }}
+          AIO_PROJECT_WORKSPACE_DETAILS_SERVICES: ${{ secrets.AIO_PROJECT_WORKSPACE_DETAILS_SERVICES }}
         uses: adobe/aio-apps-action@3.3.0
         with:
           os: ${{ matrix.os }}
