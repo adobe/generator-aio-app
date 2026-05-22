@@ -63,7 +63,7 @@
     "inquirer": "^8",
     "js-yaml": "^4",
     "lodash.clonedeep": "^4.5.0",
-    "upath": "^2.0.1",
+    "upath": "^3.0.5",
     "yeoman-generator": "^5.7.0"
   },
   "engines": {
