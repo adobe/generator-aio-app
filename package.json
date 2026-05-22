@@ -29,7 +29,7 @@
   "homepage": "https://github.com/adobe/generator-aio-app#readme",
   "devDependencies": {
     "@adobe/eslint-config-aio-lib-config": "^4.0.0",
-    "@types/jest": "^29",
+    "@types/jest": "^30",
     "cross-env": "^7.0.3",
     "eol": "^0.9.1",
     "eslint": "^8.57.1",
