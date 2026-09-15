@@ -9,18 +9,20 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const { utils, constants } = require('@adobe/generator-app-common-lib')
-const AddActions = require('../../../generators/add-action')
-const Generator = require('yeoman-generator')
-const { sdkCodes } = constants
-const cloneDeep = require('lodash.clonedeep')
+import helpers from 'yeoman-test'
+import { utils, constants } from '@adobe/generator-app-common-lib'
+import AddActions from '../../../generators/add-action/index.js'
+import Generator from 'yeoman-generator'
+import cloneDeep from 'lodash.clonedeep'
 
-const generic = require('@adobe/generator-add-action-generic')
-const assetCompute = require('@adobe/generator-add-action-asset-compute')
-const target = require('@adobe/generator-add-action-target')
-const analytics = require('@adobe/generator-add-action-analytics')
-const campaign = require('@adobe/generator-add-action-campaign-standard')
-const customerProfile = require('@adobe/generator-add-action-customer-profile')
+import generic from '@adobe/generator-add-action-generic'
+import assetCompute from '@adobe/generator-add-action-asset-compute'
+import target from '@adobe/generator-add-action-target'
+import analytics from '@adobe/generator-add-action-analytics'
+import campaign from '@adobe/generator-add-action-campaign-standard'
+import customerProfile from '@adobe/generator-add-action-customer-profile'
+
+const { sdkCodes } = constants
 
 const expectedSeparator = expect.objectContaining({
   type: 'separator',
@@ -54,13 +56,8 @@ const expectedChoices = {
 }
 
 // spies
-const prompt = jest.spyOn(Generator.prototype, 'prompt')
-const composeWith = jest.spyOn(Generator.prototype, 'composeWith')
-
-let yeomanTestHelpers
-beforeAll(async () => {
-  yeomanTestHelpers = (await import('yeoman-test')).default
-})
+const prompt = vi.spyOn(Generator.prototype, 'prompt')
+const composeWith = vi.spyOn(Generator.prototype, 'composeWith')
 
 beforeAll(() => {
   // mock implementations
@@ -85,7 +82,7 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.target},${sdkCodes.campaign},${sdkCodes.customerProfile}`
-    await yeomanTestHelpers.run(AddActions)
+    await helpers.run(AddActions)
       .withOptions(options)
     // with skip prompt defaults to generic action
     // make sure sub generators have been called
@@ -96,7 +93,7 @@ describe('run', () => {
   })
 
   test('no input, selects one generator', async () => {
-    await yeomanTestHelpers.run(AddActions)
+    await helpers.run(AddActions)
       .withPrompts({ actionGenerators: ['a'] })
 
     expect(prompt).toHaveBeenCalledTimes(1)
@@ -122,7 +119,7 @@ describe('run', () => {
     }))
   })
   test('no input, selects multiple generators', async () => {
-    await yeomanTestHelpers.run(AddActions)
+    await helpers.run(AddActions)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
     expect(prompt).toHaveBeenCalledTimes(1)
@@ -151,7 +148,7 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = 'NOTEXITING'
     options['--adobe-supported-services'] = 'notexistting'
-    await yeomanTestHelpers.run(AddActions)
+    await helpers.run(AddActions)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -180,7 +177,7 @@ describe('run', () => {
   test('--adobe-services="analytics,customerProfile"', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.customerProfile}`
-    await yeomanTestHelpers.run(AddActions)
+    await helpers.run(AddActions)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -211,7 +208,7 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.customerProfile}`
     options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.target}`
-    await yeomanTestHelpers.run(AddActions)
+    await helpers.run(AddActions)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -244,7 +241,7 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.customerProfile}`
     options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target}`
-    await yeomanTestHelpers.run(AddActions)
+    await helpers.run(AddActions)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -276,7 +273,7 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target}`
     options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target}`
-    await yeomanTestHelpers.run(AddActions)
+    await helpers.run(AddActions)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -306,7 +303,7 @@ describe('run', () => {
   test('--adobe-services=ALL', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target}`
-    await yeomanTestHelpers.run(AddActions)
+    await helpers.run(AddActions)
       .withOptions({
         'adobe-services': `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target}`
       })
@@ -339,7 +336,7 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = ''
     options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.target}`
-    await yeomanTestHelpers.run(AddActions)
+    await helpers.run(AddActions)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 
@@ -372,7 +369,7 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['adobe-services'] = ''
     options['supported-adobe-services'] = `${sdkCodes.analytics},${sdkCodes.assetCompute},${sdkCodes.customerProfile},${sdkCodes.campaign},${sdkCodes.target}`
-    await yeomanTestHelpers.run(AddActions)
+    await helpers.run(AddActions)
       .withOptions(options)
       .withPrompts({ actionGenerators: ['a', 'b', 'c'] })
 

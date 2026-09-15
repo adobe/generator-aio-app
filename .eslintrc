@@ -1,12 +1,26 @@
 {
-  "plugins": ["jest"],
-  "extends": ["standard", "plugin:jest/recommended"],
+  "extends": ["standard"],
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module"
+  },
   "globals": {
     "n": "readonly",
     "r": "readonly",
     "assertDependencies": "readonly",
     "assertNodeEngines": "readonly",
+    "basicGeneratorOptions": "readonly",
+    "fixturePath": "readonly",
     "fixtureFile": "readonly",
-    "fixtureJson": "readonly"
+    "fixtureJson": "readonly",
+    "vi": "readonly",
+    "describe": "readonly",
+    "it": "readonly",
+    "test": "readonly",
+    "expect": "readonly",
+    "beforeEach": "readonly",
+    "afterEach": "readonly",
+    "beforeAll": "readonly",
+    "afterAll": "readonly"
   }
 }

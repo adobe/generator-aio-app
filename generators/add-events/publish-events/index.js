@@ -9,8 +9,11 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const path = require('path')
-const { ActionGenerator, constants, commonTemplates } = require('@adobe/generator-app-common-lib')
+import path from 'path'
+import { fileURLToPath } from 'url'
+import { ActionGenerator, constants, commonTemplates } from '@adobe/generator-app-common-lib'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const { commonDependencyVersions } = constants
 
 class CloudEventsGenerator extends ActionGenerator {
@@ -93,4 +96,4 @@ function createCloudEvent(providerId, eventCode, payload) {
   }
 }
 
-module.exports = CloudEventsGenerator
+export default CloudEventsGenerator

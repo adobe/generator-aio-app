@@ -9,12 +9,20 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-module.exports = {
-  'add-action': require('./add-action'),
-  'add-ci': require('./add-ci'),
-  'add-events': require('./add-events'),
-  'add-vscode-config': require('./add-vscode-config'),
-  'add-web-assets': require('./add-web-assets'),
-  application: require('./application'),
-  'base-app': require('./base-app')
+import addAction from './add-action/index.js'
+import addCi from './add-ci/index.js'
+import addEvents from './add-events/index.js'
+import addVscodeConfig from './add-vscode-config/index.js'
+import addWebAssets from './add-web-assets/index.js'
+import application from './application/index.js'
+import baseApp from './base-app/index.js'
+
+export default {
+  'add-action': addAction,
+  'add-ci': addCi,
+  'add-events': addEvents,
+  'add-vscode-config': addVscodeConfig,
+  'add-web-assets': addWebAssets,
+  application,
+  'base-app': baseApp
 }

@@ -9,12 +9,12 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const Generator = require('yeoman-generator')
-const fs = require('fs-extra')
+import Generator from 'yeoman-generator'
+import fs from 'fs-extra'
 
-const { utils } = require('@adobe/generator-app-common-lib')
-const excReactWebAssetsGenerator = require('@adobe/generator-add-web-assets-exc-react')
-const rawWebAssetsGenerator = require('@adobe/generator-add-web-assets-exc-raw-html')
+import { utils } from '@adobe/generator-app-common-lib'
+import excReactWebAssetsGenerator from '@adobe/generator-add-web-assets-exc-react'
+import rawWebAssetsGenerator from '@adobe/generator-add-web-assets-exc-raw-html'
 
 /*
       'initializing',
@@ -84,4 +84,4 @@ class AddWebAssets extends Generator {
   }
 }
 
-module.exports = AddWebAssets
+export default AddWebAssets

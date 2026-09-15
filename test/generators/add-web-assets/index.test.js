@@ -8,24 +8,20 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const path = require('path')
-const fs = require('fs-extra')
-const { utils } = require('@adobe/generator-app-common-lib')
-const cloneDeep = require('lodash.clonedeep')
+import helpers from 'yeoman-test'
+import path from 'path'
+import fs from 'fs-extra'
+import { utils } from '@adobe/generator-app-common-lib'
+import cloneDeep from 'lodash.clonedeep'
 
-const AddWebAssets = require('../../../generators/add-web-assets')
-const excReact = require('@adobe/generator-add-web-assets-exc-react')
-const RawGenerator = require('@adobe/generator-add-web-assets-exc-raw-html')
-const Generator = require('yeoman-generator')
+import AddWebAssets from '../../../generators/add-web-assets/index.js'
+import excReact from '@adobe/generator-add-web-assets-exc-react'
+import RawGenerator from '@adobe/generator-add-web-assets-exc-raw-html'
+import Generator from 'yeoman-generator'
 
 // spies
-const prompt = jest.spyOn(Generator.prototype, 'prompt')
-const composeWith = jest.spyOn(Generator.prototype, 'composeWith')
-
-let yeomanTestHelpers
-beforeAll(async () => {
-  yeomanTestHelpers = (await import('yeoman-test')).default
-})
+const prompt = vi.spyOn(Generator.prototype, 'prompt')
+const composeWith = vi.spyOn(Generator.prototype, 'composeWith')
 
 beforeAll(async () => {
   // mock implementations
@@ -63,7 +59,7 @@ describe('run', () => {
     options['project-name'] = 'fake'
     options['adobe-services'] = 'some,string'
     options['web-src-folder'] = 'web-src'
-    await expect(yeomanTestHelpers.run(AddWebAssets)
+    await expect(helpers.run(AddWebAssets)
       .withOptions(options)
       .inTmpDir(dir => {
         fs.mkdirSync(path.join(dir, 'web-src'))
@@ -75,7 +71,7 @@ describe('run', () => {
     options['skip-prompt'] = true
     options['web-src-folder'] = 'web-src'
     let tmpDir
-    await yeomanTestHelpers.run(AddWebAssets)
+    await helpers.run(AddWebAssets)
       .withOptions(options)
       .inTmpDir(dir => {
         tmpDir = dir
@@ -99,7 +95,7 @@ describe('run', () => {
     options['web-src-folder'] = 'web-src'
     options['has-backend'] = false
     let tmpDir
-    await yeomanTestHelpers.run(AddWebAssets)
+    await helpers.run(AddWebAssets)
       .withOptions(options)
       .inTmpDir(dir => {
         tmpDir = dir
@@ -122,7 +118,7 @@ describe('run', () => {
     options['skip-prompt'] = true
     options['web-src-folder'] = 'web-src'
     options['project-name'] = 'fake'
-    await yeomanTestHelpers.run(AddWebAssets)
+    await helpers.run(AddWebAssets)
       .withOptions(options)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
@@ -139,7 +135,7 @@ describe('run', () => {
     options['web-src-folder'] = 'web-src'
     options['project-name'] = 'fake'
     options['adobe-services'] = 'some,string'
-    await yeomanTestHelpers.run(AddWebAssets)
+    await helpers.run(AddWebAssets)
       .withOptions(options)
 
     expect(composeWith).toHaveBeenCalledTimes(1)
@@ -154,7 +150,7 @@ describe('run', () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['web-src-folder'] = 'web-src'
     options['project-name'] = 'fake'
-    await yeomanTestHelpers.run(AddWebAssets)
+    await helpers.run(AddWebAssets)
       .withOptions(options)
       .withPrompts({ webAssetsGenerator: 'a' })
 

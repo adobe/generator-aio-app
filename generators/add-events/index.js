@@ -9,9 +9,11 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const path = require('path')
-const Generator = require('yeoman-generator')
+import path from 'path'
+import { fileURLToPath } from 'url'
+import Generator from 'yeoman-generator'
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const excPublishEventsGenerator = path.join(__dirname, 'publish-events/index.js')
 
 /*
@@ -65,4 +67,4 @@ class AddEvents extends Generator {
   }
 }
 
-module.exports = AddEvents
+export default AddEvents

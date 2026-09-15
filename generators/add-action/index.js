@@ -9,20 +9,21 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const Generator = require('yeoman-generator')
+import Generator from 'yeoman-generator'
 
-const { constants, utils } = require('@adobe/generator-app-common-lib')
+import { constants, utils } from '@adobe/generator-app-common-lib'
+
+import generic from '@adobe/generator-add-action-generic'
+import assetCompute from '@adobe/generator-add-action-asset-compute'
+import target from '@adobe/generator-add-action-target'
+import analytics from '@adobe/generator-add-action-analytics'
+import campaign from '@adobe/generator-add-action-campaign-standard'
+import customerProfile from '@adobe/generator-add-action-customer-profile'
+
+import inquirer from 'inquirer'
+
 const { atLeastOne } = utils
 const { sdkCodes, isLoopingPrompts } = constants
-
-const generic = require('@adobe/generator-add-action-generic')
-const assetCompute = require('@adobe/generator-add-action-asset-compute')
-const target = require('@adobe/generator-add-action-target')
-const analytics = require('@adobe/generator-add-action-analytics')
-const campaign = require('@adobe/generator-add-action-campaign-standard')
-const customerProfile = require('@adobe/generator-add-action-customer-profile')
-
-const inquirer = require('inquirer')
 
 // we have one actions generator per service, an action generator could generate different types of actions
 const sdkCodeToActionGenerator = {
@@ -183,4 +184,4 @@ function getPromptChoices (adobeServicesOption, supportedAdobeServicesOption) {
   ]
 }
 
-module.exports = AddActions
+export default AddActions

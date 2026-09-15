@@ -9,19 +9,13 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-/* eslint-disable jest/expect-expect */ // => use assert
-
-const theGeneratorPath = require.resolve('../../../generators/base-app/')
-const Generator = require('yeoman-generator')
-
-let yeomanTestHelpers
-beforeAll(async () => {
-  yeomanTestHelpers = (await import('yeoman-test')).default
-})
+import helpers from 'yeoman-test'
+import theGenerator from '../../../generators/base-app/index.js'
+import Generator from 'yeoman-generator'
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
-    expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
+    expect(theGenerator.prototype).toBeInstanceOf(Generator)
   })
 })
 
@@ -29,7 +23,7 @@ describe('run', () => {
   test('basic ext generator', async () => {
     const options = { 'skip-prompt': true }
 
-    const ret = await yeomanTestHelpers.run(theGeneratorPath)
+    const ret = await helpers.run(theGenerator)
       .withOptions(options)
     expect(ret).toBeDefined()
     ret.assertFile('.env')
@@ -53,7 +47,7 @@ describe('run', () => {
   test('basic ext generator, no linter', async () => {
     const options = { 'skip-prompt': true, linter: 'none' }
 
-    const ret = await yeomanTestHelpers.run(theGeneratorPath)
+    const ret = await helpers.run(theGenerator)
       .withOptions(options)
     expect(ret).toBeDefined()
     ret.assertFile('.env')
@@ -69,7 +63,7 @@ describe('run', () => {
   test('basic ext generator, adobe recommended linter', async () => {
     const options = { 'skip-prompt': true, linter: 'adobe-recommended' }
 
-    const ret = await yeomanTestHelpers.run(theGeneratorPath)
+    const ret = await helpers.run(theGenerator)
       .withOptions(options)
     expect(ret).toBeDefined()
     ret.assertFile('.env')
@@ -99,7 +93,7 @@ describe('run', () => {
   test('basic ext generator, prompt returns None', async () => {
     const options = { 'skip-prompt': false, linter: 'none' }
 
-    const ret = await yeomanTestHelpers.run(theGeneratorPath)
+    const ret = await helpers.run(theGenerator)
       .withOptions(options)
     expect(ret).toBeDefined()
     ret.assertFile('.env')

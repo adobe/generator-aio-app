@@ -9,11 +9,13 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const path = require('node:path')
-const fs = require('node:fs')
-const { stdout, stderr } = require('stdout-stderr')
+import path from 'node:path'
+import fs from 'node:fs'
+import { stdout, stderr } from 'stdout-stderr'
+import { fileURLToPath } from 'node:url'
+import { beforeEach, afterEach, expect } from 'vitest'
 
-jest.setTimeout(30000)
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 process.on('unhandledRejection', error => {
   throw error
