@@ -46,3 +46,5 @@ Two types of generators can be easily contributed to the project:
 ## Licensing
 
 This project is licensed under the Apache V2 License. See [LICENSE](LICENSE) for more information.
+
+<!-- CI verify: confirm v7 fleet PR checks green (throwaway) -->
