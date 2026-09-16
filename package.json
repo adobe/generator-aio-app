@@ -1,6 +1,6 @@
 {
   "name": "@adobe/generator-aio-app",
-  "version": "10.0.0",
+  "version": "10.1.0",
   "description": "Adobe I/O application yeoman code generator",
   "type": "module",
   "main": "generators/index.js",
@@ -63,7 +63,7 @@
     "js-yaml": "^4",
     "lodash.clonedeep": "^4.5.0",
     "upath": "^2.0.1",
-    "yeoman-generator": "^8"
+    "yeoman-generator": "^7"
   },
   "engines": {
     "node": ">=20"
