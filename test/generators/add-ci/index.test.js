@@ -9,29 +9,23 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-/* eslint-disable jest/expect-expect */ // => use assert
+import helpers from 'yeoman-test'
+import assert from 'yeoman-assert'
+import fs from 'fs'
+import path from 'path'
 
-const assert = require('yeoman-assert')
-const fs = require('fs')
-const path = require('path')
-
-const theGeneratorPath = require.resolve('../../../generators/add-ci')
-const Generator = require('yeoman-generator')
-
-let yeomanTestHelpers
-beforeAll(async () => {
-  yeomanTestHelpers = (await import('yeoman-test')).default
-})
+import theGenerator from '../../../generators/add-ci/index.js'
+import Generator from 'yeoman-generator'
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
-    expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
+    expect(theGenerator.prototype).toBeInstanceOf(Generator)
   })
 })
 
 describe('run', () => {
   test('should create files under .github', async () => {
-    await yeomanTestHelpers.run(theGeneratorPath)
+    await helpers.run(theGenerator)
       .inTmpDir(dir => {
         fs.writeFileSync(path.join(dir, '.env'), 'FAKECONTENT')
       })

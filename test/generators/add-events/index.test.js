@@ -8,18 +8,14 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const theGeneratorPath = require.resolve('../../../generators/add-events')
-const Generator = require('yeoman-generator')
-const cloneDeep = require('lodash.clonedeep')
+import helpers from 'yeoman-test'
+import theGenerator from '../../../generators/add-events/index.js'
+import Generator from 'yeoman-generator'
+import cloneDeep from 'lodash.clonedeep'
 
 // spies
-const prompt = jest.spyOn(Generator.prototype, 'prompt')
-const composeWith = jest.spyOn(Generator.prototype, 'composeWith')
-
-let yeomanTestHelpers
-beforeAll(async () => {
-  yeomanTestHelpers = (await import('yeoman-test')).default
-})
+const prompt = vi.spyOn(Generator.prototype, 'prompt')
+const composeWith = vi.spyOn(Generator.prototype, 'composeWith')
 
 beforeAll(async () => {
   // mock implementations
@@ -35,11 +31,11 @@ afterAll(() => {
 
 const expectedDefaultEventsGenerator = expect.stringContaining(n('publish-events/index.js'))
 
-jest.mock('@adobe/generator-app-common-lib')
+vi.mock('@adobe/generator-app-common-lib')
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
-    expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
+    expect(theGenerator.prototype).toBeInstanceOf(Generator)
   })
 })
 
@@ -47,7 +43,7 @@ describe('run', () => {
   test('--skip-prompt "', async () => {
     const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
-    await yeomanTestHelpers.run(theGeneratorPath)
+    await helpers.run(theGenerator)
       .withOptions(options)
     // with skip prompt defaults to generic action
     // make sure sub generators have been called

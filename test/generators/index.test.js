@@ -9,7 +9,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const generators = require('../../generators')
+import generators from '../../generators/index.js'
 
 test('all exports', () => {
   expect(generators['add-action']).toBeDefined()

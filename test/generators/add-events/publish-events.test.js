@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 /*
 Copyright 2019 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,25 +9,21 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const assert = require('yeoman-assert')
-const fs = require('fs')
-const yaml = require('js-yaml')
-const path = require('path')
-const cloneDeep = require('lodash.clonedeep')
+import helpers from 'yeoman-test'
+import assert from 'yeoman-assert'
+import fs from 'fs'
+import yaml from 'js-yaml'
+import path from 'path'
+import cloneDeep from 'lodash.clonedeep'
 
-const theGeneratorPath = require.resolve('../../../generators/add-events/publish-events')
-const Generator = require('yeoman-generator')
+import theGenerator from '../../../generators/add-events/publish-events/index.js'
+import Generator from 'yeoman-generator'
 
-const { constants } = require('@adobe/generator-app-common-lib')
-
-let yeomanTestHelpers
-beforeAll(async () => {
-  yeomanTestHelpers = (await import('yeoman-test')).default
-})
+import { constants } from '@adobe/generator-app-common-lib'
 
 describe('prototype', () => {
   test('exports a yeoman generator', () => {
-    expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
+    expect(theGenerator.prototype).toBeInstanceOf(Generator)
   })
 })
 
@@ -97,7 +92,7 @@ describe('run', () => {
     options['skip-prompt'] = true
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     try {
-      await yeomanTestHelpers.run(theGeneratorPath)
+      await helpers.run(theGenerator)
         .withOptions(options)
         .inTmpDir(dir => {
           fs.writeFileSync(path.join(dir, '.env'), prevDotEnvContent)
@@ -125,7 +120,7 @@ describe('run', () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = true
-    await yeomanTestHelpers.run(theGeneratorPath)
+    await helpers.run(theGenerator)
       .withOptions(options)
       .inTmpDir(dir => {
         fs.writeFileSync('ext.config.yaml', yaml.dump({
@@ -161,7 +156,7 @@ describe('run', () => {
     const prevDotEnvContent = 'PREVIOUSCONTENT\n'
     const options = cloneDeep(global.basicGeneratorOptions)
     options['skip-prompt'] = false
-    await yeomanTestHelpers.run(theGeneratorPath)
+    await helpers.run(theGenerator)
       .withOptions(options)
       .withPrompts({ actionName: 'fakeAction' })
       .inTmpDir(dir => {

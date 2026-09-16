@@ -9,8 +9,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const Generator = require('yeoman-generator')
-const fs = require('fs-extra')
+import Generator from 'yeoman-generator'
+import fs from 'fs-extra'
 
 /*
     'initializing',
@@ -109,4 +109,4 @@ class AddVsCodeConfig extends Generator {
   }
 }
 
-module.exports = AddVsCodeConfig
+export default AddVsCodeConfig

@@ -9,18 +9,14 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const assert = require('yeoman-assert')
-const fs = require('fs-extra')
+import helpers from 'yeoman-test'
+import assert from 'yeoman-assert'
+import fs from 'fs-extra'
 
-jest.mock('fs-extra')
+import theGenerator from '../../../generators/add-vscode-config/index.js'
+import Generator from 'yeoman-generator'
 
-let yeomanTestHelpers
-beforeAll(async () => {
-  yeomanTestHelpers = (await import('yeoman-test')).default
-})
-
-const theGeneratorPath = require.resolve('../../../generators/add-vscode-config')
-const Generator = require('yeoman-generator')
+vi.mock('fs-extra')
 
 beforeEach(() => {
   fs.lstatSync.mockReset()
@@ -28,7 +24,7 @@ beforeEach(() => {
 })
 
 test('exports a yeoman generator', () => {
-  expect(require(theGeneratorPath).prototype).toBeInstanceOf(Generator)
+  expect(theGenerator.prototype).toBeInstanceOf(Generator)
 })
 
 test('no missing options (defaults))', async () => {
@@ -36,7 +32,7 @@ test('no missing options (defaults))', async () => {
     isDirectory: () => false
   })
 
-  const result = yeomanTestHelpers.run(theGeneratorPath)
+  const result = helpers.run(theGenerator)
   await expect(result).resolves.not.toThrow()
 
   assert.file('.vscode/launch.json') // destination file is written
@@ -52,7 +48,7 @@ test('option destination-file is set', async () => {
     isDirectory: () => false
   })
 
-  const result = yeomanTestHelpers.run(theGeneratorPath).withOptions(options)
+  const result = helpers.run(theGenerator).withOptions(options)
   await expect(result).resolves.not.toThrow()
 
   assert.file(options['destination-file']) // destination file is written
@@ -70,8 +66,8 @@ test('vscode launch configuration exists', async () => {
 
   fs.existsSync.mockReturnValue(true) // destination file exists
 
-  const result = yeomanTestHelpers
-    .run(theGeneratorPath)
+  const result = helpers
+    .run(theGenerator)
     .withOptions(options)
     .withPrompts({ overwriteVsCodeConfig: false })
   await expect(result).resolves.not.toThrow()
